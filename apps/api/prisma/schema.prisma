@@ -1,0 +1,1001 @@
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "postgresql"
+}
+
+model User {
+  id        String   @id @default(cuid())
+  email     String   @unique
+  name      String?
+  role      Role     @default(SISWA)
+  password  String
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  // Relations to Siswa and Guru
+  siswa Siswa?
+  guru  Guru?
+  pengumuman Pengumuman[]
+}
+
+enum Role {
+  ADMIN
+  GURU
+  SISWA
+  PETUGAS_ABSENSI
+}
+
+model TahunAjaran {
+  id             String            @id @default(cuid())
+  tahun          String            @unique // e.g., "2024/2025"
+  tanggalMulai   DateTime
+  tanggalSelesai DateTime
+  status         StatusTahunAjaran @default(AKAN_DATANG)
+  createdAt      DateTime          @default(now())
+  updatedAt      DateTime          @updatedAt
+  deletedAt      DateTime? // soft delete
+
+  siswa             Siswa[]
+  siswaKelasHistory SiswaKelasHistory[]
+}
+
+enum StatusTahunAjaran {
+  AKTIF
+  SELESAI
+  AKAN_DATANG
+}
+
+model MataPelajaran {
+  id           String    @id @default(cuid())
+  kode         String    @unique
+  nama         String
+  jamPelajaran Int // SKS/Jam per minggu
+  deskripsi    String?
+  tingkat      String // "X", "XI", "XII", "SEMUA"
+  createdAt    DateTime  @default(now())
+  updatedAt    DateTime  @updatedAt
+  deletedAt    DateTime? // soft delete
+
+  guru Guru[] @relation("GuruMataPelajaran")
+  bankSoal BankSoal[]
+  paketSoal PaketSoal[]
+  ujian Ujian[]
+  jadwalPelajaran JadwalPelajaran[]
+  
+  // LMS Relations
+  materi Materi[]
+  tugas Tugas[]
+  forumKategori ForumKategori[]
+  progressSiswa ProgressSiswa[]
+  rpp RPP[]
+  absensiKelas AbsensiKelas[]
+}
+
+model Guru {
+  id           String     @id @default(cuid())
+  nip          String     @unique
+  nama         String
+  email        String     @unique
+  nomorTelepon String?
+  status       StatusGuru @default(AKTIF)
+  createdAt    DateTime   @default(now())
+  updatedAt    DateTime   @updatedAt
+  deletedAt    DateTime? // soft delete
+
+  // User account integration
+  userId String? @unique
+  user   User?   @relation(fields: [userId], references: [id])
+
+  mataPelajaran MataPelajaran[] @relation("GuruMataPelajaran")
+  paketSoal     PaketSoal[]
+  bankSoal      BankSoal[]
+  kelasWali     Kelas[]         @relation("WaliKelas")
+  ujian         Ujian[]
+  jadwalPelajaran JadwalPelajaran[]
+  
+  // LMS Relations
+  materi Materi[]
+  tugas Tugas[]
+  rpp RPP[]
+  absensiKelas AbsensiKelas[]
+}
+
+enum StatusGuru {
+  AKTIF
+  CUTI
+  PENSIUN
+}
+
+model Jurusan {
+  id        String    @id @default(cuid())
+  kode      String    @unique
+  nama      String
+  deskripsi String?
+  createdAt DateTime  @default(now())
+  updatedAt DateTime  @updatedAt
+  deletedAt DateTime? // soft delete
+
+  kelas Kelas[]
+}
+
+model Kelas {
+  id        String    @id @default(cuid())
+  nama      String // e.g., "X-A", "XI-IPA-1" (reusable across years)
+  tingkat   String // "X", "XI", "XII"
+  kapasitas Int       @default(32)
+  createdAt DateTime  @default(now())
+  updatedAt DateTime  @updatedAt
+  deletedAt DateTime? // soft delete
+
+  jurusanId String?
+  jurusan   Jurusan? @relation(fields: [jurusanId], references: [id])
+
+  waliKelasId String?
+  waliKelas   Guru?   @relation("WaliKelas", fields: [waliKelasId], references: [id])
+
+  siswa             Siswa[]
+  siswaKelasHistory SiswaKelasHistory[]
+  ujian             Ujian[]
+  ujianKelas        UjianKelas[] // Many-to-many relationship with Ujian
+  jadwalPelajaran   JadwalPelajaran[]
+  paketSoalKelas    PaketSoalKelas[]
+  bankSoal          BankSoal[]
+  
+  // LMS Relations
+  materi Materi[]
+  tugas Tugas[]
+  forumKategori ForumKategori[]
+  rppKelas RPPKelas[]
+  absensiKelas AbsensiKelas[]
+}
+
+model Siswa {
+  id           String      @id @default(cuid())
+  nisn         String      @unique
+  nama         String
+  tanggalLahir DateTime
+  alamat       String?
+  nomorTelepon String?
+  email        String?
+  agama        String? // Religion field for filtering (e.g., Islam, Kristen, Katolik, Hindu, Buddha, Konghucu)
+  status       StatusSiswa @default(AKTIF)
+  createdAt    DateTime    @default(now())
+  updatedAt    DateTime    @updatedAt
+  deletedAt    DateTime? // soft delete
+
+  // User account integration
+  userId String? @unique
+  user   User?   @relation(fields: [userId], references: [id])
+
+  kelasId String?
+  kelas   Kelas?  @relation(fields: [kelasId], references: [id])
+
+  tahunAjaranId String?
+  tahunAjaran   TahunAjaran? @relation(fields: [tahunAjaranId], references: [id])
+
+  kelasHistory SiswaKelasHistory[]
+  attendance   Attendance[]
+  ujianSiswa   UjianSiswa[]
+  
+  // LMS Relations
+  materiBookmarks MateriBookmark[]
+  tugasSiswa TugasSiswa[]
+  progressSiswa ProgressSiswa[]
+  absensiKelasDetail AbsensiKelasDetail[]
+}
+
+model SiswaKelasHistory {
+  id             String    @id @default(cuid())
+  siswaId        String
+  kelasId        String
+  tahunAjaranId  String
+  tanggalMulai   DateTime
+  tanggalSelesai DateTime?
+  status         String // "AKTIF", "SELESAI", "PINDAH"
+  catatan        String?
+  createdAt      DateTime  @default(now())
+  updatedAt      DateTime  @updatedAt
+
+  siswa       Siswa       @relation(fields: [siswaId], references: [id], onDelete: Cascade)
+  kelas       Kelas       @relation(fields: [kelasId], references: [id])
+  tahunAjaran TahunAjaran @relation(fields: [tahunAjaranId], references: [id])
+
+  @@index([siswaId])
+  @@index([kelasId, tahunAjaranId])
+}
+
+enum StatusSiswa {
+  AKTIF
+  PKL
+  LULUS
+  PINDAH
+  KELUAR
+}
+
+model Attendance {
+  id         String           @id @default(cuid())
+  siswaId    String
+  siswa      Siswa            @relation(fields: [siswaId], references: [id])
+  tanggal    DateTime         @default(now()) @db.Date
+  jamMasuk   DateTime         @default(now())
+  jamKeluar  DateTime?
+  status     AttendanceStatus @default(HADIR)
+  keterangan String?
+  scanBy     String? // User ID yang melakukan scan
+  createdAt  DateTime         @default(now())
+  updatedAt  DateTime         @updatedAt
+  deletedAt  DateTime? // soft delete
+
+  @@index([siswaId, tanggal])
+  @@index([tanggal])
+  @@unique([siswaId, tanggal]) // Prevent duplicate attendance per day
+}
+
+enum AttendanceStatus {
+  HADIR
+  IZIN
+  SAKIT
+  ALPHA
+  TERLAMBAT
+}
+
+model Settings {
+  id        String   @id @default(cuid())
+  key       String   @unique
+  value     String
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+}
+
+// ========== CBT (Computer-Based Test) Models ==========
+
+model BankSoal {
+  id             String        @id @default(cuid())
+  kode           String        @unique
+  pertanyaan     String        @db.Text
+  tipe           TipeSoal      @default(PILIHAN_GANDA)
+  mataPelajaranId String?
+  mataPelajaran  MataPelajaran? @relation(fields: [mataPelajaranId], references: [id])
+  guruId         String?
+  guru           Guru?          @relation(fields: [guruId], references: [id])
+  kelasId        String?
+  kelas          Kelas?         @relation(fields: [kelasId], references: [id])
+  pilihanJawaban Json?         // Array of objects: [{id, text, isCorrect}]
+  jawabanBenar   String?       // For essay/short answer
+  bobot          Int           @default(1)
+  createdAt      DateTime      @default(now())
+  updatedAt      DateTime      @updatedAt
+  deletedAt      DateTime?
+
+  ujianSoal      UjianSoal[]
+  paketSoalItems PaketSoalItem[]
+  
+  @@index([mataPelajaranId])
+  @@index([guruId])
+  @@index([kelasId])
+}
+
+enum TipeSoal {
+  PILIHAN_GANDA
+  ESSAY
+  BENAR_SALAH
+  ISIAN_SINGKAT
+}
+
+model PaketSoal {
+  id               String         @id @default(cuid())
+  kode             String         @unique
+  nama             String
+  deskripsi        String?        @db.Text
+  mataPelajaranId  String?
+  mataPelajaran    MataPelajaran? @relation(fields: [mataPelajaranId], references: [id])
+  guruId           String?
+  guru             Guru?          @relation(fields: [guruId], references: [id])
+  totalSoal        Int            @default(0)
+  createdAt        DateTime       @default(now())
+  updatedAt        DateTime       @updatedAt
+  deletedAt        DateTime?
+
+  soalItems        PaketSoalItem[]
+  ujian            Ujian[]
+  paketSoalKelas   PaketSoalKelas[]
+
+  @@index([mataPelajaranId])
+  @@index([guruId])
+}
+
+model PaketSoalKelas {
+  id          String    @id @default(cuid())
+  paketSoalId String
+  paketSoal   PaketSoal @relation(fields: [paketSoalId], references: [id], onDelete: Cascade)
+  kelasId     String
+  kelas       Kelas     @relation(fields: [kelasId], references: [id], onDelete: Cascade)
+  createdAt   DateTime  @default(now())
+
+  @@unique([paketSoalId, kelasId])
+  @@index([paketSoalId])
+  @@index([kelasId])
+}
+
+model PaketSoalItem {
+  id          String     @id @default(cuid())
+  paketSoalId String
+  paketSoal   PaketSoal  @relation(fields: [paketSoalId], references: [id], onDelete: Cascade)
+  bankSoalId  String
+  bankSoal    BankSoal   @relation(fields: [bankSoalId], references: [id], onDelete: Cascade)
+  urutan      Int        // Order of questions in package
+  createdAt   DateTime   @default(now())
+
+  @@unique([paketSoalId, bankSoalId])
+  @@index([paketSoalId])
+}
+
+model Ujian {
+  id              String        @id @default(cuid())
+  kode            String        @unique
+  judul           String
+  deskripsi       String?       @db.Text
+  jenisUjianId    String?
+  jenisUjian      JenisUjian?   @relation(fields: [jenisUjianId], references: [id])
+  mataPelajaranId String?
+  mataPelajaran   MataPelajaran? @relation(fields: [mataPelajaranId], references: [id])
+  guruId          String?
+  guru            Guru?          @relation(fields: [guruId], references: [id])
+  paketSoalId     String?
+  paketSoal       PaketSoal?     @relation(fields: [paketSoalId], references: [id])
+  kelasId         String?
+  kelas           Kelas?        @relation(fields: [kelasId], references: [id])
+  durasi          Int           // in minutes
+  tanggalMulai    DateTime
+  tanggalSelesai  DateTime
+  nilaiMinimal    Int?          // passing grade
+  acakSoal        Boolean       @default(true)
+  tampilkanNilai  Boolean       @default(false)
+  status          StatusUjian   @default(DRAFT)
+  deteksiKecurangan Boolean      @default(true) // Toggle untuk fitur deteksi kecurangan
+  createdBy       String
+  createdAt       DateTime      @default(now())
+  updatedAt       DateTime      @updatedAt
+  deletedAt       DateTime?
+
+  ujianSoal       UjianSoal[]
+  ujianSiswa      UjianSiswa[]
+  ujianKelas      UjianKelas[] // Many-to-many relationship with Kelas
+  
+  @@index([mataPelajaranId])
+  @@index([guruId])
+  @@index([kelasId])
+  @@index([jenisUjianId])
+  @@index([tanggalMulai])
+}
+
+enum StatusUjian {
+  DRAFT
+  PUBLISHED
+  ONGOING
+  SELESAI
+  DIBATALKAN
+}
+
+model JenisUjian {
+  id          String   @id @default(cuid())
+  nama        String   @unique
+  kode        String?  @unique
+  deskripsi   String?  @db.Text
+  aktif       Boolean  @default(true)
+  urutan      Int      @default(0) // untuk sorting
+  createdAt   DateTime @default(now())
+  updatedAt   DateTime @updatedAt
+  deletedAt   DateTime?
+
+  ujian       Ujian[]
+  
+  @@index([aktif])
+  @@index([urutan])
+}
+
+model UjianKelas {
+  id        String   @id @default(cuid())
+  ujianId   String
+  ujian     Ujian    @relation(fields: [ujianId], references: [id], onDelete: Cascade)
+  kelasId   String
+  kelas     Kelas    @relation(fields: [kelasId], references: [id])
+  createdAt DateTime @default(now())
+
+  @@unique([ujianId, kelasId])
+  @@index([ujianId])
+  @@index([kelasId])
+}
+
+model UjianSoal {
+  id          String    @id @default(cuid())
+  ujianId     String
+  ujian       Ujian     @relation(fields: [ujianId], references: [id], onDelete: Cascade)
+  bankSoalId  String
+  bankSoal    BankSoal  @relation(fields: [bankSoalId], references: [id])
+  nomorUrut   Int
+  bobot       Int       @default(1)
+  createdAt   DateTime  @default(now())
+
+  @@unique([ujianId, bankSoalId])
+  @@index([ujianId])
+}
+
+model UjianSiswa {
+  id              String          @id @default(cuid())
+  ujianId         String
+  ujian           Ujian           @relation(fields: [ujianId], references: [id], onDelete: Cascade)
+  siswaId         String
+  siswa           Siswa           @relation(fields: [siswaId], references: [id])
+  tokenAkses      String?         @unique
+  waktuMulai      DateTime?
+  waktuSelesai    DateTime?
+  durasi          Int?            // actual time spent in minutes
+  status          StatusPengerjaan @default(BELUM_MULAI)
+  nilaiTotal      Float?
+  isPassed        Boolean?
+  jawaban         Json?           // Array of answers: [{soalId, jawaban}]
+  manualGrades    Json?           // Manual grades override: {soalId: score}
+  violationCount  Int             @default(0) // Persistent count of cheating violations
+  createdAt       DateTime        @default(now())
+  updatedAt       DateTime        @updatedAt
+
+  @@unique([ujianId, siswaId])
+  @@index([ujianId])
+  @@index([siswaId])
+}
+
+enum StatusPengerjaan {
+  BELUM_MULAI
+  SEDANG_MENGERJAKAN
+  SELESAI
+  TIDAK_HADIR
+  DIBLOKIR
+}
+
+// ==================== JADWAL PELAJARAN ====================
+
+enum Hari {
+  SENIN
+  SELASA
+  RABU
+  KAMIS
+  JUMAT
+  SABTU
+}
+
+model JadwalPelajaran {
+  id              String        @id @default(cuid())
+  hari            Hari
+  jamMulai        String        // e.g., "07:00"
+  jamSelesai      String        // e.g., "08:30"
+  
+  kelasId         String
+  kelas           Kelas         @relation(fields: [kelasId], references: [id])
+  
+  mataPelajaranId String
+  mataPelajaran   MataPelajaran @relation(fields: [mataPelajaranId], references: [id])
+  
+  guruId          String
+  guru            Guru          @relation(fields: [guruId], references: [id])
+  
+  createdAt       DateTime      @default(now())
+  updatedAt       DateTime      @updatedAt
+  
+  absensiKelas    AbsensiKelas[]
+
+  @@index([kelasId])
+  @@index([hari])
+}
+
+// ==================== LMS FEATURES ====================
+
+// Materi Pelajaran (Course Materials)
+model Materi {
+  id              String        @id @default(cuid())
+  judul           String
+  deskripsi       String?       @db.Text
+  tipe            TipeMateri    @default(DOKUMEN)
+  konten          String?       @db.Text // For text content or embedded links
+  originalFileName String?      // Original filename when uploaded
+  
+  mataPelajaranId String
+  mataPelajaran   MataPelajaran @relation(fields: [mataPelajaranId], references: [id])
+  
+  guruId          String
+  guru            Guru          @relation(fields: [guruId], references: [id])
+  
+  kelasId         String?
+  kelas           Kelas?        @relation(fields: [kelasId], references: [id])
+  
+  isPinned        Boolean       @default(false)
+  isPublished     Boolean       @default(true)
+  viewCount       Int           @default(0)
+  
+  createdAt       DateTime      @default(now())
+  updatedAt       DateTime      @updatedAt
+  deletedAt       DateTime?
+  
+  attachments     MateriAttachment[]
+  bookmarks       MateriBookmark[]
+  
+  @@index([mataPelajaranId])
+  @@index([guruId])
+  @@index([kelasId])
+  @@index([isPublished])
+}
+
+enum TipeMateri {
+  DOKUMEN      // PDF, DOC, PPT, etc
+  VIDEO        // MP4, YouTube link, etc
+  LINK         // External URL
+  TEKS         // Rich text content
+  GAMBAR       // Image files
+}
+
+model MateriAttachment {
+  id          String   @id @default(cuid())
+  materiId    String
+  materi      Materi   @relation(fields: [materiId], references: [id], onDelete: Cascade)
+  
+  namaFile    String
+  ukuranFile  Int      // in bytes
+  tipeFile    String   // MIME type
+  urlFile     String   // File path or URL
+  
+  createdAt   DateTime @default(now())
+  
+  @@index([materiId])
+}
+
+model MateriBookmark {
+  id        String   @id @default(cuid())
+  materiId  String
+  materi    Materi   @relation(fields: [materiId], references: [id], onDelete: Cascade)
+  siswaId   String
+  siswa     Siswa    @relation(fields: [siswaId], references: [id], onDelete: Cascade)
+  
+  createdAt DateTime @default(now())
+  
+  @@unique([materiId, siswaId])
+  @@index([siswaId])
+}
+
+// Tugas (Assignments)
+model Tugas {
+  id              String        @id @default(cuid())
+  judul           String
+  deskripsi       String        @db.Text
+  instruksi       String?       @db.Text
+  
+  mataPelajaranId String
+  mataPelajaran   MataPelajaran @relation(fields: [mataPelajaranId], references: [id])
+  
+  guruId          String
+  guru            Guru          @relation(fields: [guruId], references: [id])
+  
+  kelasId         String?
+  kelas           Kelas?        @relation(fields: [kelasId], references: [id])
+  
+  deadline        DateTime
+  maxScore        Int           @default(100)
+  tipePenilaian   TipePenilaian @default(MANUAL)
+  allowLateSubmit Boolean       @default(false)
+  isPublished     Boolean       @default(true)
+  
+  createdAt       DateTime      @default(now())
+  updatedAt       DateTime      @updatedAt
+  deletedAt       DateTime?
+  
+  submissions     TugasSiswa[]
+  attachments     TugasAttachment[]
+  
+  @@index([mataPelajaranId])
+  @@index([guruId])
+  @@index([kelasId])
+  @@index([deadline])
+}
+
+enum TipePenilaian {
+  MANUAL       // Graded by teacher
+  AUTO         // Auto-graded (for objective questions)
+  PEER_REVIEW  // Peer assessment
+}
+
+model TugasAttachment {
+  id          String   @id @default(cuid())
+  tugasId     String
+  tugas       Tugas    @relation(fields: [tugasId], references: [id], onDelete: Cascade)
+  
+  namaFile    String
+  ukuranFile  Int
+  tipeFile    String
+  urlFile     String
+  
+  createdAt   DateTime @default(now())
+  
+  @@index([tugasId])
+}
+
+model TugasSiswa {
+  id              String            @id @default(cuid())
+  tugasId         String
+  tugas           Tugas             @relation(fields: [tugasId], references: [id], onDelete: Cascade)
+  siswaId         String
+  siswa           Siswa             @relation(fields: [siswaId], references: [id], onDelete: Cascade)
+  
+  status          StatusPengumpulan @default(BELUM_DIKUMPULKAN)
+  submittedAt     DateTime?
+  gradedAt        DateTime?
+  
+  konten          String?           @db.Text  // Text answer/notes
+  score           Float?
+  feedback        String?           @db.Text
+  
+  createdAt       DateTime          @default(now())
+  updatedAt       DateTime          @updatedAt
+  
+  files           TugasSiswaFile[]
+  
+  @@unique([tugasId, siswaId])
+  @@index([tugasId])
+  @@index([siswaId])
+  @@index([status])
+}
+
+enum StatusPengumpulan {
+  BELUM_DIKUMPULKAN
+  DIKUMPULKAN
+  TERLAMBAT
+  DINILAI
+}
+
+model TugasSiswaFile {
+  id           String     @id @default(cuid())
+  tugasSiswaId String
+  tugasSiswa   TugasSiswa @relation(fields: [tugasSiswaId], references: [id], onDelete: Cascade)
+  
+  namaFile     String
+  ukuranFile   Int
+  tipeFile     String
+  urlFile      String
+  
+  createdAt    DateTime   @default(now())
+  
+  @@index([tugasSiswaId])
+}
+
+// Forum Diskusi (Discussion Forum)
+model ForumKategori {
+  id              String        @id @default(cuid())
+  nama            String
+  deskripsi       String?
+  icon            String?       // Icon name or emoji
+  warna           String?       // Hex color for category badge
+  
+  mataPelajaranId String?
+  mataPelajaran   MataPelajaran? @relation(fields: [mataPelajaranId], references: [id])
+  
+  kelasId         String?
+  kelas           Kelas?        @relation(fields: [kelasId], references: [id])
+  
+  urutan          Int           @default(0)
+  isActive        Boolean       @default(true)
+  
+  createdAt       DateTime      @default(now())
+  updatedAt       DateTime      @updatedAt
+  
+  threads         ForumThread[]
+  
+  @@index([mataPelajaranId])
+  @@index([kelasId])
+}
+
+model ForumThread {
+  id              String         @id @default(cuid())
+  judul           String
+  isPinned        Boolean        @default(false)
+  isLocked        Boolean        @default(false)
+  
+  kategoriId      String
+  kategori        ForumKategori  @relation(fields: [kategoriId], references: [id], onDelete: Cascade)
+  
+  authorId        String         // User ID (could be Siswa or Guru)
+  authorType      String         // "SISWA" or "GURU"
+  
+  viewCount       Int            @default(0)
+  replyCount      Int            @default(0)
+  
+  createdAt       DateTime       @default(now())
+  updatedAt       DateTime       @updatedAt
+  deletedAt       DateTime?
+  
+  posts           ForumPost[]
+  
+  @@index([kategoriId])
+  @@index([authorId])
+  @@index([createdAt])
+}
+
+model ForumPost {
+  id          String       @id @default(cuid())
+  threadId    String
+  thread      ForumThread  @relation(fields: [threadId], references: [id], onDelete: Cascade)
+  
+  parentId    String?      // For nested replies
+  parent      ForumPost?   @relation("PostReplies", fields: [parentId], references: [id])
+  replies     ForumPost[]  @relation("PostReplies")
+  
+  authorId    String       // User ID
+  authorType  String       // "SISWA" or "GURU"
+  
+  konten      String       @db.Text
+  isEdited    Boolean      @default(false)
+  
+  createdAt   DateTime     @default(now())
+  updatedAt   DateTime     @updatedAt
+  deletedAt   DateTime?
+  
+  reactions   ForumReaction[]
+  
+  @@index([threadId])
+  @@index([authorId])
+  @@index([parentId])
+}
+
+model ForumReaction {
+  id        String    @id @default(cuid())
+  postId    String
+  post      ForumPost @relation(fields: [postId], references: [id], onDelete: Cascade)
+  
+  userId    String    // User ID
+  tipe      String    // "LIKE", "HELPFUL", "LOVE", etc
+  
+  createdAt DateTime  @default(now())
+  
+  @@unique([postId, userId, tipe])
+  @@index([postId])
+  @@index([userId])
+}
+
+// Notifikasi (Notifications)
+model Notifikasi {
+  id          String           @id @default(cuid())
+  userId      String           // Recipient user ID
+  tipe        TipeNotifikasi
+  judul       String
+  pesan       String           @db.Text
+  linkUrl     String?          // URL to related content
+  
+  isRead      Boolean          @default(false)
+  readAt      DateTime?
+  
+  metadata    Json?            // Additional contextual data
+  
+  createdAt   DateTime         @default(now())
+  
+  @@index([userId])
+  @@index([isRead])
+  @@index([createdAt])
+}
+
+enum TipeNotifikasi {
+  MATERI_BARU
+  TUGAS_BARU
+  DEADLINE_REMINDER
+  TUGAS_DINILAI
+  FORUM_REPLY
+  PENGUMUMAN
+  SISTEM
+}
+
+model Pengumuman {
+  id          String   @id @default(cuid())
+  judul       String
+  konten      String   @db.Text
+  targetRoles Role[]   @default([]) // Empty array means visible to everyone
+  authorId    String
+  author      User     @relation(fields: [authorId], references: [id])
+  isActive    Boolean  @default(true)
+  createdAt   DateTime @default(now())
+  updatedAt   DateTime @updatedAt
+  deletedAt   DateTime? // Soft delete
+}
+
+// Progress Siswa (Student Progress Tracking)
+model ProgressSiswa {
+  id              String   @id @default(cuid())
+  siswaId         String
+  siswa           Siswa    @relation(fields: [siswaId], references: [id], onDelete: Cascade)
+  
+  mataPelajaranId String
+  mataPelajaran   MataPelajaran @relation(fields: [mataPelajaranId], references: [id])
+  
+  materiDibaca    Int      @default(0)  // Count of materials viewed
+  tugasSelesai    Int      @default(0)  // Count of assignments completed
+  forumPosts      Int      @default(0)  // Count of forum participations
+  
+  totalScore      Float    @default(0)  // Average score
+  lastActivity    DateTime @default(now())
+  
+  createdAt       DateTime @default(now())
+  updatedAt       DateTime @updatedAt
+  
+  @@unique([siswaId, mataPelajaranId])
+  @@index([siswaId])
+  @@index([mataPelajaranId])
+}
+
+// ==================== RPP (Rencana Pelaksanaan Pembelajaran) Deep Learning ====================
+
+model RPP {
+  id                     String        @id @default(cuid())
+  kode                   String        @unique // e.g., "RPP-MTK-001"
+  
+  // Header Information
+  namaGuru               String?       // Nama Guru
+  mataPelajaranId        String
+  mataPelajaran          MataPelajaran @relation(fields: [mataPelajaranId], references: [id])
+  materi                 String        // Materi / Topik
+  fase                   String?       // Fase/Kelas/Semester
+  alokasiWaktu           Int           // Dalam menit
+  tahunAjaran            String?       // e.g., "2025/2026"
+  
+  guruId                 String
+  guru                   Guru          @relation(fields: [guruId], references: [id])
+  
+  // I. IDENTIFIKASI
+  identifikasiPesertaDidik  String?    @db.Text // Kesiapan, pengetahuan awal, minat, dll
+  identifikasiMateri        String?    @db.Text // Jenis pengetahuan, relevansi, tingkat kesulitan
+  dimensiProfilLulusan      Json?                // Array of selected dimensions (8 DPL)
+  
+  // II. DESAIN PEMBELAJARAN
+  capaianPembelajaran    String        @db.Text // Capaian pembelajaran sesuai fase
+  lintasDisiplinIlmu     String?       @db.Text // Disiplin ilmu yang relevan
+  tujuanPembelajaran     Json                   // Array of tujuan per pertemuan
+  topikPembelajaran      String        @db.Text // Topik pembelajaran
+  praktikPedagogik       String?       @db.Text // Model/Strategi/Metode
+  kemitraanPembelajaran  String?       @db.Text // Mitra kerjasama
+  lingkunganPembelajaran String?       @db.Text // Ruang fisik, virtual, budaya belajar
+  pemanfaatanDigital     String?       @db.Text // Teknologi digital yang digunakan
+  
+  // III. PENGALAMAN BELAJAR
+  // A. Awal
+  kegiatanAwal           Json?                   // {prinsip: [], kegiatan: "..."}
+  
+  // B. Inti
+  kegiatanMemahami       Json?                   // {prinsip: [], kegiatan: "..."}
+  kegiatanMengaplikasi   Json?                   // {prinsip: [], kegiatan: "..."}
+  kegiatanMerefleksi     Json?                   // {prinsip: [], kegiatan: "..."}
+  
+  // C. Penutup
+  kegiatanPenutup        Json?                   // {prinsip: [], kegiatan: "..."}
+  
+  // IV. ASESMEN PEMBELAJARAN
+  asesmenAwal            String?       @db.Text // Asesmen pada awal pembelajaran
+  asesmenProses          String?       @db.Text // Asesmen pada proses pembelajaran
+  asesmenAkhir           String?       @db.Text // Asesmen pada akhir pembelajaran
+  
+  // Status and metadata
+  status                 StatusRPP     @default(DRAFT)
+  isPublished            Boolean       @default(false)
+  
+  createdAt              DateTime      @default(now())
+  updatedAt              DateTime      @updatedAt
+  deletedAt              DateTime?     // Soft delete
+  
+  rppKelas               RPPKelas[]
+  
+  @@index([mataPelajaranId])
+  @@index([guruId])
+  @@index([status])
+  @@index([isPublished])
+}
+
+enum StatusRPP {
+  DRAFT
+  PUBLISHED
+  ARCHIVED
+}
+
+enum DimensiProfilLulusan {
+  KEIMANAN_KETAQWAAN      // DPL 1: Keimanan dan ketaqwaan terhadap Tuhan YME
+  KEWARGAAN               // DPL 2: Kewargaan
+  PENALARAN_KRITIS        // DPL 3: Penalaran Kritis
+  KREATIFITAS             // DPL 4: Kreatifitas
+  KOLABORASI              // DPL 5: Kolaborasi
+  KEMANDIRIAN             // DPL 6: Kemandirian
+  KESEHATAN               // DPL 7: Kesehatan
+  KOMUNIKASI              // DPL 8: Komunikasi
+}
+
+model RPPKelas {
+  id        String   @id @default(cuid())
+  rppId     String
+  rpp       RPP      @relation(fields: [rppId], references: [id], onDelete: Cascade)
+  kelasId   String
+  kelas     Kelas    @relation(fields: [kelasId], references: [id], onDelete: Cascade)
+  createdAt DateTime @default(now())
+  
+  @@unique([rppId, kelasId])
+  @@index([rppId])
+  @@index([kelasId])
+}
+
+// ==================== ABSENSI KELAS (Per Mata Pelajaran) ====================
+
+model AbsensiKelas {
+  id                String              @id @default(cuid())
+  tanggal           DateTime            @db.Date
+  
+  jadwalPelajaranId String
+  jadwalPelajaran   JadwalPelajaran     @relation(fields: [jadwalPelajaranId], references: [id])
+  
+  guruId            String
+  guru              Guru                @relation(fields: [guruId], references: [id])
+  
+  kelasId           String
+  kelas             Kelas               @relation(fields: [kelasId], references: [id])
+  
+  mataPelajaranId   String
+  mataPelajaran     MataPelajaran       @relation(fields: [mataPelajaranId], references: [id])
+  
+  createdAt         DateTime            @default(now())
+  updatedAt         DateTime            @updatedAt
+  
+  // Relasi ke detail absensi tiap siswa
+  detailAbsensi     AbsensiKelasDetail[]
+  jurnalMengajar    JurnalMengajar?
+  
+  @@unique([tanggal, jadwalPelajaranId]) // 1 absensi per jadwal per hari
+  @@index([guruId])
+  @@index([kelasId])
+  @@index([tanggal])
+}
+
+model AbsensiKelasDetail {
+  id              String                 @id @default(cuid())
+  absensiKelasId  String
+  absensiKelas    AbsensiKelas           @relation(fields: [absensiKelasId], references: [id], onDelete: Cascade)
+  
+  siswaId         String
+  siswa           Siswa                  @relation(fields: [siswaId], references: [id])
+  
+  status          AbsensiKelasStatus     @default(HADIR)
+  keterangan      String?
+  
+  createdAt       DateTime               @default(now())
+  updatedAt       DateTime               @updatedAt
+  
+  @@unique([absensiKelasId, siswaId]) // 1 record per siswa per absensi
+  @@index([absensiKelasId])
+  @@index([siswaId])
+}
+
+enum AbsensiKelasStatus {
+  HADIR
+  IZIN
+  SAKIT
+  ALPHA
+}
+
+// ==================== JURNAL MENGAJAR ====================
+
+model JurnalMengajar {
+  id                   String        @id @default(cuid())
+  
+  absensiKelasId       String        @unique
+  absensiKelas         AbsensiKelas  @relation(fields: [absensiKelasId], references: [id], onDelete: Cascade)
+  
+  materiPembelajaran   String        @db.Text  // Materi yang diajarkan
+  kegiatanPembelajaran String        @db.Text  // Kegiatan yang dilakukan
+  catatan              String?       @db.Text  // Catatan tambahan/evaluasi
+  
+  createdAt            DateTime      @default(now())
+  updatedAt            DateTime      @updatedAt
+  
+  @@index([absensiKelasId])
+}

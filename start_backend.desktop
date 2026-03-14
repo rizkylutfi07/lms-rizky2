@@ -1,0 +1,9 @@
+[Desktop Entry]
+Type=Application
+Name=Start Backend
+Comment=Jalankan Backend LMS
+Exec=gnome-terminal -- bash -c 'cd /home/server/Desktop/lms-rizky-main && ./start_backend.sh; exec bash'
+Icon=utilities-terminal
+Terminal=false
+Path=/home/server/Desktop/lms-rizky-main
+Categories=Development;

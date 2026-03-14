@@ -1,0 +1,20 @@
+[Unit]
+Description=LMS Rizky Application (API + Frontend)
+After=network.target
+
+[Service]
+Type=simple
+User=server
+WorkingDirectory=/home/server/Desktop/lms-rizky-main
+ExecStart=/home/server/.nvm/versions/node/v25.3.0/bin/npm start
+Restart=on-failure
+RestartSec=10
+StandardOutput=append:/home/server/Desktop/lms-rizky-main/lms.log
+StandardError=append:/home/server/Desktop/lms-rizky-main/lms-error.log
+
+# Environment variables
+Environment="NODE_ENV=production"
+Environment="PATH=/home/server/.nvm/versions/node/v25.3.0/bin:/usr/local/sbin:/usr/local/bin:/usr/sbin:/usr/bin:/sbin:/bin"
+
+[Install]
+WantedBy=multi-user.target

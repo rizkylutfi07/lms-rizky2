@@ -1,0 +1,22 @@
+app/(dashboard)/tugas/page.tsx(191,22): error TS18046: 'tugasList' is of type 'unknown'.
+app/(dashboard)/tugas/page.tsx(195,23): error TS18046: 'tugasList' is of type 'unknown'.
+app/(dashboard)/tugas/page.tsx(201,20): error TS18046: 'tugasList' is of type 'unknown'.
+app/(dashboard)/tugas/page.tsx(232,48): error TS18046: 'tugasList' is of type 'unknown'.
+app/(dashboard)/ujian-saya/hasil/[id]/page.tsx(277,44): error TS2322: Type '{ children: any; variant: string; className: string; }' is not assignable to type 'IntrinsicAttributes & HTMLAttributes<HTMLDivElement> & { tone?: "info" | "warning" | "success" | undefined; }'.
+  Property 'variant' does not exist on type 'IntrinsicAttributes & HTMLAttributes<HTMLDivElement> & { tone?: "info" | "warning" | "success" | undefined; }'.
+app/(dashboard)/ujian-saya/mulai/[id]/page.tsx(113,36): error TS2322: Type '{ children: any; variant: string; }' is not assignable to type 'IntrinsicAttributes & HTMLAttributes<HTMLDivElement> & { tone?: "info" | "warning" | "success" | undefined; }'.
+  Property 'variant' does not exist on type 'IntrinsicAttributes & HTMLAttributes<HTMLDivElement> & { tone?: "info" | "warning" | "success" | undefined; }'.
+app/(dashboard)/ujian-saya/page.tsx(91,60): error TS2322: Type '{ children: any; variant: string; }' is not assignable to type 'IntrinsicAttributes & HTMLAttributes<HTMLDivElement> & { tone?: "info" | "warning" | "success" | undefined; }'.
+  Property 'variant' does not exist on type 'IntrinsicAttributes & HTMLAttributes<HTMLDivElement> & { tone?: "info" | "warning" | "success" | undefined; }'.
+app/(dashboard)/users/page.tsx(278,63): error TS2345: Argument of type 'CreateUserData | UpdateUserData' is not assignable to parameter of type 'CreateUserData'.
+  Type 'UpdateUserData' is not assignable to type 'CreateUserData'.
+    Types of property 'email' are incompatible.
+      Type 'string | undefined' is not assignable to type 'string'.
+        Type 'undefined' is not assignable to type 'string'.
+app/(dashboard)/users/page.tsx(400,77): error TS2322: Type 'string' is not assignable to type '"ADMIN" | "GURU" | "SISWA" | "PETUGAS_ABSENSI"'.
+components/student-dashboard.tsx(69,48): error TS2322: Type 'string | undefined' is not assignable to type 'string'.
+  Type 'undefined' is not assignable to type 'string'.
+components/student-dashboard.tsx(334,60): error TS2322: Type '{ children: (string | number)[]; variant: string; className: string; }' is not assignable to type 'IntrinsicAttributes & HTMLAttributes<HTMLDivElement> & { tone?: "info" | "warning" | "success" | undefined; }'.
+  Property 'variant' does not exist on type 'IntrinsicAttributes & HTMLAttributes<HTMLDivElement> & { tone?: "info" | "warning" | "success" | undefined; }'.
+components/student-dashboard.tsx(387,53): error TS2322: Type '{ children: (string | Element)[]; variant: string; className: string; }' is not assignable to type 'IntrinsicAttributes & HTMLAttributes<HTMLDivElement> & { tone?: "info" | "warning" | "success" | undefined; }'.
+  Property 'variant' does not exist on type 'IntrinsicAttributes & HTMLAttributes<HTMLDivElement> & { tone?: "info" | "warning" | "success" | undefined; }'.

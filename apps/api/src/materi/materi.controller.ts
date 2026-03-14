@@ -1,0 +1,170 @@
+import {
+    Controller,
+    Get,
+    Post,
+    Put,
+    Delete,
+    Body,
+    Param,
+    Query,
+    UseGuards,
+    Req,
+    ParseBoolPipe,
+    DefaultValuePipe,
+    BadRequestException,
+    UseInterceptors,
+    UploadedFile,
+} from '@nestjs/common';
+import { FileInterceptor } from '@nestjs/platform-express';
+import { multerConfig } from '../config/multer.config';
+import { MateriService } from './materi.service';
+import { AiMateriService } from './ai-materi.service';
+import { CreateMateriDto, UpdateMateriDto } from './dto/materi.dto';
+import { GenerateMateriDto } from './dto/generate-materi.dto';
+import { JwtAuthGuard } from '../auth/guards/jwt-auth.guard';
+import { RolesGuard } from '../auth/guards/roles.guard';
+import { Roles } from '../auth/decorators/roles.decorator';
+import { Role } from '@prisma/client';
+
+@Controller('materi')
+@UseGuards(JwtAuthGuard, RolesGuard)
+export class MateriController {
+    constructor(
+        private readonly materiService: MateriService,
+        private readonly aiMateriService: AiMateriService,
+    ) { }
+
+    @Post('generate')
+    @Roles(Role.GURU, Role.ADMIN)
+    async generateWithAI(@Body() generateMateriDto: GenerateMateriDto) {
+        return this.aiMateriService.generateMateri(generateMateriDto);
+    }
+
+    @Post()
+    @Roles(Role.GURU, Role.ADMIN)
+    @UseInterceptors(FileInterceptor('file', multerConfig))
+    async create(
+        @Body() createMateriDto: CreateMateriDto,
+        @UploadedFile() file: Express.Multer.File,
+        @Req() req: any
+    ) {
+        console.log('Materi create called');
+        console.log('User from request:', req.user);
+        console.log('DTO received:', createMateriDto);
+        console.log('File received:', file?.filename);
+
+        let guruId: string;
+
+        // If GURU role, always use their own guruId
+        if (req.user.role === Role.GURU) {
+            guruId = req.user.guru?.id;
+            if (!guruId) {
+                throw new BadRequestException('Guru profile not found for this user');
+            }
+        }
+        // If ADMIN, use guruId from request body (they can choose)
+        else if (req.user.role === Role.ADMIN) {
+            guruId = (createMateriDto as any).guruId;
+            if (!guruId) {
+                throw new BadRequestException('ADMIN must specify guruId when creating material');
+            }
+        } else {
+            throw new BadRequestException('Unauthorized role');
+        }
+
+        // If file uploaded, store file path in konten
+        if (file) {
+            createMateriDto.konten = `file://${file.filename}`;
+            (createMateriDto as any).originalFileName = file.originalname;
+        }
+
+        console.log('Creating materi with guruId:', guruId);
+        return this.materiService.create(guruId, createMateriDto);
+    }
+
+    @Get()
+    @Roles(Role.ADMIN, Role.GURU, Role.SISWA)
+    findAll(
+        @Query('mataPelajaranId') mataPelajaranId?: string,
+        @Query('kelasId') kelasId?: string,
+        @Query('guruId') guruId?: string,
+        @Query('isPublished') isPublished?: boolean,
+        @Query('search') search?: string,
+        @Req() req?: any,
+    ) {
+        // For GURU, always filter by their own materi
+        let effectiveGuruId = guruId;
+        if (req.user.role === Role.GURU && req.user.guru?.id) {
+            effectiveGuruId = req.user.guru.id;
+        }
+
+        // For SISWA, filter by their class
+        let effectiveKelasId = kelasId;
+        if (req.user.role === Role.SISWA && req.user.siswa?.kelasId) {
+            effectiveKelasId = req.user.siswa.kelasId;
+        }
+
+        return this.materiService.findAll({
+            mataPelajaranId,
+            kelasId: effectiveKelasId,
+            guruId: effectiveGuruId,
+            isPublished,
+            search,
+        });
+    }
+
+    @Get(':id')
+    @Roles(Role.ADMIN, Role.GURU, Role.SISWA)
+    findOne(
+        @Param('id') id: string,
+        @Query('incrementView', new DefaultValuePipe(false), ParseBoolPipe) incrementView: boolean,
+        @Req() req: any,
+    ) {
+        const siswaId = req.user.siswa?.id || null;
+        return this.materiService.findOne(id, incrementView, siswaId);
+    }
+
+    @Put(':id')
+    @Roles(Role.GURU, Role.ADMIN)
+    @UseInterceptors(FileInterceptor('file', multerConfig))
+    update(
+        @Param('id') id: string,
+        @Body() updateMateriDto: UpdateMateriDto,
+        @UploadedFile() file: Express.Multer.File,
+        @Req() req: any,
+    ) {
+        const isAdmin = req.user.role === Role.ADMIN;
+        const guruId = req.user.guru?.id || null;
+        
+        // If file uploaded, save as file:// path
+        if (file) {
+            updateMateriDto.konten = `file://${file.filename}`;
+            (updateMateriDto as any).originalFileName = file.originalname;
+        }
+        
+        return this.materiService.update(id, guruId, updateMateriDto, isAdmin);
+    }
+
+    @Delete(':id')
+    @Roles(Role.GURU, Role.ADMIN)
+    remove(@Param('id') id: string, @Req() req: any) {
+        const isAdmin = req.user.role === Role.ADMIN;
+        const guruId = req.user.guru?.id || null;
+        return this.materiService.remove(id, guruId, isAdmin);
+    }
+
+    // Bookmark operations
+    @Post(':id/bookmark')
+    @Roles(Role.SISWA)
+    toggleBookmark(@Param('id') materiId: string, @Req() req: any) {
+        const siswaId = req.user.siswa?.id;
+        return this.materiService.toggleBookmark(materiId, siswaId);
+    }
+
+    @Get('bookmarked/list')
+    @Roles(Role.SISWA)
+    getBookmarkedMateri(@Req() req: any) {
+        const siswaId = req.user.siswa?.id;
+        return this.materiService.getBookmarkedMateri(siswaId);
+    }
+}

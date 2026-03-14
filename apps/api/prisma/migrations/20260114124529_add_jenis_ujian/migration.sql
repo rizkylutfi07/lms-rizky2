@@ -1,0 +1,5 @@
+-- CreateEnum
+CREATE TYPE "JenisUjian" AS ENUM ('ULANGAN_HARIAN', 'UTS', 'UAS', 'QUIZ', 'REMIDI', 'PENGAYAAN', 'UJIAN_SEKOLAH', 'LAINNYA');
+
+-- AlterTable
+ALTER TABLE "Ujian" ADD COLUMN     "jenisUjian" "JenisUjian" NOT NULL DEFAULT 'ULANGAN_HARIAN';
