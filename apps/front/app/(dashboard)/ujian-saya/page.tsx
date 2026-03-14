@@ -23,6 +23,8 @@ export default function UjianSayaPage() {
             );
             return res.json();
         },
+        refetchInterval: 30_000, // Re-check every 30s so list is always based on server time
+        staleTime: 0,
     });
 
     const exams = Array.isArray(data) ? data : [];
@@ -40,15 +42,9 @@ export default function UjianSayaPage() {
         return { icon: AlertCircle, color: "text-gray-500", label: "Belum Mulai" };
     };
 
-    const isAvailable = (ujian: any) => {
-        const now = new Date();
-        const start = ujian ? new Date(ujian.tanggalMulai) : null;
-        const end = ujian ? new Date(ujian.tanggalSelesai) : null;
-        if (!start || !end || Number.isNaN(start.getTime()) || Number.isNaN(end.getTime())) {
-            return false;
-        }
-        return now >= start && now <= end;
-    };
+    // Availability is determined by the server (/ujian-siswa/available already filters by server time).
+    // Do NOT use the phone's local clock — it may differ from the server and cause false "Tidak Tersedia".
+    const isAvailable = (ujian: any) => !!ujian;
 
     return (
         <div className="space-y-6">
