@@ -218,7 +218,7 @@ export default function CreatePaketSoalPage() {
                         <div>
                             <label className="mb-1.5 flex items-center gap-1.5 text-sm font-medium">
                                 Kode Paket
-                                <Badge variant="outline" className="text-[10px] font-normal px-1.5 py-0">
+                                <Badge className="text-[10px] font-normal px-1.5 py-0 bg-transparent border-border text-muted-foreground">
                                     Otomatis
                                 </Badge>
                             </label>

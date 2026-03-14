@@ -1,4 +1,25 @@
-export const API_URL = process.env.NEXT_PUBLIC_API_URL || 'http://localhost:3001';
+/**
+ * Resolve API base URL at runtime based on the current hostname.
+ * This allows the same build to work on LAN, localhost, AND Cloudflare Tunnel
+ * without rebuilding or changing env vars.
+ */
+function resolveApiUrl(): string {
+    if (typeof window === 'undefined') {
+        // Server-side: use env var or fallback
+        return process.env.NEXT_PUBLIC_API_URL || 'http://localhost:3001';
+    }
+    const host = window.location.hostname;
+    if (host === 'lms.smkpgribanyuputih.cloud') {
+        return 'https://api.smkpgribanyuputih.cloud';
+    }
+    if (host === '192.168.1.11') {
+        return 'http://192.168.1.11:3001';
+    }
+    // localhost / dev fallback
+    return process.env.NEXT_PUBLIC_API_URL || 'http://localhost:3001';
+}
+
+export const API_URL = resolveApiUrl();
 
 export class ApiError extends Error {
     constructor(
@@ -32,6 +53,15 @@ async function fetchApi<T>(
         ...options,
         headers,
     });
+
+    if (response.status === 401) {
+        // Token expired or invalid — clear auth state and redirect to login
+        if (typeof window !== 'undefined') {
+            localStorage.removeItem('arunika-auth');
+            window.location.replace('/login');
+        }
+        throw new ApiError(401, 'Sesi habis, silakan login kembali');
+    }
 
     if (!response.ok) {
         const error = await response.json().catch(() => ({ message: response.statusText }));

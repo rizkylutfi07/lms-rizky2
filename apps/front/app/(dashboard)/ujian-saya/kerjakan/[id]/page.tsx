@@ -10,6 +10,7 @@ import { Card, CardContent } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
 import { useRole } from "../../../role-context";
 import { useToast } from "@/hooks/use-toast";
+import RichTextEditor from "@/components/ui/rich-text-editor";
 
 type PilihanJawaban = {
     id: string;
@@ -867,7 +868,21 @@ export default function KerjakanUjianPage() {
                                         </div>
                                     )}
 
-                                    {(tipeSoal === "ESSAY" || tipeSoal === "ISIAN_SINGKAT") && (
+                                    {tipeSoal === "ESSAY" && (
+                                        <RichTextEditor
+                                            value={jawaban[soalKey] || ""}
+                                            onChange={(val) => {
+                                                const next = { ...jawaban, [soalKey]: val };
+                                                setJawaban(next);
+                                                queueSaveProgress(next);
+                                            }}
+                                            placeholder="Tulis jawaban Anda di sini..."
+                                            compact
+                                            minHeight={180}
+                                        />
+                                    )}
+
+                                    {tipeSoal === "ISIAN_SINGKAT" && (
                                         <textarea
                                             value={jawaban[soalKey] || ""}
                                             onChange={(e) => {
@@ -877,7 +892,7 @@ export default function KerjakanUjianPage() {
                                             }}
                                             placeholder="Tulis jawaban Anda di sini..."
                                             className="w-full rounded-lg border border-border bg-background px-4 py-3 outline-none transition focus:border-primary/60 focus:ring-2 focus:ring-primary/20"
-                                            rows={tipeSoal === "ESSAY" ? 6 : 2}
+                                            rows={2}
                                         />
                                     )}
 

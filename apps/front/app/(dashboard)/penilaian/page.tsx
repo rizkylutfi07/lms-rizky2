@@ -603,7 +603,14 @@ function GradeModal({ data, onClose, onSaved, isLoading, token }: any) {
                     <div className="text-foreground" dangerouslySetInnerHTML={{ __html: soal.bankSoal.pertanyaan }} />
                     <div className="text-sm text-muted-foreground">
                       <span className="font-medium text-foreground">Jawaban Siswa: </span>
-                      <span>{ans ?? "-"}</span>
+                      {ans ? (
+                        <div
+                          className="mt-1 prose prose-sm max-w-none [&_img]:max-w-full [&_img]:h-auto [&_img]:rounded [&_img]:max-h-40"
+                          dangerouslySetInnerHTML={{ __html: ans }}
+                        />
+                      ) : (
+                        <span>-</span>
+                      )}
                     </div>
                     {soal.bankSoal.jawabanBenar && (
                       <div className="text-sm text-muted-foreground">

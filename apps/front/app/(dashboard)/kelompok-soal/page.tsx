@@ -187,7 +187,7 @@ export default function KelompokSoalPage() {
                                                     {item.judul || <span className="text-muted-foreground italic">Tanpa judul</span>}
                                                 </h3>
                                                 {item.mataPelajaran && (
-                                                    <Badge variant="secondary">{item.mataPelajaran.nama}</Badge>
+                                                    <Badge className="bg-secondary/20 text-secondary-foreground border-secondary/40">{item.mataPelajaran.nama}</Badge>
                                                 )}
                                                 <Badge className="bg-amber-500/15 text-amber-700 border-amber-200">
                                                     <FileText size={11} className="mr-1" />
