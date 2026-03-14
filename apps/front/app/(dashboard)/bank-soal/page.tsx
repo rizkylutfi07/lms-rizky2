@@ -3,7 +3,7 @@ import { API_URL } from "@/lib/api";
 
 import { useState } from "react";
 import { useQuery, useMutation, useQueryClient } from "@tanstack/react-query";
-import { Loader2, Pencil, Trash2, Plus, X, BookOpen, Upload, Download } from "lucide-react";
+import { Loader2, Pencil, Trash2, Plus, X, BookOpen, Upload, Download, CheckSquare, Square } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import {
@@ -28,7 +28,7 @@ import { useRole } from "../role-context";
 import { useToast } from "@/hooks/use-toast";
 
 export default function BankSoalPage() {
-    const { token } = useRole();
+    const { token, role, user } = useRole();
     const { toast } = useToast();
     const queryClient = useQueryClient();
     const [page, setPage] = useState(1);
@@ -41,6 +41,25 @@ export default function BankSoalPage() {
     const [isImportModalOpen, setIsImportModalOpen] = useState(false);
     const [editingItem, setEditingItem] = useState<any>(null);
     const [deletingItem, setDeletingItem] = useState<any>(null);
+    const [selectedIds, setSelectedIds] = useState<Set<string>>(new Set());
+    const [isBulkDeleteOpen, setIsBulkDeleteOpen] = useState(false);
+
+    const toggleSelect = (id: string) => {
+        setSelectedIds(prev => {
+            const next = new Set(prev);
+            next.has(id) ? next.delete(id) : next.add(id);
+            return next;
+        });
+    };
+
+    const toggleSelectAll = () => {
+        const allIds = data?.data?.map((item: any) => item.id) ?? [];
+        if (allIds.every((id: string) => selectedIds.has(id))) {
+            setSelectedIds(new Set());
+        } else {
+            setSelectedIds(new Set(allIds));
+        }
+    };
 
     const { data, isLoading } = useQuery({
         queryKey: ["bank-soal", page, search, filterTipe, filterMataPelajaran, filterGuru, filterKelas],
@@ -82,6 +101,7 @@ export default function BankSoalPage() {
             });
             return res.json();
         },
+        enabled: role === "ADMIN",
     });
 
     const { data: kelasList } = useQuery({
@@ -144,6 +164,30 @@ export default function BankSoalPage() {
         onSuccess: () => {
             queryClient.invalidateQueries({ queryKey: ["bank-soal"] });
             setDeletingItem(null);
+        },
+    });
+
+    const bulkDeleteMutation = useMutation({
+        mutationFn: async (ids: string[]) => {
+            const res = await fetch(`${API_URL}/bank-soal/bulk`, {
+                method: "DELETE",
+                headers: {
+                    "Content-Type": "application/json",
+                    Authorization: `Bearer ${token}`,
+                },
+                body: JSON.stringify({ ids }),
+            });
+            if (!res.ok) throw new Error("Failed to delete");
+            return res.json();
+        },
+        onSuccess: (result) => {
+            queryClient.invalidateQueries({ queryKey: ["bank-soal"] });
+            setSelectedIds(new Set());
+            setIsBulkDeleteOpen(false);
+            toast({ title: "Berhasil", description: `${result.deleted} soal berhasil dihapus` });
+        },
+        onError: () => {
+            toast({ title: "Error", description: "Gagal menghapus soal", variant: "destructive" });
         },
     });
 
@@ -254,6 +298,26 @@ export default function BankSoalPage() {
                 </CardHeader>
 
                 <CardContent className="p-2 md:p-4">
+                    {/* Bulk action toolbar */}
+                    {selectedIds.size > 0 && (
+                        <div className="flex items-center justify-between mb-3 px-3 py-2 rounded-lg bg-primary/10 border border-primary/20">
+                            <div className="flex items-center gap-3">
+                                <button onClick={() => setSelectedIds(new Set())} className="text-muted-foreground hover:text-foreground">
+                                    <X size={16} />
+                                </button>
+                                <span className="text-sm font-medium">{selectedIds.size} soal dipilih</span>
+                            </div>
+                            <Button
+                                size="sm"
+                                variant="destructive"
+                                onClick={() => setIsBulkDeleteOpen(true)}
+                            >
+                                <Trash2 size={14} />
+                                Hapus {selectedIds.size} Soal
+                            </Button>
+                        </div>
+                    )}
+
                     <div className="space-y-2">
                         {isLoading ? (
                             Array.from({ length: 5 }).map((_, i) => (
@@ -267,36 +331,59 @@ export default function BankSoalPage() {
                                 Data tidak ditemukan
                             </div>
                         ) : (
-                            data?.data?.map((item: any) => (
-                                <Card key={item.id} className="p-4">
+                            <>
+                                {/* Select all row */}
+                                <div className="flex items-center gap-2 px-1 pb-1">
+                                    <button onClick={toggleSelectAll} className="flex items-center gap-2 text-sm text-muted-foreground hover:text-foreground">
+                                        {data?.data?.every((item: any) => selectedIds.has(item.id))
+                                            ? <CheckSquare size={16} className="text-primary" />
+                                            : <Square size={16} />}
+                                        Pilih Semua
+                                    </button>
+                                </div>
+                                {data?.data?.map((item: any) => (
+                                <Card
+                                    key={item.id}
+                                    className={`p-4 cursor-pointer transition ${
+                                        selectedIds.has(item.id) ? "border-primary/50 bg-primary/5" : ""
+                                    }`}
+                                    onClick={() => toggleSelect(item.id)}
+                                >
                                     <div className="flex items-start justify-between gap-4">
-                                        <div className="flex-1">
-                                            <div className="flex items-center gap-2 mb-2">
-                                                <Badge className="border border-border bg-transparent text-muted-foreground">{item.kode}</Badge>
-                                                <Badge
-                                                    className={
-                                                        item.tipe === "PILIHAN_GANDA"
-                                                            ? "bg-blue-500/15 text-blue-600"
-                                                            : item.tipe === "ESSAY"
-                                                                ? "bg-purple-500/15 text-purple-600"
-                                                                : "bg-green-500/15 text-green-600"
-                                                    }
-                                                >
-                                                    {item.tipe.replace("_", " ")}
-                                                </Badge>
+                                        <div className="flex items-start gap-3 flex-1 min-w-0">
+                                            <div className="mt-0.5 flex-shrink-0" onClick={(e) => { e.stopPropagation(); toggleSelect(item.id); }}>
+                                                {selectedIds.has(item.id)
+                                                    ? <CheckSquare size={18} className="text-primary" />
+                                                    : <Square size={18} className="text-muted-foreground" />}
                                             </div>
-                                            <div
-                                                className="text-sm font-medium line-clamp-2 prose prose-sm max-w-none [&_img]:max-h-20 [&_img]:w-auto [&_img]:inline-block [&_img]:rounded"
-                                                dangerouslySetInnerHTML={{ __html: item.pertanyaan }}
-                                            />
-                                            {item.mataPelajaran && (
-                                                <p className="text-xs text-muted-foreground mt-1">
-                                                    {item.mataPelajaran.nama}
-                                                </p>
-                                            )}
+                                            <div className="flex-1 min-w-0">
+                                                <div className="flex items-center gap-2 mb-2">
+                                                    <Badge className="border border-border bg-transparent text-muted-foreground">{item.kode}</Badge>
+                                                    <Badge
+                                                        className={
+                                                            item.tipe === "PILIHAN_GANDA"
+                                                                ? "bg-blue-500/15 text-blue-600"
+                                                                : item.tipe === "ESSAY"
+                                                                    ? "bg-purple-500/15 text-purple-600"
+                                                                    : "bg-green-500/15 text-green-600"
+                                                        }
+                                                    >
+                                                        {item.tipe.replace("_", " ")}
+                                                    </Badge>
+                                                </div>
+                                                <div
+                                                    className="text-sm font-medium line-clamp-2 prose prose-sm max-w-none [&_img]:max-h-20 [&_img]:w-auto [&_img]:inline-block [&_img]:rounded"
+                                                    dangerouslySetInnerHTML={{ __html: item.pertanyaan }}
+                                                />
+                                                {item.mataPelajaran && (
+                                                    <p className="text-xs text-muted-foreground mt-1">
+                                                        {item.mataPelajaran.nama}
+                                                    </p>
+                                                )}
+                                            </div>
                                         </div>
 
-                                        <div className="flex gap-1">
+                                        <div className="flex gap-1 flex-shrink-0" onClick={(e) => e.stopPropagation()}>
                                             <Button
                                                 variant="ghost"
                                                 size="icon"
@@ -316,7 +403,8 @@ export default function BankSoalPage() {
                                         </div>
                                     </div>
                                 </Card>
-                            ))
+                            ))}
+                            </>
                         )}
                     </div>
 
@@ -386,8 +474,35 @@ export default function BankSoalPage() {
                     onClose={() => setIsImportModalOpen(false)}
                     token={token}
                     queryClient={queryClient}
+                    role={role}
+                    user={user}
                 />
             )}
+
+            <AlertDialog open={isBulkDeleteOpen} onOpenChange={(open) => !open && setIsBulkDeleteOpen(false)}>
+                <AlertDialogContent>
+                    <AlertDialogHeader>
+                        <AlertDialogTitle>Hapus {selectedIds.size} Soal?</AlertDialogTitle>
+                        <AlertDialogDescription>
+                            Tindakan ini akan menghapus {selectedIds.size} soal yang dipilih. Data tidak dapat dikembalikan.
+                        </AlertDialogDescription>
+                    </AlertDialogHeader>
+                    <AlertDialogFooter>
+                        <AlertDialogCancel disabled={bulkDeleteMutation.isPending}>Batal</AlertDialogCancel>
+                        <button
+                            onClick={() => bulkDeleteMutation.mutate(Array.from(selectedIds))}
+                            disabled={bulkDeleteMutation.isPending}
+                            className="inline-flex items-center gap-2 rounded-md bg-destructive px-4 py-2 text-sm font-medium text-destructive-foreground hover:bg-destructive/90 disabled:opacity-50"
+                        >
+                            {bulkDeleteMutation.isPending ? (
+                                <><Loader2 size={14} className="animate-spin" /> Menghapus...</>
+                            ) : (
+                                <><Trash2 size={14} /> Ya, Hapus Semua</>
+                            )}
+                        </button>
+                    </AlertDialogFooter>
+                </AlertDialogContent>
+            </AlertDialog>
         </div>
     );
 }
@@ -689,12 +804,16 @@ function DeleteModal({ item, onClose, onConfirm, isLoading }: any) {
     );
 }
 
-function ImportModal({ onClose, token, queryClient }: any) {
+function ImportModal({ onClose, token, queryClient, role, user }: any) {
     const [file, setFile] = useState<File | null>(null);
     const [mataPelajaranId, setMataPelajaranId] = useState("");
+    const [kelasId, setKelasId] = useState("");
     const [isUploading, setIsUploading] = useState(false);
     const [result, setResult] = useState<any>(null);
     const { toast } = useToast();
+
+    // For GURU: auto-fill guruId from user context
+    const guruId = role === "GURU" ? (user?.guru?.id ?? "") : "";
 
     const { data: mataPelajaranList } = useQuery({
         queryKey: ["mata-pelajaran-list"],
@@ -705,6 +824,29 @@ function ImportModal({ onClose, token, queryClient }: any) {
             return res.json();
         },
     });
+
+    const { data: kelasList } = useQuery({
+        queryKey: ["kelas-list-import"],
+        queryFn: async () => {
+            const res = await fetch(`${API_URL}/kelas?limit=100`, {
+                headers: { Authorization: `Bearer ${token}` },
+            });
+            return res.json();
+        },
+    });
+
+    const { data: guruList } = useQuery({
+        queryKey: ["guru-list-import"],
+        queryFn: async () => {
+            const res = await fetch(`${API_URL}/guru?limit=100`, {
+                headers: { Authorization: `Bearer ${token}` },
+            });
+            return res.json();
+        },
+        enabled: role === "ADMIN",
+    });
+
+    const [selectedGuruId, setSelectedGuruId] = useState("");
 
     const handleDownloadTemplate = async () => {
         try {
@@ -744,9 +886,11 @@ function ImportModal({ onClose, token, queryClient }: any) {
         try {
             const formData = new FormData();
             formData.append("file", file);
-            if (mataPelajaranId) {
-                formData.append("mataPelajaranId", mataPelajaranId);
-            }
+            if (mataPelajaranId) formData.append("mataPelajaranId", mataPelajaranId);
+            if (kelasId) formData.append("kelasId", kelasId);
+            // Use auto-detected guruId for GURU, or admin-selected
+            const effectiveGuruId = role === "GURU" ? guruId : selectedGuruId;
+            if (effectiveGuruId) formData.append("guruId", effectiveGuruId);
 
             const res = await fetch(`${API_URL}/bank-soal/import/file`, {
                 method: "POST",
@@ -823,6 +967,46 @@ function ImportModal({ onClose, token, queryClient }: any) {
                                 ))}
                             </select>
                         </div>
+
+                        {/* Kelas */}
+                        <div>
+                            <label className="mb-2 block text-sm font-medium">
+                                Kelas (Opsional)
+                            </label>
+                            <select
+                                value={kelasId}
+                                onChange={(e) => setKelasId(e.target.value)}
+                                className="w-full rounded-lg border border-border bg-background px-4 py-2 outline-none transition focus:border-primary/60 focus:ring-2 focus:ring-primary/20"
+                            >
+                                <option value="">Pilih Kelas</option>
+                                {kelasList?.data?.map((k: any) => (
+                                    <option key={k.id} value={k.id}>
+                                        {k.nama}
+                                    </option>
+                                ))}
+                            </select>
+                        </div>
+
+                        {/* Guru (ADMIN only) */}
+                        {role === "ADMIN" && (
+                            <div>
+                                <label className="mb-2 block text-sm font-medium">
+                                    Guru Pembuat (Opsional)
+                                </label>
+                                <select
+                                    value={selectedGuruId}
+                                    onChange={(e) => setSelectedGuruId(e.target.value)}
+                                    className="w-full rounded-lg border border-border bg-background px-4 py-2 outline-none transition focus:border-primary/60 focus:ring-2 focus:ring-primary/20"
+                                >
+                                    <option value="">Pilih Guru</option>
+                                    {guruList?.data?.map((g: any) => (
+                                        <option key={g.id} value={g.id}>
+                                            {g.nama}
+                                        </option>
+                                    ))}
+                                </select>
+                            </div>
+                        )}
 
                         {/* Instructions */}
                         <div className="p-4 bg-muted/30 rounded-lg text-sm">

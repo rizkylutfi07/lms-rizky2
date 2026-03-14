@@ -25,6 +25,7 @@ export class UjianService {
             deskripsi: rest.deskripsi,
             mataPelajaranId: rest.mataPelajaranId || null,
             guruId: rest.guruId || null,
+            kelasId: kelasIds && kelasIds.length > 0 ? kelasIds[0] : null,
             durasi: rest.durasi,
             tanggalMulai,
             tanggalSelesai,
@@ -479,6 +480,7 @@ export class UjianService {
             data: {
                 ...ujianData,
                 paketSoalId,
+                ...(kelasIds && kelasIds.length > 0 ? { kelasId: kelasIds[0] } : {}),
             },
             include: {
                 mataPelajaran: true,

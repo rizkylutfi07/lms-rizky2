@@ -93,11 +93,13 @@ export class PaketSoalController {
     @Roles(Role.ADMIN, Role.GURU)
     @UseInterceptors(FileInterceptor('file'))
     async importSoal(
+        @Req() req: any,
         @Param('id') id: string,
         @UploadedFile() file: Express.Multer.File,
         @Body('mataPelajaranId') mataPelajaranId?: string,
     ) {
-        return this.paketSoalService.importSoal(id, file, mataPelajaranId);
+        const guruId = req.user?.guruId || undefined;
+        return this.paketSoalService.importSoal(id, file, mataPelajaranId, guruId);
     }
 
     @Delete(':id/soal/:itemId')

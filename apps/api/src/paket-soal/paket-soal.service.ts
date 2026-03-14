@@ -200,9 +200,18 @@ export class PaketSoalService {
 
     async generateKode(): Promise<string> {
         const prefix = 'PKT';
-        const count = await this.prisma.paketSoal.count();
-        const number = (count + 1).toString().padStart(5, '0');
-        return `${prefix}-${number}`;
+        const last = await this.prisma.paketSoal.findFirst({
+            where: { kode: { startsWith: `${prefix}-` } },
+            orderBy: { kode: 'desc' },
+            select: { kode: true },
+        });
+        const lastNumber = last ? parseInt(last.kode.replace(`${prefix}-`, ''), 10) : 0;
+        let number = lastNumber + 1;
+        // Ensure no collision (safety loop)
+        while (await this.prisma.paketSoal.findUnique({ where: { kode: `${prefix}-${number.toString().padStart(5, '0')}` } })) {
+            number++;
+        }
+        return `${prefix}-${number.toString().padStart(5, '0')}`;
     }
 
     async addSoal(id: string, addSoalDto: AddSoalDto) {
@@ -444,13 +453,16 @@ export class PaketSoalService {
         };
     }
 
-    async importSoal(paketSoalId: string, file: Express.Multer.File, mataPelajaranId?: string) {
+    async importSoal(paketSoalId: string, file: Express.Multer.File, mataPelajaranId?: string, guruId?: string) {
         if (!file) {
             throw new BadRequestException('File is required');
         }
 
-        // Verify paket exists
-        await this.findOne(paketSoalId);
+        // Verify paket exists and get its guruId / kelasIds
+        const paket = await this.findOne(paketSoalId);
+        const effectiveGuruId = guruId || paket.guruId || undefined;
+        // Use the first kelas from the paket (if any) for bankSoal.kelasId
+        const effectiveKelasId = (paket as any).paketSoalKelas?.[0]?.kelasId || undefined;
 
         // Parse Word file with HTML and custom image handler (embeds images as base64)
         const imageHandler = mammoth.images.imgElement(function (image) {
@@ -491,8 +503,10 @@ export class PaketSoalService {
                     pertanyaan: soalData.pertanyaan,
                     tipe: soalData.tipe,
                     bobot: soalData.bobot,
-                    mataPelajaranId: mataPelajaranId || soalData.mataPelajaranId,
+                    mataPelajaranId: mataPelajaranId || soalData.mataPelajaranId || paket.mataPelajaranId,
                 };
+                if (effectiveGuruId) data.guruId = effectiveGuruId;
+                if (effectiveKelasId) data.kelasId = effectiveKelasId;
 
                 if (soalData.pilihanJawaban) {
                     data.pilihanJawaban = soalData.pilihanJawaban;
@@ -810,9 +824,17 @@ export class PaketSoalService {
 
     private async generateBankSoalKode(): Promise<string> {
         const prefix = 'SOAL';
-        const count = await this.prisma.bankSoal.count();
-        const number = (count + 1).toString().padStart(5, '0');
-        return `${prefix}-${number}`;
+        const last = await this.prisma.bankSoal.findFirst({
+            where: { kode: { startsWith: `${prefix}-` } },
+            orderBy: { kode: 'desc' },
+            select: { kode: true },
+        });
+        const lastNumber = last ? parseInt(last.kode.replace(`${prefix}-`, ''), 10) : 0;
+        let number = lastNumber + 1;
+        while (await this.prisma.bankSoal.findUnique({ where: { kode: `${prefix}-${number.toString().padStart(5, '0')}` } })) {
+            number++;
+        }
+        return `${prefix}-${number.toString().padStart(5, '0')}`;
     }
 
     private parseWordContent(text: string): any[] {

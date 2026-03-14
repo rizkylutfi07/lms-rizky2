@@ -4,7 +4,7 @@ import { useState, useEffect } from "react";
 import Link from "next/link";
 
 import { useForm } from "react-hook-form";
-import { BookOpen, Plus, Pencil, Trash2, Eye, Download, Loader2, Sparkles, Wand2 } from "lucide-react";
+import { BookOpen, Plus, Pencil, Trash2, Eye, Loader2, Sparkles, Wand2, Search, X, FileText, Video, Link2, Image, AlignLeft, LayoutGrid, List } from "lucide-react";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 import {
@@ -51,7 +51,7 @@ import {
 } from "@/components/ui/select";
 import { Input } from "@/components/ui/input";
 import { Textarea } from "@/components/ui/textarea";
-import { materiApi, mataPelajaranApi, kelasApi, guruApi } from "@/lib/api";
+import { materiApi, mataPelajaranApi, kelasApi, guruApi, API_URL } from "@/lib/api";
 import { useRole } from "../role-context";
 import { useToast } from "@/hooks/use-toast";
 import { useAiMateriGenerator } from "@/hooks/use-ai-materi-generator";
@@ -66,7 +66,7 @@ const TIPE_MATERI = [
 ];
 
 export default function MateriManagementPage() {
-    const { user, role, ready } = useRole();
+    const { user, role, ready, token } = useRole();
     const { toast } = useToast();
     const [materiList, setMateriList] = useState<any[]>([]);
     const [mataPelajaranList, setMataPelajaranList] = useState<any[]>([]);
@@ -83,6 +83,10 @@ export default function MateriManagementPage() {
     const [editingMateri, setEditingMateri] = useState<any | null>(null);
     const [deleteDialogOpen, setDeleteDialogOpen] = useState(false);
     const [deletingId, setDeletingId] = useState<string | null>(null);
+    const [searchQuery, setSearchQuery] = useState("");
+    const [filterKelasId, setFilterKelasId] = useState("");
+    const [filterTipe, setFilterTipe] = useState("");
+    const [viewMode, setViewMode] = useState<"card" | "table">("card");
 
 
     // AI Generation state
@@ -122,7 +126,7 @@ export default function MateriManagementPage() {
             console.log("Starting to load data in parallel...");
 
             // Run all API calls in parallel for faster loading
-            const [materiResponse, mapelResponse, kelasResponse, guruResponse] = await Promise.all([
+            const [materiResponse, mapelResponse, kelasResponse, guruResponse, jadwalResponse] = await Promise.all([
                 // Load materi
                 materiApi.getAll().catch(err => {
                     console.error("Materi API error:", err);
@@ -132,8 +136,10 @@ export default function MateriManagementPage() {
                 // Load mata pelajaran
                 mataPelajaranApi.getAll({ limit: 1000 }),
 
-                // Load kelas
-                kelasApi.getAll({ limit: 1000 }),
+                // Load kelas (ADMIN only; GURU uses jadwal)
+                role === "ADMIN"
+                    ? kelasApi.getAll({ limit: 1000 })
+                    : Promise.resolve({ data: [] }),
 
                 // Load guru (only for ADMIN)
                 role === "ADMIN"
@@ -142,13 +148,33 @@ export default function MateriManagementPage() {
                         return { data: [] };
                     })
                     : Promise.resolve({ data: [] }),
+
+                // Load jadwal pelajaran (GURU only, to derive their kelas)
+                role === "GURU"
+                    ? fetch(`${API_URL}/jadwal-pelajaran`, {
+                        headers: { Authorization: `Bearer ${token ?? ""}` },
+                      }).then(r => r.json()).catch(() => [])
+                    : Promise.resolve([]),
             ]);
 
             // Extract data from paginated response
             const materiArray = Array.isArray(materiResponse) ? materiResponse : ((materiResponse as any).data || []);
             const mapelArray = Array.isArray(mapelResponse) ? mapelResponse : ((mapelResponse as any).data || []);
-            const kelasArray = Array.isArray(kelasResponse) ? kelasResponse : ((kelasResponse as any).data || []);
             const guruArray = Array.isArray(guruResponse) ? guruResponse : ((guruResponse as any).data || []);
+
+            // For GURU: derive unique kelas they teach from jadwal
+            let kelasArray: any[];
+            if (role === "GURU" && user?.guru?.id) {
+                const jadwalArray: any[] = Array.isArray(jadwalResponse) ? jadwalResponse : (jadwalResponse?.data ?? []);
+                const guruJadwal = jadwalArray.filter((j: any) => j.guru?.id === user.guru!.id);
+                const kelasMap = new Map<string, any>();
+                guruJadwal.forEach((j: any) => {
+                    if (j.kelas) kelasMap.set(j.kelas.id, j.kelas);
+                });
+                kelasArray = Array.from(kelasMap.values()).sort((a, b) => a.nama.localeCompare(b.nama));
+            } else {
+                kelasArray = Array.isArray(kelasResponse) ? kelasResponse : ((kelasResponse as any).data || []);
+            }
 
             console.log("Data loaded:", {
                 materi: materiArray.length,
@@ -399,6 +425,19 @@ export default function MateriManagementPage() {
         );
     }
 
+    const filteredMateri = materiList.filter((m) => {
+        const q = searchQuery.toLowerCase();
+        const matchSearch = !q ||
+            m.judul?.toLowerCase().includes(q) ||
+            m.deskripsi?.toLowerCase().includes(q) ||
+            m.mataPelajaran?.nama?.toLowerCase().includes(q);
+        const matchKelas = !filterKelasId || m.kelasId === filterKelasId;
+        const matchTipe = !filterTipe || m.tipe === filterTipe;
+        return matchSearch && matchKelas && matchTipe;
+    });
+
+    const hasActiveFilter = !!searchQuery || !!filterKelasId || !!filterTipe;
+
     if (loading) {
         return (
             <div className="flex items-center justify-center min-h-screen">
@@ -420,7 +459,7 @@ export default function MateriManagementPage() {
                                     <BookOpen size={14} />
                                     Kelola Materi
                                 </Badge>
-                                <Badge tone="success">{materiList.length} materi</Badge>
+                                <Badge tone="success">{hasActiveFilter ? `${filteredMateri.length} / ${materiList.length}` : materiList.length} materi</Badge>
                             </div>
                             <CardTitle className="text-3xl">Manajemen Materi Pelajaran</CardTitle>
                             <CardDescription className="text-base">
@@ -806,81 +845,289 @@ export default function MateriManagementPage() {
                 </CardHeader>
             </Card>
 
-            {/* Materi List */}
-            <div className="grid gap-4 md:grid-cols-2 lg:grid-cols-3">
-                {materiList.length === 0 ? (
+            {/* Filter bar */}
+            <div className="flex flex-col sm:flex-row gap-3">
+                <div className="relative flex-1">
+                    <Search size={16} className="absolute left-3 top-1/2 -translate-y-1/2 text-muted-foreground pointer-events-none" />
+                    <input
+                        type="text"
+                        placeholder="Cari judul, deskripsi, atau mata pelajaran..."
+                        value={searchQuery}
+                        onChange={(e) => setSearchQuery(e.target.value)}
+                        className="w-full rounded-lg border border-border bg-background py-2 pl-9 pr-4 text-sm outline-none transition focus:border-primary/60 focus:ring-2 focus:ring-primary/20"
+                    />
+                </div>
+                <select
+                    value={filterKelasId}
+                    onChange={(e) => setFilterKelasId(e.target.value)}
+                    className="rounded-lg border border-border bg-background py-2 px-3 text-sm outline-none transition focus:border-primary/60 focus:ring-2 focus:ring-primary/20 min-w-[150px]"
+                >
+                    <option value="">Semua Kelas</option>
+                    {kelasList.map((k) => (
+                        <option key={k.id} value={k.id}>{k.nama}</option>
+                    ))}
+                </select>
+                <select
+                    value={filterTipe}
+                    onChange={(e) => setFilterTipe(e.target.value)}
+                    className="rounded-lg border border-border bg-background py-2 px-3 text-sm outline-none transition focus:border-primary/60 focus:ring-2 focus:ring-primary/20 min-w-[150px]"
+                >
+                    <option value="">Semua Tipe</option>
+                    {TIPE_MATERI.map((t) => (
+                        <option key={t.value} value={t.value}>{t.icon} {t.label}</option>
+                    ))}
+                </select>
+                {hasActiveFilter && (
+                    <Button
+                        variant="outline"
+                        size="sm"
+                        className="gap-1.5 self-stretch sm:self-auto"
+                        onClick={() => { setSearchQuery(""); setFilterKelasId(""); setFilterTipe(""); }}
+                    >
+                        <X size={14} />
+                        Reset
+                    </Button>
+                )}
+                <div className="flex rounded-lg border border-border overflow-hidden shrink-0">
+                    <button
+                        onClick={() => setViewMode("card")}
+                        className={`flex items-center justify-center px-3 py-2 text-sm transition-colors ${
+                            viewMode === "card"
+                                ? "bg-primary text-primary-foreground"
+                                : "bg-background text-muted-foreground hover:bg-muted"
+                        }`}
+                        title="Tampilan Kartu"
+                    >
+                        <LayoutGrid size={16} />
+                    </button>
+                    <button
+                        onClick={() => setViewMode("table")}
+                        className={`flex items-center justify-center px-3 py-2 text-sm transition-colors border-l border-border ${
+                            viewMode === "table"
+                                ? "bg-primary text-primary-foreground"
+                                : "bg-background text-muted-foreground hover:bg-muted"
+                        }`}
+                        title="Tampilan Tabel"
+                    >
+                        <List size={16} />
+                    </button>
+                </div>
+            </div>
+
+            {/* Materi List - Table View */}
+            {viewMode === "table" && (
+                <Card>
+                    <CardContent className="p-0">
+                        <div className="overflow-x-auto">
+                            <table className="w-full">
+                                <thead>
+                                    <tr className="border-b border-border bg-muted/40">
+                                        <th className="text-left py-3 px-4 text-xs font-semibold text-muted-foreground uppercase tracking-wide">Judul</th>
+                                        <th className="text-left py-3 px-4 text-xs font-semibold text-muted-foreground uppercase tracking-wide">Tipe</th>
+                                        <th className="text-left py-3 px-4 text-xs font-semibold text-muted-foreground uppercase tracking-wide">Mata Pelajaran</th>
+                                        <th className="text-left py-3 px-4 text-xs font-semibold text-muted-foreground uppercase tracking-wide">Kelas</th>
+                                        <th className="text-center py-3 px-4 text-xs font-semibold text-muted-foreground uppercase tracking-wide">Views</th>
+                                        <th className="text-center py-3 px-4 text-xs font-semibold text-muted-foreground uppercase tracking-wide">Status</th>
+                                        <th className="text-right py-3 px-4 text-xs font-semibold text-muted-foreground uppercase tracking-wide">Aksi</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    {filteredMateri.length === 0 ? (
+                                        <tr>
+                                            <td colSpan={7} className="py-16 text-center">
+                                                <div className="flex flex-col items-center gap-2 text-muted-foreground">
+                                                    <BookOpen size={40} className="opacity-30" />
+                                                    <p className="font-medium">{hasActiveFilter ? "Tidak ada hasil" : "Belum ada materi"}</p>
+                                                    {hasActiveFilter && (
+                                                        <Button variant="outline" size="sm" onClick={() => { setSearchQuery(""); setFilterKelasId(""); setFilterTipe(""); }}>
+                                                            Reset Filter
+                                                        </Button>
+                                                    )}
+                                                </div>
+                                            </td>
+                                        </tr>
+                                    ) : filteredMateri.map((materi) => {
+                                        const tipeInfo = TIPE_MATERI.find((t) => t.value === materi.tipe);
+                                        const tipeBadgeMap: Record<string, string> = {
+                                            DOKUMEN: "bg-blue-500/15 text-blue-600",
+                                            VIDEO: "bg-red-500/15 text-red-600",
+                                            LINK: "bg-purple-500/15 text-purple-600",
+                                            GAMBAR: "bg-green-500/15 text-green-600",
+                                            TEKS: "bg-amber-500/15 text-amber-600",
+                                        };
+                                        return (
+                                            <tr key={materi.id} className="border-b border-border hover:bg-muted/30 transition">
+                                                <td className="py-3 px-4">
+                                                    <p className="font-medium text-sm line-clamp-1">{materi.judul}</p>
+                                                    {materi.deskripsi && (
+                                                        <p className="text-xs text-muted-foreground line-clamp-1 mt-0.5">{materi.deskripsi}</p>
+                                                    )}
+                                                </td>
+                                                <td className="py-3 px-4">
+                                                    <span className={`inline-flex items-center rounded-full px-2.5 py-0.5 text-xs font-medium ${tipeBadgeMap[materi.tipe] ?? ""}`}>
+                                                        {tipeInfo?.icon} {tipeInfo?.label}
+                                                    </span>
+                                                </td>
+                                                <td className="py-3 px-4 text-sm">{materi.mataPelajaran?.nama || "—"}</td>
+                                                <td className="py-3 px-4 text-sm">{materi.kelas?.nama || <span className="text-muted-foreground italic text-xs">Semua kelas</span>}</td>
+                                                <td className="py-3 px-4 text-center text-sm">{materi.viewCount || 0}</td>
+                                                <td className="py-3 px-4 text-center">
+                                                    {materi.isPublished
+                                                        ? <span className="inline-flex items-center rounded-full px-2 py-0.5 text-xs font-medium bg-green-500/15 text-green-600">Aktif</span>
+                                                        : <span className="inline-flex items-center rounded-full px-2 py-0.5 text-xs font-medium bg-yellow-500/15 text-yellow-600">Draft</span>
+                                                    }
+                                                </td>
+                                                <td className="py-3 px-4">
+                                                    <div className="flex justify-end gap-1">
+                                                        <Button size="sm" variant="ghost" asChild title="Preview">
+                                                            <Link href={`/materi-management/preview/${materi.id}`}><Eye size={14} /></Link>
+                                                        </Button>
+                                                        <Button size="sm" variant="ghost" onClick={() => handleEdit(materi)} title="Edit">
+                                                            <Pencil size={14} />
+                                                        </Button>
+                                                        <Button size="sm" variant="ghost" className="text-destructive hover:text-destructive hover:bg-destructive/10" onClick={() => openDeleteDialog(materi.id)} title="Hapus">
+                                                            <Trash2 size={14} />
+                                                        </Button>
+                                                    </div>
+                                                </td>
+                                            </tr>
+                                        );
+                                    })}
+                                </tbody>
+                            </table>
+                        </div>
+                    </CardContent>
+                </Card>
+            )}
+
+            {/* Materi List - Card View */}
+            {viewMode === "card" && <div className="grid gap-4 md:grid-cols-2 lg:grid-cols-3">
+                {filteredMateri.length === 0 ? (
                     <Card className="col-span-full">
-                        <CardContent className="flex flex-col items-center justify-center py-12 text-center">
-                            <BookOpen className="h-12 w-12 text-muted-foreground mb-4" />
-                            <p className="text-lg font-semibold mb-2">Belum ada materi</p>
-                            <p className="text-sm text-muted-foreground mb-4">
-                                Klik tombol "Upload Materi Baru" untuk menambahkan materi pertama Anda
+                        <CardContent className="flex flex-col items-center justify-center py-16 text-center">
+                            <div className="rounded-full bg-muted p-4 mb-4">
+                                <BookOpen className="h-10 w-10 text-muted-foreground" />
+                            </div>
+                            <p className="text-lg font-semibold mb-1">
+                                {hasActiveFilter ? "Tidak ada hasil" : "Belum ada materi"}
                             </p>
+                            <p className="text-sm text-muted-foreground mb-4 max-w-xs">
+                                {hasActiveFilter
+                                    ? "Coba ubah filter atau kata kunci pencarian Anda"
+                                    : "Klik tombol \"Upload Materi Baru\" untuk menambahkan materi pertama Anda"}
+                            </p>
+                            {hasActiveFilter && (
+                                <Button variant="outline" size="sm" onClick={() => { setSearchQuery(""); setFilterKelasId(""); setFilterTipe(""); }}>
+                                    Reset Filter
+                                </Button>
+                            )}
                         </CardContent>
                     </Card>
                 ) : (
-                    materiList.map((materi) => {
+                    filteredMateri.map((materi) => {
                         const tipeInfo = TIPE_MATERI.find((t) => t.value === materi.tipe);
+                        const tipeColorMap: Record<string, string> = {
+                            DOKUMEN: "border-blue-400 bg-blue-50 dark:bg-blue-950/30",
+                            VIDEO: "border-red-400 bg-red-50 dark:bg-red-950/30",
+                            LINK: "border-purple-400 bg-purple-50 dark:bg-purple-950/30",
+                            GAMBAR: "border-green-400 bg-green-50 dark:bg-green-950/30",
+                            TEKS: "border-amber-400 bg-amber-50 dark:bg-amber-950/30",
+                        };
+                        const tipeIconColorMap: Record<string, string> = {
+                            DOKUMEN: "text-blue-500",
+                            VIDEO: "text-red-500",
+                            LINK: "text-purple-500",
+                            GAMBAR: "text-green-500",
+                            TEKS: "text-amber-500",
+                        };
+                        const tipeBadgeMap: Record<string, string> = {
+                            DOKUMEN: "bg-blue-500/15 text-blue-600",
+                            VIDEO: "bg-red-500/15 text-red-600",
+                            LINK: "bg-purple-500/15 text-purple-600",
+                            GAMBAR: "bg-green-500/15 text-green-600",
+                            TEKS: "bg-amber-500/15 text-amber-600",
+                        };
+                        const TipeIcon = materi.tipe === "DOKUMEN" ? FileText
+                            : materi.tipe === "VIDEO" ? Video
+                            : materi.tipe === "LINK" ? Link2
+                            : materi.tipe === "GAMBAR" ? Image
+                            : AlignLeft;
                         return (
-                            <Card key={materi.id} className="group hover:shadow-lg transition-all">
-                                <CardHeader>
+                            <Card key={materi.id} className="group flex flex-col overflow-hidden hover:shadow-lg transition-all duration-200 border border-border">
+                                {/* Colored top stripe */}
+                                <div className={`h-1.5 w-full ${materi.tipe === "DOKUMEN" ? "bg-blue-400" : materi.tipe === "VIDEO" ? "bg-red-400" : materi.tipe === "LINK" ? "bg-purple-400" : materi.tipe === "GAMBAR" ? "bg-green-400" : "bg-amber-400"}`} />
+
+                                <CardHeader className="pb-2">
                                     <div className="flex items-start justify-between gap-2">
-                                        <div className="flex items-center gap-2">
-                                            <span className="text-2xl">{tipeInfo?.icon}</span>
-                                            <Badge tone="info" className="text-xs">
-                                                {tipeInfo?.label}
-                                            </Badge>
+                                        <div className={`flex items-center justify-center rounded-lg p-2 ${tipeColorMap[materi.tipe] ?? ""}`}>
+                                            <TipeIcon size={20} className={tipeIconColorMap[materi.tipe] ?? "text-muted-foreground"} />
                                         </div>
-                                        {!materi.isPublished && (
-                                            <Badge tone="warning" className="text-xs">Draft</Badge>
-                                        )}
+                                        <div className="flex items-center gap-1.5 flex-wrap justify-end">
+                                            <span className={`inline-flex items-center rounded-full px-2.5 py-0.5 text-xs font-medium ${tipeBadgeMap[materi.tipe] ?? ""}`}>
+                                                {tipeInfo?.label}
+                                            </span>
+                                            {!materi.isPublished && (
+                                                <span className="inline-flex items-center rounded-full px-2.5 py-0.5 text-xs font-medium bg-yellow-500/15 text-yellow-600">
+                                                    Draft
+                                                </span>
+                                            )}
+                                        </div>
                                     </div>
-                                    <CardTitle className="line-clamp-2">{materi.judul}</CardTitle>
-                                    <CardDescription className="line-clamp-2">
+                                    <CardTitle className="mt-2 text-base leading-snug line-clamp-2 group-hover:text-primary transition-colors">
+                                        {materi.judul}
+                                    </CardTitle>
+                                    <CardDescription className="line-clamp-2 text-xs">
                                         {materi.deskripsi || "Tidak ada deskripsi"}
                                     </CardDescription>
                                 </CardHeader>
-                                <CardContent className="space-y-4">
-                                    <div className="text-sm space-y-1">
-                                        <p className="text-muted-foreground">
-                                            <strong>Mapel:</strong> {materi.mataPelajaran?.nama || "N/A"}
-                                        </p>
-                                        <p className="text-muted-foreground">
-                                            <strong>Kelas:</strong> {materi.kelas?.nama || "Semua kelas"}
-                                        </p>
-                                        <p className="text-muted-foreground">
-                                            <strong>Views:</strong> {materi.viewCount || 0} views
-                                        </p>
+
+                                <CardContent className="pt-0 flex flex-col flex-1 justify-between gap-4">
+                                    <div className="space-y-1.5">
+                                        <div className="flex items-center gap-2 text-sm">
+                                            <span className="text-muted-foreground shrink-0">Mapel:</span>
+                                            <span className="font-medium truncate">{materi.mataPelajaran?.nama || "—"}</span>
+                                        </div>
+                                        <div className="flex items-center gap-2 text-sm">
+                                            <span className="text-muted-foreground shrink-0">Kelas:</span>
+                                            <span className={`font-medium truncate ${!materi.kelas ? "text-muted-foreground italic" : ""}`}>
+                                                {materi.kelas?.nama || "Semua kelas"}
+                                            </span>
+                                        </div>
+                                        <div className="flex items-center gap-1.5 text-xs text-muted-foreground">
+                                            <Eye size={12} />
+                                            <span>{materi.viewCount || 0} views</span>
+                                        </div>
                                     </div>
 
-                                    <div className="flex gap-2">
+                                    <div className="flex gap-2 pt-2 border-t border-border">
                                         <Button
                                             size="sm"
                                             variant="outline"
                                             className="px-3"
                                             asChild
-                                            title="Lihat Detail"
+                                            title="Preview"
                                         >
                                             <Link href={`/materi-management/preview/${materi.id}`}>
-                                                <Eye size={16} />
+                                                <Eye size={15} />
                                             </Link>
                                         </Button>
                                         <Button
                                             size="sm"
                                             variant="outline"
-                                            className="flex-1 gap-2"
+                                            className="flex-1 gap-1.5"
                                             onClick={() => handleEdit(materi)}
                                         >
-                                            <Pencil size={14} />
+                                            <Pencil size={13} />
                                             Edit
                                         </Button>
                                         <Button
                                             size="sm"
                                             variant="outline"
-                                            className="gap-2 text-destructive hover:bg-destructive/10 hover:text-destructive border-destructive/20"
+                                            className="px-3 text-destructive hover:bg-destructive/10 hover:text-destructive border-destructive/20"
                                             onClick={() => openDeleteDialog(materi.id)}
+                                            title="Hapus"
                                         >
-                                            <Trash2 size={14} />
+                                            <Trash2 size={15} />
                                         </Button>
                                     </div>
                                 </CardContent>
@@ -888,7 +1135,7 @@ export default function MateriManagementPage() {
                         );
                     })
                 )}
-            </div>
+            </div>}
 
             {/* Delete Confirmation Dialog */}
             <AlertDialog open={deleteDialogOpen} onOpenChange={setDeleteDialogOpen}>

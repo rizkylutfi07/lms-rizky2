@@ -333,6 +333,11 @@ export default function PaketSoalDetailPage({ params }: { params: Promise<{ id: 
                                                 <Badge className="bg-transparent">
                                                     Bobot: {item.bankSoal.bobot}
                                                 </Badge>
+                                                {item.bankSoal.kode && (
+                                                    <Badge className="bg-transparent border border-border font-mono text-xs text-muted-foreground">
+                                                        {item.bankSoal.kode}
+                                                    </Badge>
+                                                )}
                                             </div>
                                             {item.bankSoal.pertanyaan.includes('<img') ? (
                                                 <div

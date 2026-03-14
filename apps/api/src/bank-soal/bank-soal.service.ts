@@ -163,14 +163,33 @@ export class BankSoalService {
         });
     }
 
-    async generateKode(): Promise<string> {
-        const prefix = 'SOAL';
-        const count = await this.prisma.bankSoal.count();
-        const number = (count + 1).toString().padStart(5, '0');
-        return `${prefix}-${number}`;
+    async bulkDelete(ids: string[]) {
+        const result = await this.prisma.bankSoal.updateMany({
+            where: {
+                id: { in: ids },
+                deletedAt: null,
+            },
+            data: { deletedAt: new Date() },
+        });
+        return { deleted: result.count };
     }
 
-    async bulkImport(soalList: any[], mataPelajaranId?: string) {
+    async generateKode(): Promise<string> {
+        const prefix = 'SOAL';
+        const last = await this.prisma.bankSoal.findFirst({
+            where: { kode: { startsWith: `${prefix}-` } },
+            orderBy: { kode: 'desc' },
+            select: { kode: true },
+        });
+        const lastNumber = last ? parseInt(last.kode.replace(`${prefix}-`, ''), 10) : 0;
+        let number = lastNumber + 1;
+        while (await this.prisma.bankSoal.findUnique({ where: { kode: `${prefix}-${number.toString().padStart(5, '0')}` } })) {
+            number++;
+        }
+        return `${prefix}-${number.toString().padStart(5, '0')}`;
+    }
+
+    async bulkImport(soalList: any[], mataPelajaranId?: string, guruId?: string, kelasId?: string) {
         const results: {
             success: any[];
             failed: any[];
@@ -194,6 +213,14 @@ export class BankSoalService {
 
                 if (mataPelajaranId) {
                     data.mataPelajaranId = mataPelajaranId;
+                }
+
+                if (guruId) {
+                    data.guruId = guruId;
+                }
+
+                if (kelasId) {
+                    data.kelasId = kelasId;
                 }
 
                 if (soalData.pilihanJawaban) {

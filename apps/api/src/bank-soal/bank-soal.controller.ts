@@ -62,6 +62,15 @@ export class BankSoalController {
         return this.bankSoalService.update(id, updateBankSoalDto);
     }
 
+    @Delete('bulk')
+    @Roles(Role.ADMIN, Role.GURU)
+    bulkDelete(@Body() body: { ids: string[] }) {
+        if (!body.ids || body.ids.length === 0) {
+            throw new BadRequestException('ids harus diisi');
+        }
+        return this.bankSoalService.bulkDelete(body.ids);
+    }
+
     @Delete(':id')
     @Roles(Role.ADMIN, Role.GURU)
     remove(@Param('id') id: string) {
@@ -70,16 +79,20 @@ export class BankSoalController {
 
     @Post('import')
     @Roles(Role.ADMIN, Role.GURU)
-    bulkImport(@Body() body: { soal: any[]; mataPelajaranId?: string }) {
-        return this.bankSoalService.bulkImport(body.soal, body.mataPelajaranId);
+    bulkImport(@Req() req: any, @Body() body: { soal: any[]; mataPelajaranId?: string; guruId?: string; kelasId?: string }) {
+        const effectiveGuruId = body.guruId || req.user?.guruId || undefined;
+        return this.bankSoalService.bulkImport(body.soal, body.mataPelajaranId, effectiveGuruId, body.kelasId);
     }
 
     @Post('import/file')
     @Roles(Role.ADMIN, Role.GURU)
     @UseInterceptors(FileInterceptor('file'))
     async importFile(
+        @Req() req: any,
         @UploadedFile() file: Express.Multer.File,
         @Body('mataPelajaranId') mataPelajaranId?: string,
+        @Body('guruId') guruId?: string,
+        @Body('kelasId') kelasId?: string,
     ) {
         if (!file) {
             throw new BadRequestException('File is required');
@@ -329,7 +342,8 @@ export class BankSoalController {
             throw new BadRequestException('Unsupported file type. Please upload JSON or Word (.docx) file.');
         }
 
-        return this.bankSoalService.bulkImport(soalList, mataPelajaranId);
+        const effectiveGuruId = guruId || req.user?.guruId || undefined;
+        return this.bankSoalService.bulkImport(soalList, mataPelajaranId, effectiveGuruId, kelasId);
     }
 
     @Get('template/word')

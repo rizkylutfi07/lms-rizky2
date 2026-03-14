@@ -13,7 +13,7 @@ import { useRouter } from "next/navigation";
 import { useToast } from "@/hooks/use-toast";
 
 export default function CreatePaketSoalPage() {
-    const { token, role } = useRole();
+    const { token, role, user } = useRole();
     const { toast } = useToast();
     const router = useRouter();
     const [formData, setFormData] = useState({
@@ -105,6 +105,11 @@ export default function CreatePaketSoalPage() {
         if (!submitData.nama) {
             toast({ title: "Perhatian", description: "Nama paket soal harus diisi!", variant: "destructive" });
             return;
+        }
+
+        // Auto-fill guruId for GURU role
+        if (role === "GURU" && user?.guru?.id) {
+            submitData.guruId = user.guru.id;
         }
 
         // Remove empty optional fields

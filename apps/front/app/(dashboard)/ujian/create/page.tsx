@@ -82,7 +82,7 @@ export default function CreateUjianPage() {
     });
 
     // Fetch kelas
-    const { data: kelasList } = useQuery({
+    const { data: kelasRaw } = useQuery({
         queryKey: ["kelas-list"],
         queryFn: async () => {
             const res = await fetch(`${API_URL}/kelas?limit=100`, {
@@ -90,7 +90,32 @@ export default function CreateUjianPage() {
             });
             return res.json();
         },
+        enabled: role === "ADMIN",
     });
+
+    // Fetch jadwal for GURU to derive their taught classes
+    const { data: jadwalGuru } = useQuery({
+        queryKey: ["jadwal-guru", user?.guru?.id],
+        queryFn: async () => {
+            const res = await fetch(`${API_URL}/jadwal-pelajaran`, {
+                headers: { Authorization: `Bearer ${token}` },
+            });
+            return res.json();
+        },
+        enabled: role === "GURU" && !!user?.guru?.id,
+    });
+
+    const kelasList = (() => {
+        if (role === "GURU" && user?.guru?.id) {
+            const jadwalArray: any[] = Array.isArray(jadwalGuru) ? jadwalGuru : (jadwalGuru?.data ?? []);
+            const kelasMap = new Map<string, any>();
+            jadwalArray
+                .filter((j: any) => j.guru?.id === user.guru!.id)
+                .forEach((j: any) => { if (j.kelas) kelasMap.set(j.kelas.id, j.kelas); });
+            return { data: Array.from(kelasMap.values()).sort((a, b) => a.nama.localeCompare(b.nama)) };
+        }
+        return kelasRaw;
+    })();
 
     // Fetch jenis ujian
     const { data: jenisUjianList } = useQuery({
@@ -118,6 +143,16 @@ export default function CreateUjianPage() {
             return res.json();
         },
     });
+
+    const filteredPaketSoal = (() => {
+        const all: any[] = paketSoalList?.data ?? [];
+        if (kelasIds.length === 0) return all;
+        return all.filter((paket: any) => {
+            const paketKelas: string[] = (paket.paketSoalKelas ?? []).map((pk: any) => pk.kelasId ?? pk.kelas?.id);
+            if (paketKelas.length === 0) return true; // no restriction
+            return kelasIds.some(id => paketKelas.includes(id));
+        });
+    })();
 
     // Fetch students based on selected classes
     const { data: studentsList, isLoading: isLoadingStudents } = useQuery({
@@ -770,15 +805,17 @@ export default function CreateUjianPage() {
                                         className="w-full rounded-lg border border-border bg-background px-4 py-2 outline-none transition focus:border-primary/60 focus:ring-2 focus:ring-primary/20"
                                     >
                                         <option value="">Pilih Paket Soal</option>
-                                        {paketSoalList?.data?.map((paket: any) => (
+                                        {filteredPaketSoal.map((paket: any) => (
                                             <option key={paket.id} value={paket.id}>
                                                 {paket.nama} {paket.kode ? `(${paket.kode})` : ''} - {paket._count?.soalItems || 0} soal
                                             </option>
                                         ))}
                                     </select>
-                                    {paketSoalList?.data?.length === 0 && formData.mataPelajaranId && (
+                                    {filteredPaketSoal.length === 0 && formData.mataPelajaranId && (
                                         <p className="text-sm text-muted-foreground mt-2">
-                                            Tidak ada paket soal tersedia untuk mata pelajaran ini
+                                            {kelasIds.length > 0
+                                                ? "Tidak ada paket soal untuk kelas yang dipilih"
+                                                : "Tidak ada paket soal tersedia untuk mata pelajaran ini"}
                                         </p>
                                     )}
                                     {!formData.mataPelajaranId && (
