@@ -33,6 +33,7 @@ import { PengumumanModule } from './pengumuman/pengumuman.module';
 import { RppModule } from './rpp/rpp.module';
 import { AbsensiKelasModule } from './absensi-kelas/absensi-kelas.module';
 import { JenisUjianModule } from './jenis-ujian/jenis-ujian.module';
+import { KelompokSoalModule } from './kelompok-soal/kelompok-soal.module';
 
 @Module({
   imports: [
@@ -75,6 +76,7 @@ import { JenisUjianModule } from './jenis-ujian/jenis-ujian.module';
     RppModule,
     AbsensiKelasModule,
     JenisUjianModule,
+    KelompokSoalModule,
   ],
   controllers: [AppController],
   providers: [AppService],

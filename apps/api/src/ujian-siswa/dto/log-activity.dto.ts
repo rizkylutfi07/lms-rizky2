@@ -5,6 +5,8 @@ export enum ActivityType {
     EXIT_FULLSCREEN = 'EXIT_FULLSCREEN',
     COPY_PASTE = 'COPY_PASTE',
     RIGHT_CLICK = 'RIGHT_CLICK',
+    FLOATING_WINDOW = 'FLOATING_WINDOW',
+    WINDOW_BLUR = 'WINDOW_BLUR',
 }
 
 export class LogActivityDto {

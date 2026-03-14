@@ -64,6 +64,7 @@ model MataPelajaran {
   paketSoal PaketSoal[]
   ujian Ujian[]
   jadwalPelajaran JadwalPelajaran[]
+  kelompokSoal KelompokSoal[]
   
   // LMS Relations
   materi Materi[]
@@ -95,6 +96,7 @@ model Guru {
   kelasWali     Kelas[]         @relation("WaliKelas")
   ujian         Ujian[]
   jadwalPelajaran JadwalPelajaran[]
+  kelompokSoal  KelompokSoal[]
   
   // LMS Relations
   materi Materi[]
@@ -253,22 +255,24 @@ model Settings {
 // ========== CBT (Computer-Based Test) Models ==========
 
 model BankSoal {
-  id             String        @id @default(cuid())
-  kode           String        @unique
-  pertanyaan     String        @db.Text
-  tipe           TipeSoal      @default(PILIHAN_GANDA)
+  id              String         @id @default(cuid())
+  kode            String         @unique
+  pertanyaan      String         @db.Text
+  tipe            TipeSoal       @default(PILIHAN_GANDA)
   mataPelajaranId String?
-  mataPelajaran  MataPelajaran? @relation(fields: [mataPelajaranId], references: [id])
-  guruId         String?
-  guru           Guru?          @relation(fields: [guruId], references: [id])
-  kelasId        String?
-  kelas          Kelas?         @relation(fields: [kelasId], references: [id])
-  pilihanJawaban Json?         // Array of objects: [{id, text, isCorrect}]
-  jawabanBenar   String?       // For essay/short answer
-  bobot          Int           @default(1)
-  createdAt      DateTime      @default(now())
-  updatedAt      DateTime      @updatedAt
-  deletedAt      DateTime?
+  mataPelajaran   MataPelajaran? @relation(fields: [mataPelajaranId], references: [id])
+  guruId          String?
+  guru            Guru?          @relation(fields: [guruId], references: [id])
+  kelasId         String?
+  kelas           Kelas?         @relation(fields: [kelasId], references: [id])
+  kelompokSoalId  String?
+  kelompokSoal    KelompokSoal?  @relation(fields: [kelompokSoalId], references: [id])
+  pilihanJawaban  Json?          // Array of objects: [{id, text, isCorrect}]
+  jawabanBenar    String?        // For essay/short answer
+  bobot           Int            @default(1)
+  createdAt       DateTime       @default(now())
+  updatedAt       DateTime       @updatedAt
+  deletedAt       DateTime?
 
   ujianSoal      UjianSoal[]
   paketSoalItems PaketSoalItem[]
@@ -276,6 +280,24 @@ model BankSoal {
   @@index([mataPelajaranId])
   @@index([guruId])
   @@index([kelasId])
+  @@index([kelompokSoalId])
+}
+
+model KelompokSoal {
+  id              String         @id @default(cuid())
+  judul           String?
+  wacana          String         @db.Text
+  mataPelajaranId String?
+  mataPelajaran   MataPelajaran? @relation(fields: [mataPelajaranId], references: [id])
+  guruId          String?
+  guru            Guru?          @relation(fields: [guruId], references: [id])
+  createdAt       DateTime       @default(now())
+  updatedAt       DateTime       @updatedAt
+
+  bankSoal        BankSoal[]
+
+  @@index([mataPelajaranId])
+  @@index([guruId])
 }
 
 enum TipeSoal {

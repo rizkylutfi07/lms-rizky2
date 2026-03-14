@@ -4,7 +4,7 @@ import { API_URL } from "@/lib/api";
 import { use, useState, useEffect } from "react";
 import { createPortal } from "react-dom";
 import { useQuery, useMutation, useQueryClient } from "@tanstack/react-query";
-import { Loader2, ArrowLeft, Plus, Trash2, Upload, FileText, Database } from "lucide-react";
+import { Loader2, ArrowLeft, Plus, Trash2, Upload, FileText, Database, Pencil } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import {
@@ -15,6 +15,7 @@ import {
     DialogTitle,
 } from "@/components/ui/dialog";
 import { Badge } from "@/components/ui/badge";
+import RichTextEditor from "@/components/ui/rich-text-editor";
 import { useRole } from "../../role-context";
 import { useRouter } from "next/navigation";
 import { useToast } from "@/hooks/use-toast";
@@ -171,6 +172,7 @@ export default function PaketSoalDetailPage({ params }: { params: Promise<{ id: 
     const [showPreview, setShowPreview] = useState(false);
     const [previewIndex, setPreviewIndex] = useState(0);
     const [previewAnswers, setPreviewAnswers] = useState<Record<string, string>>({});
+    const [editingSoal, setEditingSoal] = useState<any | null>(null);
 
     const { data: paketSoal, isLoading } = useQuery({
         queryKey: ["paket-soal", id],
@@ -321,45 +323,82 @@ export default function PaketSoalDetailPage({ params }: { params: Promise<{ id: 
                         </div>
                     ) : (
                         <div className="space-y-2">
-                            {paketSoal.soalItems?.map((item: any, index: number) => (
-                                <Card key={item.id} className="p-4">
-                                    <div className="flex items-start gap-4">
-                                        <div className="flex-shrink-0 w-8 h-8 rounded-full bg-primary/10 flex items-center justify-center font-semibold">
-                                            {index + 1}
-                                        </div>
-                                        <div className="flex-1">
-                                            <div className="flex items-center gap-2 mb-2">
-                                                {getTipeBadge(item.bankSoal.tipe)}
-                                                <Badge className="bg-transparent">
-                                                    Bobot: {item.bankSoal.bobot}
-                                                </Badge>
-                                                {item.bankSoal.kode && (
-                                                    <Badge className="bg-transparent border border-border font-mono text-xs text-muted-foreground">
-                                                        {item.bankSoal.kode}
-                                                    </Badge>
-                                                )}
-                                            </div>
-                                            {item.bankSoal.pertanyaan.includes('<img') ? (
+                            {(() => {
+                                const items: any[] = paketSoal.soalItems ?? [];
+                                const rendered: React.ReactNode[] = [];
+                                let shownKelompok = new Set<string>();
+                                let globalIndex = 0;
+                                items.forEach((item: any, index: number) => {
+                                    const kelompok = item.bankSoal?.kelompokSoal;
+                                    if (kelompok && !shownKelompok.has(kelompok.id)) {
+                                        shownKelompok.add(kelompok.id);
+                                        rendered.push(
+                                            <div key={`ks-${kelompok.id}`} className="rounded-xl border-2 border-amber-200 bg-amber-50/60 dark:bg-amber-900/10 dark:border-amber-800 p-4">
+                                                <div className="flex items-center gap-2 mb-2">
+                                                    <span className="text-xs font-semibold uppercase tracking-wide text-amber-700 dark:text-amber-400">Wacana / Naskah Referensi</span>
+                                                    {kelompok.judul && <span className="text-sm font-medium">— {kelompok.judul}</span>}
+                                                </div>
                                                 <div
-                                                    className="text-sm whitespace-pre-wrap prose prose-sm max-w-none"
-                                                    dangerouslySetInnerHTML={{ __html: item.bankSoal.pertanyaan }}
+                                                    className="prose prose-sm max-w-none dark:prose-invert text-sm"
+                                                    dangerouslySetInnerHTML={{ __html: kelompok.wacana }}
                                                 />
-                                            ) : (
-                                                <p className="text-sm whitespace-pre-wrap">{item.bankSoal.pertanyaan}</p>
-                                            )}
-                                        </div>
-                                        <Button
-                                            variant="ghost"
-                                            size="sm"
-                                            onClick={() => removeSoalMutation.mutate(item.id)}
-                                            disabled={removeSoalMutation.isPending}
-                                            className="text-destructive"
-                                        >
-                                            <Trash2 size={14} />
-                                        </Button>
-                                    </div>
-                                </Card>
-                            ))}
+                                            </div>
+                                        );
+                                    }
+                                    globalIndex++;
+                                    rendered.push(
+                                        <Card key={item.id} className="p-4">
+                                            <div className="flex items-start gap-4">
+                                                <div className="flex-shrink-0 w-8 h-8 rounded-full bg-primary/10 flex items-center justify-center font-semibold">
+                                                    {globalIndex}
+                                                </div>
+                                                <div className="flex-1">
+                                                    <div className="flex items-center gap-2 mb-2">
+                                                        {getTipeBadge(item.bankSoal.tipe)}
+                                                        <Badge className="bg-transparent">
+                                                            Bobot: {item.bankSoal.bobot}
+                                                        </Badge>
+                                                        {item.bankSoal.kode && (
+                                                            <Badge className="bg-transparent border border-border font-mono text-xs text-muted-foreground">
+                                                                {item.bankSoal.kode}
+                                                            </Badge>
+                                                        )}
+                                                        {kelompok && (
+                                                            <Badge className="bg-amber-100 text-amber-700 border-amber-200 text-xs">
+                                                                📄 Wacana
+                                                            </Badge>
+                                                        )}
+                                                    </div>
+                                                    <div
+                                                        className="text-sm prose prose-sm max-w-none dark:prose-invert"
+                                                        dangerouslySetInnerHTML={{ __html: item.bankSoal.pertanyaan }}
+                                                    />
+                                                </div>
+                                                <div className="flex gap-1">
+                                                    <Button
+                                                        variant="ghost"
+                                                        size="sm"
+                                                        onClick={() => setEditingSoal(item.bankSoal)}
+                                                        className="text-muted-foreground hover:text-foreground"
+                                                    >
+                                                        <Pencil size={14} />
+                                                    </Button>
+                                                    <Button
+                                                        variant="ghost"
+                                                        size="sm"
+                                                        onClick={() => removeSoalMutation.mutate(item.id)}
+                                                        disabled={removeSoalMutation.isPending}
+                                                        className="text-destructive"
+                                                    >
+                                                        <Trash2 size={14} />
+                                                    </Button>
+                                                </div>
+                                            </div>
+                                        </Card>
+                                    );
+                                });
+                                return rendered;
+                            })()}
                         </div>
                     )}
                 </CardContent>
@@ -407,6 +446,18 @@ export default function PaketSoalDetailPage({ params }: { params: Promise<{ id: 
                     answers={previewAnswers}
                     setAnswers={setPreviewAnswers}
                     onClose={() => setShowPreview(false)}
+                />
+            )}
+
+            {editingSoal && (
+                <EditSoalModal
+                    soal={editingSoal}
+                    token={token}
+                    onClose={() => setEditingSoal(null)}
+                    onSuccess={() => {
+                        queryClient.invalidateQueries({ queryKey: ["paket-soal", id] });
+                        setEditingSoal(null);
+                    }}
                 />
             )}
         </div>
@@ -486,14 +537,10 @@ function AddFromBankModal({ paketSoalId, token, onClose, onSuccess }: any) {
                                         className="mt-1"
                                     />
                                     <div className="flex-1">
-                                        {soal.pertanyaan.includes('<img') ? (
-                                            <div
-                                                className="text-sm whitespace-pre-wrap prose prose-sm max-w-none"
-                                                dangerouslySetInnerHTML={{ __html: soal.pertanyaan }}
-                                            />
-                                        ) : (
-                                            <p className="text-sm whitespace-pre-wrap">{soal.pertanyaan}</p>
-                                        )}
+                                        <div
+                                            className="text-sm prose prose-sm max-w-none dark:prose-invert"
+                                            dangerouslySetInnerHTML={{ __html: soal.pertanyaan }}
+                                        />
                                         <div className="flex gap-2 mt-1">
                                             <Badge className="text-xs">{soal.tipe}</Badge>
                                             <Badge className="bg-transparent text-xs">
@@ -824,6 +871,292 @@ function ImportSoalModal({ paketSoalId, mataPelajaranId, token, onClose, onSucce
     );
 }
 
+const OPTION_LABELS = ['A', 'B', 'C', 'D', 'E'];
+const TIPE_OPTIONS = [
+    { value: 'PILIHAN_GANDA', label: 'Pilihan Ganda' },
+    { value: 'ESSAY', label: 'Essay' },
+    { value: 'BENAR_SALAH', label: 'Benar/Salah' },
+    { value: 'ISIAN_SINGKAT', label: 'Isian Singkat' },
+];
+
+function EditSoalModal({ soal, token, onClose, onSuccess }: any) {
+    const { toast } = useToast();
+
+    // Initialize pilihan from stored data
+    const initPilihan = (): { id: string; text: string; isCorrect: boolean }[] => {
+        const parsed = normalizePilihanData(soal.pilihanJawaban);
+        if (parsed.length > 0) {
+            return parsed.map((p, i) => ({
+                id: OPTION_LABELS[i] ?? p.id,
+                text: p.text,
+                isCorrect: soal.jawabanBenar === p.id || soal.jawabanBenar === OPTION_LABELS[i],
+            }));
+        }
+        // Default 4 empty options for PG
+        return OPTION_LABELS.slice(0, 4).map((id) => ({ id, text: '', isCorrect: false }));
+    };
+
+    const [pertanyaan, setPertanyaan] = useState<string>(soal.pertanyaan ?? '');
+    const [tipe, setTipe] = useState<string>(soal.tipe ?? 'PILIHAN_GANDA');
+    const [bobot, setBobot] = useState<number>(soal.bobot ?? 1);
+    const [pilihan, setPilihan] = useState<{ id: string; text: string; isCorrect: boolean }[]>(initPilihan);
+    const [jawabanBenar, setJawabanBenar] = useState<string>(soal.jawabanBenar ?? '');
+    const [kelompokSoalId, setKelompokSoalId] = useState<string>(soal.kelompokSoalId ?? '');
+
+    const { data: kelompokList } = useQuery({
+        queryKey: ['kelompok-soal-list-edit'],
+        queryFn: async () => {
+            const res = await fetch(`${API_URL}/kelompok-soal?limit=100`, {
+                headers: { Authorization: `Bearer ${token}` },
+            });
+            return res.json();
+        },
+    });
+
+    const updateMutation = useMutation({
+        mutationFn: async (payload: any) => {
+            const res = await fetch(`${API_URL}/bank-soal/${soal.id}`, {
+                method: 'PATCH',
+                headers: { 'Content-Type': 'application/json', Authorization: `Bearer ${token}` },
+                body: JSON.stringify(payload),
+            });
+            if (!res.ok) {
+                const err = await res.json().catch(() => ({}));
+                throw new Error(err.message || 'Gagal menyimpan perubahan');
+            }
+            return res.json();
+        },
+        onSuccess: () => {
+            toast({ title: 'Berhasil', description: 'Soal berhasil diperbarui' });
+            onSuccess();
+        },
+        onError: (err: any) => {
+            toast({ title: 'Error', description: err.message, variant: 'destructive' });
+        },
+    });
+
+    const handleSetCorrect = (idx: number) => {
+        setPilihan((prev) => prev.map((p, i) => ({ ...p, isCorrect: i === idx })));
+    };
+
+    const handlePilihanText = (idx: number, text: string) => {
+        setPilihan((prev) => prev.map((p, i) => (i === idx ? { ...p, text } : p)));
+    };
+
+    const handleAddPilihan = () => {
+        if (pilihan.length >= 5) return;
+        const nextId = OPTION_LABELS[pilihan.length] ?? `OPT${pilihan.length}`;
+        setPilihan((prev) => [...prev, { id: nextId, text: '', isCorrect: false }]);
+    };
+
+    const handleRemovePilihan = (idx: number) => {
+        if (pilihan.length <= 2) return;
+        setPilihan((prev) => {
+            const next = prev.filter((_, i) => i !== idx).map((p, i) => ({ ...p, id: OPTION_LABELS[i] ?? p.id }));
+            return next;
+        });
+    };
+
+    const handleSubmit = () => {
+        // Quill empty check: empty editor produces '<p><br></p>'
+        const isEmptyHtml = (html: string) => !html || html.replace(/<[^>]+>/g, '').trim() === '';
+        if (isEmptyHtml(pertanyaan)) {
+            toast({ title: 'Perhatian', description: 'Pertanyaan tidak boleh kosong', variant: 'destructive' });
+            return;
+        }
+
+        const payload: any = { pertanyaan, tipe, bobot, kelompokSoalId: kelompokSoalId || null };
+
+        if (tipe === 'PILIHAN_GANDA') {
+            const correct = pilihan.find((p) => p.isCorrect);
+            payload.pilihanJawaban = pilihan.map((p) => ({ id: p.id, text: p.text }));
+            payload.jawabanBenar = correct?.id ?? '';
+        } else if (tipe === 'BENAR_SALAH') {
+            payload.jawabanBenar = jawabanBenar || 'BENAR';
+        } else {
+            payload.jawabanBenar = jawabanBenar;
+        }
+
+        updateMutation.mutate(payload);
+    };
+
+    return (
+        <Dialog open={true} onOpenChange={(open) => !open && onClose()}>
+            <DialogContent className="max-w-3xl max-h-[92vh] overflow-hidden flex flex-col gap-0 p-0">
+                {/* Header */}
+                <div className="flex items-center justify-between px-6 py-4 border-b shrink-0">
+                    <div>
+                        <DialogTitle className="text-lg font-semibold">Edit Soal</DialogTitle>
+                        <p className="text-xs text-muted-foreground font-mono mt-0.5">{soal.kode}</p>
+                    </div>
+                    <div className="flex items-center gap-3">
+                        <div className="flex items-center gap-1.5">
+                            <label className="text-xs text-muted-foreground">Bobot</label>
+                            <input
+                                type="number"
+                                min={1}
+                                value={bobot}
+                                onChange={(e) => setBobot(Number(e.target.value))}
+                                className="w-16 rounded-md border border-border bg-background px-2 py-1 text-sm text-center outline-none transition focus:border-primary/60 focus:ring-1 focus:ring-primary/40"
+                            />
+                        </div>
+                        <select
+                            value={tipe}
+                            onChange={(e) => setTipe(e.target.value)}
+                            className="rounded-md border border-border bg-background px-2 py-1 text-sm outline-none transition focus:border-primary/60 focus:ring-1 focus:ring-primary/40"
+                        >
+                            {TIPE_OPTIONS.map((t) => (
+                                <option key={t.value} value={t.value}>{t.label}</option>
+                            ))}
+                        </select>
+                    </div>
+                </div>
+
+                {/* Kelompok Soal row */}
+                <div className="px-6 py-2 border-b shrink-0 flex items-center gap-3">
+                    <label className="text-xs text-muted-foreground whitespace-nowrap">Kelompok Wacana</label>
+                    <select
+                        value={kelompokSoalId}
+                        onChange={(e) => setKelompokSoalId(e.target.value)}
+                        className="flex-1 rounded-md border border-border bg-background px-2 py-1 text-sm outline-none transition focus:border-primary/60 focus:ring-1 focus:ring-primary/40"
+                    >
+                        <option value="">— Tidak ada (soal berdiri sendiri) —</option>
+                        {kelompokList?.data?.map((k: any) => (
+                            <option key={k.id} value={k.id}>
+                                {k.judul || `Kelompok #${k.id.slice(-6)}`}{k.mataPelajaran ? ` — ${k.mataPelajaran.nama}` : ''}
+                            </option>
+                        ))}
+                    </select>
+                </div>
+
+                {/* Scrollable body */}
+                <div className="flex-1 overflow-y-auto px-6 py-4 space-y-5">
+                    {/* Pertanyaan */}
+                    <div>
+                        <label className="mb-1.5 flex items-center gap-1.5 text-sm font-medium">
+                            Pertanyaan
+                            <span className="text-destructive">*</span>
+                        </label>
+                        <RichTextEditor
+                            value={pertanyaan}
+                            onChange={setPertanyaan}
+                            placeholder="Tulis pertanyaan di sini..."
+                            token={token}
+                            minHeight={130}
+                        />
+                    </div>
+
+                    {/* Pilihan Ganda */}
+                    {tipe === 'PILIHAN_GANDA' && (
+                        <div>
+                            <div className="flex items-center justify-between mb-2">
+                                <label className="text-sm font-medium">Pilihan Jawaban</label>
+                                <span className="text-xs text-muted-foreground">Klik huruf untuk tandai jawaban benar</span>
+                            </div>
+                            <div className="space-y-3">
+                                {pilihan.map((p, idx) => (
+                                    <div
+                                        key={p.id}
+                                        className={`rounded-xl border-2 transition-all ${p.isCorrect ? 'border-green-500 shadow-sm shadow-green-500/20' : 'border-border'}`}
+                                    >
+                                        <div className={`flex items-center gap-2 px-3 py-2 rounded-t-xl ${p.isCorrect ? 'bg-green-500/10' : 'bg-muted/30'}`}>
+                                            <button
+                                                type="button"
+                                                onClick={() => handleSetCorrect(idx)}
+                                                title="Tandai sebagai jawaban benar"
+                                                className={`shrink-0 w-7 h-7 rounded-full border-2 text-xs font-bold transition-all ${p.isCorrect ? 'border-green-500 bg-green-500 text-white scale-110' : 'border-border bg-background text-muted-foreground hover:border-green-400 hover:text-green-500'}`}
+                                            >
+                                                {p.id}
+                                            </button>
+                                            <span className={`text-xs font-medium flex-1 ${p.isCorrect ? 'text-green-600' : 'text-muted-foreground'}`}>
+                                                {p.isCorrect ? '✓ Jawaban benar' : `Pilihan ${p.id}`}
+                                            </span>
+                                            {pilihan.length > 2 && (
+                                                <button
+                                                    type="button"
+                                                    onClick={() => handleRemovePilihan(idx)}
+                                                    className="text-xs text-muted-foreground hover:text-destructive transition px-1"
+                                                >
+                                                    Hapus
+                                                </button>
+                                            )}
+                                        </div>
+                                        <div className="px-1 pb-1">
+                                            <RichTextEditor
+                                                value={p.text}
+                                                onChange={(val) => handlePilihanText(idx, val)}
+                                                placeholder={`Teks pilihan ${p.id}...`}
+                                                token={token}
+                                                minHeight={55}
+                                                compact
+                                            />
+                                        </div>
+                                    </div>
+                                ))}
+                                {pilihan.length < 5 && (
+                                    <button
+                                        type="button"
+                                        onClick={handleAddPilihan}
+                                        className="w-full rounded-xl border-2 border-dashed border-border py-2.5 text-sm text-muted-foreground hover:border-primary/50 hover:text-primary transition"
+                                    >
+                                        + Tambah Pilihan
+                                    </button>
+                                )}
+                            </div>
+                        </div>
+                    )}
+
+                    {/* Benar/Salah */}
+                    {tipe === 'BENAR_SALAH' && (
+                        <div>
+                            <label className="mb-2 block text-sm font-medium">Jawaban Benar</label>
+                            <div className="flex gap-3">
+                                {['BENAR', 'SALAH'].map((opt) => (
+                                    <label
+                                        key={opt}
+                                        className={`flex-1 flex items-center gap-3 rounded-xl border-2 p-4 cursor-pointer transition-all ${jawabanBenar === opt ? 'border-green-500 bg-green-500/10 shadow-sm shadow-green-500/20' : 'border-border hover:border-border/80'}`}
+                                    >
+                                        <input type="radio" name="bs-answer" value={opt} checked={jawabanBenar === opt} onChange={() => setJawabanBenar(opt)} className="accent-green-500" />
+                                        <div>
+                                            <p className="text-sm font-semibold">{opt === 'BENAR' ? '✓ Benar' : '✗ Salah'}</p>
+                                        </div>
+                                    </label>
+                                ))}
+                            </div>
+                        </div>
+                    )}
+
+                    {/* Essay / Isian */}
+                    {(tipe === 'ESSAY' || tipe === 'ISIAN_SINGKAT') && (
+                        <div>
+                            <label className="mb-1.5 block text-sm font-medium">
+                                Kunci Jawaban
+                                <span className="ml-1.5 text-xs font-normal text-muted-foreground">(opsional)</span>
+                            </label>
+                            <RichTextEditor
+                                value={jawabanBenar}
+                                onChange={setJawabanBenar}
+                                placeholder="Isi kunci jawaban..."
+                                token={token}
+                                minHeight={80}
+                            />
+                        </div>
+                    )}
+                </div>
+
+                {/* Footer */}
+                <div className="flex gap-3 px-6 py-4 border-t shrink-0 bg-muted/20">
+                    <Button variant="outline" onClick={onClose} className="flex-1">Batal</Button>
+                    <Button onClick={handleSubmit} disabled={updateMutation.isPending} className="flex-1">
+                        {updateMutation.isPending ? (
+                            <><Loader2 className="animate-spin mr-2" size={16} />Menyimpan...</>
+                        ) : 'Simpan Perubahan'}
+                    </Button>
+                </div>
+            </DialogContent>
+        </Dialog>
+    );
+}
 
 function PreviewModal({ paketSoal, index, setIndex, answers, setAnswers, onClose }: any) {
     const soalItems = paketSoal?.soalItems || [];
@@ -885,14 +1218,10 @@ function PreviewModal({ paketSoal, index, setIndex, answers, setAnswers, onClose
                                 )}
                                 <Badge className="bg-transparent">Bobot: {current.bankSoal?.bobot ?? 1}</Badge>
                             </div>
-                            {pertanyaan.includes('<img') ? (
-                                <div
-                                    className="text-base whitespace-pre-wrap prose prose-sm max-w-none"
-                                    dangerouslySetInnerHTML={{ __html: pertanyaan }}
-                                />
-                            ) : (
-                                <p className="text-base whitespace-pre-wrap">{pertanyaan}</p>
-                            )}
+                            <div
+                                className="text-base prose prose-sm max-w-none dark:prose-invert"
+                                dangerouslySetInnerHTML={{ __html: pertanyaan }}
+                            />
 
                             {tipe === "PILIHAN_GANDA" && pilihanJawaban.length > 0 && (
                                 <div className="space-y-2">
@@ -918,14 +1247,10 @@ function PreviewModal({ paketSoal, index, setIndex, answers, setAnswers, onClose
                                                     className="mt-1"
                                                 />
                                                 <div className="flex-1">
-                                                    {optionLabel.includes('<img') ? (
-                                                        <div
-                                                            className="prose prose-sm max-w-none"
-                                                            dangerouslySetInnerHTML={{ __html: optionLabel }}
-                                                        />
-                                                    ) : (
-                                                        <span>{optionLabel}</span>
-                                                    )}
+                                                    <div
+                                                        className="prose prose-sm max-w-none dark:prose-invert"
+                                                        dangerouslySetInnerHTML={{ __html: optionLabel }}
+                                                    />
                                                     {optionImageUrl && (
                                                         <img
                                                             src={optionImageUrl.startsWith('/') ? `${process.env.NEXT_PUBLIC_API_URL || ''}${optionImageUrl}` : optionImageUrl}

@@ -378,6 +378,17 @@ export default function BankSoalPage() {
                                                 {item.mataPelajaran && (
                                                     <p className="text-xs text-muted-foreground mt-1">
                                                         {item.mataPelajaran.nama}
+                                                        {item.kelompokSoal && (
+                                                            <span className="ml-2 inline-flex items-center gap-1 text-amber-600">
+                                                                <span>📄</span>
+                                                                <span>{item.kelompokSoal.judul || "Wacana"}</span>
+                                                            </span>
+                                                        )}
+                                                    </p>
+                                                )}
+                                                {!item.mataPelajaran && item.kelompokSoal && (
+                                                    <p className="text-xs text-amber-600 mt-1">
+                                                        📄 {item.kelompokSoal.judul || "Wacana"}
                                                     </p>
                                                 )}
                                             </div>
@@ -533,6 +544,16 @@ function FormModal({ title, item, onClose, onSubmit, isLoading }: any) {
         },
     });
 
+    const { data: kelompokList } = useQuery({
+        queryKey: ["kelompok-soal-list-modal"],
+        queryFn: async () => {
+            const res = await fetch(`${API_URL}/kelompok-soal?limit=100`, {
+                headers: { Authorization: `Bearer ${token}` },
+            });
+            return res.json();
+        },
+    });
+
     // Generate kode if creating new
     const { data: generatedKode } = useQuery({
         queryKey: ["generate-kode-soal"],
@@ -553,6 +574,7 @@ function FormModal({ title, item, onClose, onSubmit, isLoading }: any) {
             tipe: formData.tipe,
             bobot: formData.bobot,
             mataPelajaranId: formData.mataPelajaranId,
+            kelompokSoalId: formData.kelompokSoalId || null,
         };
 
         if (item && item.kode) {
@@ -760,6 +782,30 @@ function FormModal({ title, item, onClose, onSubmit, isLoading }: any) {
                             </p>
                         </div>
                     )}
+
+                    {/* Kelompok Soal (Wacana/Naskah Referensi) */}
+                    <div>
+                        <label className="mb-2 block text-sm font-medium">
+                            Kelompok Soal (Wacana)
+                        </label>
+                        <select
+                            value={formData.kelompokSoalId || ""}
+                            onChange={(e) =>
+                                setFormData({ ...formData, kelompokSoalId: e.target.value || undefined })
+                            }
+                            className="w-full rounded-lg border border-border bg-background px-4 py-2 outline-none transition focus:border-primary/60 focus:ring-2 focus:ring-primary/20"
+                        >
+                            <option value="">— Tidak ada (soal berdiri sendiri) —</option>
+                            {kelompokList?.data?.map((k: any) => (
+                                <option key={k.id} value={k.id}>
+                                    {k.judul || `Kelompok #${k.id.slice(-6)}`}{k.mataPelajaran ? ` — ${k.mataPelajaran.nama}` : ""}
+                                </option>
+                            ))}
+                        </select>
+                        <p className="text-xs text-muted-foreground mt-1">
+                            Assign soal ke kelompok wacana agar naskah referensi tampil satu kali di atas soal
+                        </p>
+                    </div>
 
                     <div className="flex gap-2 pt-4">
                         <Button

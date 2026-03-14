@@ -9,7 +9,7 @@ export class KelasService {
   constructor(private readonly prisma: PrismaService) { }
 
   async findAll(query: QueryKelasDto) {
-    const { page = 1, limit = 10, search, tahunAjaranId } = query;
+    const { page = 1, limit = 10, search, tahunAjaranId, guruId } = query;
     const skip = (page - 1) * limit;
 
     const where: any = { deletedAt: null };
@@ -26,6 +26,13 @@ export class KelasService {
         some: {
           tahunAjaranId: tahunAjaranId,
         },
+      };
+    }
+
+    // Filter kelas where the guru teaches (via jadwalPelajaran)
+    if (guruId) {
+      where.jadwalPelajaran = {
+        some: { guruId },
       };
     }
 

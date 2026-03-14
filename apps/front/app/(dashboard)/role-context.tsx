@@ -20,6 +20,7 @@ import {
   MessageSquare,
   FileText,
   Tags,
+  BookText,
 } from "lucide-react";
 
 export type Role = "ADMIN" | "GURU" | "SISWA" | "PETUGAS_ABSENSI";
@@ -120,6 +121,7 @@ const navByRole: Record<Role, NavGroup[]> = {
       items: [
         { label: "Overview CBT", icon: ClipboardCheck, href: "/cbt", note: "Dashboard CBT" },
         { label: "Bank Soal", icon: BookOpen, href: "/bank-soal", note: "Kelola soal" },
+        { label: "Kelompok Soal", icon: BookText, href: "/kelompok-soal", note: "Wacana/naskah referensi" },
         { label: "Paket Soal", icon: Package, href: "/paket-soal", note: "Kelola paket" },
         { label: "Jenis Ujian", icon: Tags, href: "/jenis-ujian", note: "Master jenis ujian" },
         { label: "Kelola Ujian", icon: Settings, href: "/kelola-ujian", note: "Edit & hapus ujian" },
@@ -178,6 +180,7 @@ const navByRole: Record<Role, NavGroup[]> = {
       items: [
         { label: "Overview CBT", icon: ClipboardCheck, href: "/cbt", note: "Dashboard CBT" },
         { label: "Bank Soal", icon: BookOpen, href: "/bank-soal", note: "Kelola soal" },
+        { label: "Kelompok Soal", icon: BookText, href: "/kelompok-soal", note: "Wacana/naskah referensi" },
         { label: "Paket Soal", icon: Package, href: "/paket-soal", note: "Kelola paket" },
         { label: "Rencana Ujian", icon: CalendarClock, href: "/ujian", note: "Buat & kelola" },
         { label: "Pelaksanaan Ujian", icon: Activity, href: "/ujian/berlangsung", note: "Monitoring" },

@@ -29,4 +29,8 @@ export class CreateBankSoalDto {
     @Min(1)
     @IsOptional()
     bobot?: number = 1;
+
+    @IsString()
+    @IsOptional()
+    kelompokSoalId?: string;
 }

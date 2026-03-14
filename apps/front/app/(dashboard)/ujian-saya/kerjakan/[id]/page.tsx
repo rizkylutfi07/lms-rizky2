@@ -154,6 +154,8 @@ export default function KerjakanUjianPage() {
     const [violations, setViolations] = useState(0);
     const [isSubmitting, setIsSubmitting] = useState(false);
     const [isFullscreen, setIsFullscreen] = useState(false);
+    const [isFloatingWindow, setIsFloatingWindow] = useState(false);
+    const floatingLoggedRef = useRef(false);
     const [activeSoalId, setActiveSoalId] = useState<string | null>(null);
     const [currentIndex, setCurrentIndex] = useState(0);
     const [hasLoadedSavedAnswers, setHasLoadedSavedAnswers] = useState(false);
@@ -393,8 +395,8 @@ export default function KerjakanUjianPage() {
             if (!document.fullscreenElement) {
                 await document.documentElement.requestFullscreen();
             }
-        } catch (err) {
-            console.error("Fullscreen error:", err);
+        } catch {
+            // Fullscreen not supported or requires user gesture on mobile — ignore silently
         }
     };
 
@@ -403,8 +405,8 @@ export default function KerjakanUjianPage() {
             if (document.fullscreenElement) {
                 await document.exitFullscreen();
             }
-        } catch (err) {
-            console.error("Exit fullscreen error:", err);
+        } catch {
+            // ignore
         }
     };
 
@@ -473,6 +475,81 @@ export default function KerjakanUjianPage() {
 
         document.addEventListener("contextmenu", preventRightClick);
         return () => document.removeEventListener("contextmenu", preventRightClick);
+    }, []);
+
+    // Anti-cheat: Floating window / small viewport detection (Android overlay)
+    useEffect(() => {
+        const checkFloating = () => {
+            if (typeof window === "undefined") return;
+            const sw = window.screen.width;
+            const sh = window.screen.height;
+            const iw = window.innerWidth;
+            const ih = window.innerHeight;
+
+            // Guard: only run on real mobile/tablet screens
+            if (sw < 280 || sh < 280) return;
+
+            const widthRatio = iw / sw;
+            const heightRatio = ih / sh;
+
+            // Full-screen browser on Android:
+            //   widthRatio  ≈ 1.0   (fills full width)
+            //   heightRatio ≈ 0.78–0.90 (minus status bar + address bar + nav gesture)
+            //
+            // Floating window (any size):
+            //   widthRatio  < ~0.95 (window chrome on sides)
+            //   heightRatio < ~0.72 (extra title-bar + resize handle overhead)
+            //
+            // We flag if EITHER signal is suspicious:
+            const suspectWidth  = widthRatio  < 0.95;
+            const suspectHeight = heightRatio < 0.72;
+            const suspected = suspectWidth || suspectHeight;
+
+            setIsFloatingWindow(suspected);
+            if (suspected && !floatingLoggedRef.current) {
+                floatingLoggedRef.current = true;
+                logActivityMutation.mutate("FLOATING_WINDOW");
+            }
+            if (!suspected) {
+                floatingLoggedRef.current = false;
+            }
+        };
+
+        checkFloating();
+        window.addEventListener("resize", checkFloating);
+        return () => window.removeEventListener("resize", checkFloating);
+    }, []);
+
+    // Re-trigger floating window violation when admin unblocks but student still in floating window
+    const prevBlockedRef = useRef(false);
+    useEffect(() => {
+        if (prevBlockedRef.current && !isBlocked && isFloatingWindow) {
+            // Admin just unblocked, but student is still in floating window → relog immediately
+            floatingLoggedRef.current = false;
+            logActivityMutation.mutate("FLOATING_WINDOW");
+        }
+        prevBlockedRef.current = isBlocked;
+    }, [isBlocked]);
+
+    // Periodic enforcement: re-log every 5s while still in floating window and not already blocked
+    useEffect(() => {
+        if (!isFloatingWindow) return;
+        const interval = setInterval(() => {
+            if (isFloatingWindow) {
+                floatingLoggedRef.current = false;
+                logActivityMutation.mutate("FLOATING_WINDOW");
+            }
+        }, 5000);
+        return () => clearInterval(interval);
+    }, [isFloatingWindow]);
+
+    // Anti-cheat: Window blur (switching to another app while page still visible)
+    useEffect(() => {
+        const handleBlur = () => {
+            logActivityMutation.mutate("WINDOW_BLUR");
+        };
+        window.addEventListener("blur", handleBlur);
+        return () => window.removeEventListener("blur", handleBlur);
     }, []);
 
     // Format time
@@ -569,6 +646,24 @@ export default function KerjakanUjianPage() {
                 </div>
             )}
 
+            {/* Floating Window Warning Overlay */}
+            {isFloatingWindow && (
+                <div className="fixed inset-0 z-[99] flex items-center justify-center bg-black/90 backdrop-blur-sm p-4">
+                    <div className="max-w-sm w-full text-center space-y-4">
+                        <div className="mx-auto w-16 h-16 bg-red-100 dark:bg-red-900/40 rounded-full flex items-center justify-center">
+                            <AlertTriangle className="w-8 h-8 text-red-500" />
+                        </div>
+                        <h2 className="text-xl font-bold text-white">Layar Mengambang Terdeteksi!</h2>
+                        <p className="text-sm text-gray-300">
+                            Pergunakan mode layar penuh untuk melanjutkan ujian. Penggunaan layar mengambang (floating window) tidak diperbolehkan dan telah dicatat sebagai pelanggaran.
+                        </p>
+                        <p className="text-xs text-red-400 font-medium animate-pulse">
+                            Tutup layar mengambang dan buka halaman ini secara penuh.
+                        </p>
+                    </div>
+                </div>
+            )}
+
             {/* Header - Fixed */}
             <div className="fixed top-0 left-0 right-0 bg-background/95 backdrop-blur-sm border-b z-50 p-4">
                 <div className="max-w-4xl mx-auto flex items-center justify-center">
@@ -656,6 +751,11 @@ export default function KerjakanUjianPage() {
                         const pilihanRaw = soalData?.pilihanJawaban ?? currentSoal.pilihanJawaban;
                         const pilihanJawaban = normalizePilihanData(pilihanRaw);
                         const bobot = currentSoal.bobot ?? soalData?.bobot ?? 1;
+                        const kelompokSoal = soalData?.kelompokSoal ?? null;
+                        // Only show wacana on its first soal within this session
+                        const isFirstInKelompok = kelompokSoal
+                            ? soalList.findIndex((s: any) => (s.bankSoal ?? s)?.kelompokSoal?.id === kelompokSoal.id) === currentIndex
+                            : false;
                         const getTipeLabel = (tipe: string) => {
                             const labels: Record<string, string> = {
                                 PILIHAN_GANDA: "Pilihan Ganda",
@@ -667,18 +767,29 @@ export default function KerjakanUjianPage() {
                         };
 
                         return (
+                            <div className="space-y-3">
+                            {kelompokSoal && (
+                                <Card className="border-2 border-amber-200 bg-amber-50/60 dark:bg-amber-900/10 dark:border-amber-800">
+                                    <CardContent className="p-4">
+                                        <div className="flex items-center gap-2 mb-2">
+                                            <span className="text-xs font-semibold uppercase tracking-wide text-amber-700 dark:text-amber-400">Wacana / Naskah Referensi</span>
+                                            {kelompokSoal.judul && <span className="text-sm font-medium">— {kelompokSoal.judul}</span>}
+                                        </div>
+                                        <div
+                                            className="prose prose-sm max-w-none dark:prose-invert text-sm"
+                                            dangerouslySetInnerHTML={{ __html: kelompokSoal.wacana }}
+                                        />
+                                    </CardContent>
+                                </Card>
+                            )}
                             <Card>
                                 <CardContent className="p-6 space-y-6">
                                     
 
-                                    {typeof pertanyaan === "string" && pertanyaan.includes("<") ? (
-                                        <div
+                                    <div
                                             className="prose prose-sm max-w-none"
                                             dangerouslySetInnerHTML={{ __html: pertanyaan }}
                                         />
-                                    ) : (
-                                        <p className="text-base whitespace-pre-wrap">{pertanyaan}</p>
-                                    )}
 
                                     {tipeSoal === "PILIHAN_GANDA" && pilihanJawaban.length > 0 && (
                                         <div className="space-y-2">
@@ -705,14 +816,10 @@ export default function KerjakanUjianPage() {
                                                             className="mt-1"
                                                         />
                                                         <div className="flex-1">
-                                                            {optionLabel.includes('<img') ? (
-                                                                <div
-                                                                    className="prose prose-sm max-w-none"
-                                                                    dangerouslySetInnerHTML={{ __html: optionLabel }}
-                                                                />
-                                                            ) : (
-                                                                <span>{optionLabel}</span>
-                                                            )}
+                                                            <div
+                                                                className="prose prose-sm max-w-none"
+                                                                dangerouslySetInnerHTML={{ __html: optionLabel }}
+                                                            />
                                                             {optionImageUrl && (
                                                                 <img
                                                                     src={optionImageUrl.startsWith('/') ? `${process.env.NEXT_PUBLIC_API_URL || ''}${optionImageUrl}` : optionImageUrl}
@@ -798,6 +905,7 @@ export default function KerjakanUjianPage() {
                                     </div>
                                 </CardContent>
                             </Card>
+                            </div>
                         );
                     })()
                 ) : (

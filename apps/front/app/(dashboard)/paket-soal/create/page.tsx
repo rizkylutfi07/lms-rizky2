@@ -3,9 +3,10 @@ import { API_URL } from "@/lib/api";
 
 import { useState } from "react";
 import { useQuery, useMutation } from "@tanstack/react-query";
-import { Loader2, ArrowLeft, Search } from "lucide-react";
+import { Loader2, ArrowLeft, BookOpen, Users, Info } from "lucide-react";
 import { Button } from "@/components/ui/button";
-import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
+import { Card, CardContent, CardHeader, CardTitle, CardDescription } from "@/components/ui/card";
+import { Badge } from "@/components/ui/badge";
 import { SearchableSelect } from "@/components/ui/searchable-select";
 import { MultiSelect } from "@/components/ui/multi-select";
 import { useRole } from "../../role-context";
@@ -55,13 +56,18 @@ export default function CreatePaketSoalPage() {
     });
 
     const { data: kelasList } = useQuery({
-        queryKey: ["kelas-list"],
+        queryKey: ["kelas-list", role, user?.guru?.id],
         queryFn: async () => {
-            const res = await fetch(`${API_URL}/kelas?limit=100`, {
+            // For GURU role, only fetch classes they teach
+            const guruId = role === "GURU" ? user?.guru?.id : undefined;
+            const params = new URLSearchParams({ limit: "100" });
+            if (guruId) params.set("guruId", guruId);
+            const res = await fetch(`${API_URL}/kelas?${params}`, {
                 headers: { Authorization: `Bearer ${token}` },
             });
             return res.json();
         },
+        enabled: !!token,
     });
 
     const { data: guruList } = useQuery({
@@ -178,46 +184,56 @@ export default function CreatePaketSoalPage() {
     };
 
     return (
-        <div className="space-y-6">
-            <div className="flex items-center gap-4">
+        <div className="space-y-6 max-w-2xl mx-auto">
+            {/* Header */}
+            <div className="flex items-center gap-3">
                 <Button
                     variant="ghost"
                     size="icon"
                     onClick={() => router.back()}
+                    className="shrink-0"
                 >
                     <ArrowLeft size={20} />
                 </Button>
                 <div>
-                    <h1 className="text-3xl font-bold">Buat Paket Soal Baru</h1>
+                    <h1 className="text-2xl font-bold">Buat Paket Soal Baru</h1>
                     <p className="text-sm text-muted-foreground">
                         Isi informasi paket soal di bawah ini
                     </p>
                 </div>
             </div>
 
-            <Card>
-                <CardHeader>
-                    <CardTitle>Informasi Paket Soal</CardTitle>
-                </CardHeader>
-                <CardContent>
-                    <form onSubmit={handleSubmit} className="space-y-4">
-                        {generatedKode && (
-                            <div>
-                                <label className="mb-2 block text-sm font-medium">
-                                    Kode Paket
-                                </label>
-                                <input
-                                    type="text"
-                                    value={generatedKode}
-                                    disabled
-                                    className="w-full rounded-lg border border-border bg-muted/40 px-4 py-2 text-sm text-muted-foreground outline-none opacity-80"
-                                />
-                            </div>
-                        )}
-
+            <form onSubmit={handleSubmit} className="space-y-4">
+                {/* Informasi Dasar */}
+                <Card>
+                    <CardHeader className="pb-3">
+                        <div className="flex items-center gap-2">
+                            <BookOpen size={18} className="text-primary" />
+                            <CardTitle className="text-base">Informasi Dasar</CardTitle>
+                        </div>
+                        <CardDescription>Detail identitas paket soal</CardDescription>
+                    </CardHeader>
+                    <CardContent className="space-y-4">
+                        {/* Kode Paket */}
                         <div>
-                            <label className="mb-2 block text-sm font-medium">
-                                Nama Paket Soal *
+                            <label className="mb-1.5 flex items-center gap-1.5 text-sm font-medium">
+                                Kode Paket
+                                <Badge variant="outline" className="text-[10px] font-normal px-1.5 py-0">
+                                    Otomatis
+                                </Badge>
+                            </label>
+                            <input
+                                type="text"
+                                value={generatedKode || "Memuat..."}
+                                disabled
+                                className="w-full rounded-lg border border-border bg-muted/40 px-4 py-2 text-sm text-muted-foreground font-mono outline-none opacity-80"
+                            />
+                        </div>
+
+                        {/* Nama */}
+                        <div>
+                            <label className="mb-1.5 block text-sm font-medium">
+                                Nama Paket Soal <span className="text-destructive">*</span>
                             </label>
                             <input
                                 type="text"
@@ -231,24 +247,40 @@ export default function CreatePaketSoalPage() {
                             />
                         </div>
 
+                        {/* Deskripsi */}
                         <div>
-                            <label className="mb-2 block text-sm font-medium">
+                            <label className="mb-1.5 block text-sm font-medium text-foreground/80">
                                 Deskripsi
+                                <span className="ml-1 text-xs font-normal text-muted-foreground">(opsional)</span>
                             </label>
                             <textarea
                                 value={formData.deskripsi}
                                 onChange={(e) =>
                                     setFormData({ ...formData, deskripsi: e.target.value })
                                 }
-                                placeholder="Deskripsi paket soal..."
+                                placeholder="Deskripsi singkat tentang paket soal ini..."
                                 rows={3}
-                                className="w-full rounded-lg border border-border bg-background px-4 py-2 text-sm outline-none transition focus:border-primary/60 focus:ring-1 focus:ring-primary/40"
+                                className="w-full rounded-lg border border-border bg-background px-4 py-2 text-sm outline-none transition focus:border-primary/60 focus:ring-1 focus:ring-primary/40 resize-none"
                             />
                         </div>
+                    </CardContent>
+                </Card>
 
+                {/* Pengaitan */}
+                <Card>
+                    <CardHeader className="pb-3">
+                        <div className="flex items-center gap-2">
+                            <Users size={18} className="text-primary" />
+                            <CardTitle className="text-base">Pengaitan</CardTitle>
+                        </div>
+                        <CardDescription>Hubungkan paket soal ke mata pelajaran, kelas, dan guru</CardDescription>
+                    </CardHeader>
+                    <CardContent className="space-y-4">
+                        {/* Mata Pelajaran */}
                         <div>
-                            <label className="mb-2 block text-sm font-medium">
+                            <label className="mb-1.5 block text-sm font-medium text-foreground/80">
                                 Mata Pelajaran
+                                <span className="ml-1 text-xs font-normal text-muted-foreground">(opsional)</span>
                             </label>
                             <SearchableSelect
                                 options={mataPelajaranOptions.map((mp: any) => ({
@@ -263,16 +295,19 @@ export default function CreatePaketSoalPage() {
                                 emptyMessage="Tidak ada mata pelajaran yang cocok"
                             />
                             {formData.guruId && !selectedGuru?.mataPelajaran?.some((mp: any) => mp.id === formData.mataPelajaranId) && (
-                                <p className="mt-1 text-xs text-muted-foreground">
-                                    Guru yang dipilih tidak mengajar mapel ini. Pilih mapel yang sesuai.
+                                <p className="mt-1 flex items-center gap-1 text-xs text-amber-600">
+                                    <Info size={11} />
+                                    Guru yang dipilih tidak mengajar mapel ini.
                                 </p>
                             )}
                         </div>
 
+                        {/* Guru — ADMIN only */}
                         {role === "ADMIN" && (
                             <div>
-                                <label className="mb-2 block text-sm font-medium">
+                                <label className="mb-1.5 block text-sm font-medium text-foreground/80">
                                     Guru Mata Pelajaran
+                                    <span className="ml-1 text-xs font-normal text-muted-foreground">(opsional)</span>
                                 </label>
                                 <SearchableSelect
                                     options={filteredGuruOptions.map((guru: any) => ({
@@ -285,18 +320,27 @@ export default function CreatePaketSoalPage() {
                                     searchPlaceholder="Cari guru..."
                                     emptyMessage={formData.mataPelajaranId ? "Tidak ada guru yang mengajar mapel ini" : "Guru tidak ditemukan"}
                                 />
-                                {formData.guruId && selectedGuru && !selectedGuru.mataPelajaran?.length && (
-                                    <p className="mt-1 text-xs text-muted-foreground">
-                                        Guru belum memiliki mata pelajaran terhubung.
-                                    </p>
-                                )}
                             </div>
                         )}
 
+                        {/* Kelas */}
                         <div>
-                            <label className="mb-2 block text-sm font-medium">
+                            <label className="mb-1.5 block text-sm font-medium text-foreground/80">
                                 Kelas
+                                <span className="ml-1 text-xs font-normal text-muted-foreground">(opsional)</span>
                             </label>
+                            {role === "GURU" && kelasOptions.length === 0 && (
+                                <p className="mb-2 flex items-center gap-1 text-xs text-muted-foreground">
+                                    <Info size={11} />
+                                    Belum ada kelas yang Anda ampu. Hubungi admin untuk menambahkan jadwal pelajaran.
+                                </p>
+                            )}
+                            {role === "GURU" && kelasOptions.length > 0 && (
+                                <p className="mb-2 flex items-center gap-1 text-xs text-muted-foreground">
+                                    <Info size={11} />
+                                    Menampilkan kelas yang Anda ampu.
+                                </p>
+                            )}
                             <MultiSelect
                                 options={kelasOptions.map((kelas: any) => ({
                                     value: kelas.id,
@@ -305,39 +349,45 @@ export default function CreatePaketSoalPage() {
                                 }))}
                                 values={formData.kelasIds}
                                 onChange={(values) => setFormData({ ...formData, kelasIds: values })}
-                                placeholder="Pilih Kelas (Opsional)"
+                                placeholder="Pilih Kelas"
                                 searchPlaceholder="Cari kelas..."
                                 emptyMessage="Tidak ada kelas yang cocok"
                             />
+                            {formData.kelasIds.length > 0 && (
+                                <p className="mt-1 text-xs text-muted-foreground">
+                                    {formData.kelasIds.length} kelas dipilih
+                                </p>
+                            )}
                         </div>
+                    </CardContent>
+                </Card>
 
-                        <div className="flex gap-2 pt-4">
-                            <Button
-                                type="button"
-                                variant="outline"
-                                onClick={() => router.back()}
-                                className="flex-1"
-                            >
-                                Batal
-                            </Button>
-                            <Button
-                                type="submit"
-                                disabled={createMutation.isPending}
-                                className="flex-1"
-                            >
-                                {createMutation.isPending ? (
-                                    <>
-                                        <Loader2 className="animate-spin mr-2" size={16} />
-                                        Menyimpan...
-                                    </>
-                                ) : (
-                                    "Buat Paket Soal"
-                                )}
-                            </Button>
-                        </div>
-                    </form>
-                </CardContent>
-            </Card>
+                {/* Actions */}
+                <div className="flex gap-3">
+                    <Button
+                        type="button"
+                        variant="outline"
+                        onClick={() => router.back()}
+                        className="flex-1"
+                    >
+                        Batal
+                    </Button>
+                    <Button
+                        type="submit"
+                        disabled={createMutation.isPending || !formData.nama.trim()}
+                        className="flex-1"
+                    >
+                        {createMutation.isPending ? (
+                            <>
+                                <Loader2 className="animate-spin mr-2" size={16} />
+                                Menyimpan...
+                            </>
+                        ) : (
+                            "Buat Paket Soal"
+                        )}
+                    </Button>
+                </div>
+            </form>
         </div>
     );
 }

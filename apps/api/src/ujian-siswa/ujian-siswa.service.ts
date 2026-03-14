@@ -233,6 +233,14 @@ export class UjianSiswaService {
                                         tipe: true,
                                         pilihanJawaban: true,
                                         bobot: true,
+                                        kelompokSoalId: true,
+                                        kelompokSoal: {
+                                            select: {
+                                                id: true,
+                                                judul: true,
+                                                wacana: true,
+                                            },
+                                        },
                                         // Don't include jawabanBenar for security
                                     },
                                 },
@@ -434,7 +442,8 @@ export class UjianSiswaService {
         this.activityLogs.set(ujianSiswaId, logs);
 
         // Check if this activity is a violation
-        const isViolation = activityType === 'TAB_SWITCH' || activityType === 'EXIT_FULLSCREEN';
+        const VIOLATION_TYPES = ['TAB_SWITCH', 'EXIT_FULLSCREEN', 'FLOATING_WINDOW', 'WINDOW_BLUR'];
+        const isViolation = VIOLATION_TYPES.includes(activityType);
 
         // Persist violation to database if it's a violation event
         let dbViolationCount = ujianSiswa.violationCount ?? 0;
@@ -448,7 +457,7 @@ export class UjianSiswaService {
 
         // Count in-memory violations for this session
         const memViolationCount = logs.filter(
-            (log) => log.activityType === 'TAB_SWITCH' || log.activityType === 'EXIT_FULLSCREEN'
+            (log) => VIOLATION_TYPES.includes(log.activityType)
         ).length;
 
         // Use the highest value between DB and in-memory count
@@ -639,8 +648,9 @@ export class UjianSiswaService {
         // Attach violation count and PG stats from in-memory logs and DB
         return result.map(u => {
             const logs = this.activityLogs.get(u.id) || [];
+            const VIOLATION_TYPES = ['TAB_SWITCH', 'EXIT_FULLSCREEN', 'FLOATING_WINDOW', 'WINDOW_BLUR'];
             const memViolationCount = logs.filter(
-                (log) => log.activityType === 'TAB_SWITCH' || log.activityType === 'EXIT_FULLSCREEN'
+                (log) => VIOLATION_TYPES.includes(log.activityType)
             ).length;
             // Use DB value as source of truth, augmented by in-memory for active sessions
             const violationCount = Math.max(u.violationCount ?? 0, memViolationCount);

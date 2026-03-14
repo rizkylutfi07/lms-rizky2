@@ -120,7 +120,9 @@ export class PaketSoalService {
                 },
                 soalItems: {
                     include: {
-                        bankSoal: true,
+                        bankSoal: {
+                            include: { kelompokSoal: true },
+                        },
                     },
                     orderBy: { urutan: 'asc' },
                 },

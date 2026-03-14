@@ -21,4 +21,8 @@ export class QueryKelasDto {
   @IsString()
   @IsOptional()
   tahunAjaranId?: string; // Filter classes by students' academic year
+
+  @IsString()
+  @IsOptional()
+  guruId?: string; // Filter classes where this guru teaches (via jadwalPelajaran)
 }

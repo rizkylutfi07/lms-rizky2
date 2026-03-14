@@ -32,6 +32,7 @@ export class BankSoalService {
             data: createBankSoalDto,
             include: {
                 mataPelajaran: true,
+                kelompokSoal: true,
             },
         });
     }
@@ -78,6 +79,7 @@ export class BankSoalService {
                 take: limit,
                 include: {
                     mataPelajaran: true,
+                    kelompokSoal: true,
                 },
                 orderBy: {
                     createdAt: 'desc',
@@ -104,8 +106,7 @@ export class BankSoalService {
                 deletedAt: null,
             },
             include: {
-                mataPelajaran: true,
-            },
+                mataPelajaran: true,                kelompokSoal: true,            },
         });
 
         if (!bankSoal) {
@@ -147,6 +148,7 @@ export class BankSoalService {
             data: updateBankSoalDto,
             include: {
                 mataPelajaran: true,
+                kelompokSoal: true,
             },
         });
     }

@@ -71,6 +71,6 @@ async function bootstrap() {
   await app.listen(port, '0.0.0.0');
   console.log(`dYs? API ready on:`);
   console.log(`  - Local:   http://localhost:${port}`);
-  console.log(`  - Network: http://192.168.1.17:${port}`);
+  console.log(`  - Network: http://192.168.1.11:${port}`);
 }
 void bootstrap();
