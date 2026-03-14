@@ -15,7 +15,7 @@ import { UploadService } from './upload.service';
 
 @Controller('upload')
 @UseGuards(JwtAuthGuard, RolesGuard)
-@Roles(Role.ADMIN, Role.GURU)
+@Roles(Role.ADMIN, Role.GURU, Role.SISWA)
 export class UploadController {
     constructor(private readonly uploadService: UploadService) {}
 

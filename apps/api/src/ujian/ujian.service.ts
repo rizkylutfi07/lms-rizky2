@@ -23,6 +23,7 @@ export class UjianService {
         const ujianData = {
             judul: rest.judul,
             deskripsi: rest.deskripsi,
+            jenisUjianId: rest.jenisUjianId || null,
             mataPelajaranId: rest.mataPelajaranId || null,
             guruId: rest.guruId || null,
             kelasId: kelasIds && kelasIds.length > 0 ? kelasIds[0] : null,

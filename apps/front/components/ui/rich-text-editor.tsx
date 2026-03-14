@@ -3,6 +3,7 @@
 import dynamic from 'next/dynamic';
 import 'react-quill-new/dist/quill.snow.css';
 import { useRef, useMemo, useCallback } from 'react';
+import { Camera, ImagePlus } from 'lucide-react';
 import { API_URL } from '@/lib/api';
 
 const ReactQuill = dynamic(
@@ -21,6 +22,9 @@ interface RichTextEditorProps {
     token?: string;
     minHeight?: number;
     compact?: boolean; // compact = simplified toolbar (for answer options)
+    showCamera?: boolean; // show camera capture button for mobile
+    onCameraOpen?: () => void;  // called before opening camera/gallery (to pause anti-cheat)
+    onCameraClose?: () => void; // called after file selected or cancelled
 }
 
 export default function RichTextEditor({
@@ -31,43 +35,45 @@ export default function RichTextEditor({
     token,
     minHeight = 150,
     compact = false,
+    showCamera = false,
+    onCameraOpen,
+    onCameraClose,
 }: RichTextEditorProps) {
     const quillRef = useRef<any>(null);
+    const cameraInputRef = useRef<HTMLInputElement>(null);
+    const galleryInputRef = useRef<HTMLInputElement>(null);
+
+    const insertImageFromFile = useCallback(async (file: File) => {
+        const formData = new FormData();
+        formData.append('image', file);
+        try {
+            const res = await fetch(`${API_URL}/upload/image`, {
+                method: 'POST',
+                headers: token ? { Authorization: `Bearer ${token}` } : {},
+                body: formData,
+            });
+            if (!res.ok) throw new Error('Upload failed');
+            const data = await res.json();
+            const imageUrl = data.url.startsWith('http') ? data.url : `${API_URL}${data.url}`;
+
+            const editor = quillRef.current?.getEditor?.();
+            if (editor) {
+                const range = editor.getSelection(true) ?? { index: editor.getLength(), length: 0 };
+                editor.insertEmbed(range.index, 'image', imageUrl);
+                editor.setSelection(range.index + 1);
+            }
+        } catch {
+            alert('Gagal mengupload gambar. Coba lagi.');
+        }
+    }, [token]);
+
+    // toolbarInputRef: persistent hidden input for toolbar image button (avoids browser blocking dynamic input.click())
+    const toolbarInputRef = useRef<HTMLInputElement>(null);
 
     const imageHandler = useCallback(() => {
-        const input = document.createElement('input');
-        input.setAttribute('type', 'file');
-        input.setAttribute('accept', 'image/*');
-        input.click();
-
-        input.onchange = async () => {
-            const file = input.files?.[0];
-            if (!file) return;
-
-            const formData = new FormData();
-            formData.append('image', file);
-
-            try {
-                const res = await fetch(`${API_URL}/upload/image`, {
-                    method: 'POST',
-                    headers: token ? { Authorization: `Bearer ${token}` } : {},
-                    body: formData,
-                });
-                if (!res.ok) throw new Error('Upload failed');
-                const data = await res.json();
-                const imageUrl = data.url.startsWith('http') ? data.url : `${API_URL}${data.url}`;
-
-                const editor = quillRef.current?.getEditor?.();
-                if (editor) {
-                    const range = editor.getSelection(true);
-                    editor.insertEmbed(range.index, 'image', imageUrl);
-                    editor.setSelection(range.index + 1);
-                }
-            } catch {
-                alert('Gagal mengupload gambar. Coba lagi.');
-            }
-        };
-    }, [token]);
+        // Trigger the persistent DOM input instead of creating a dynamic one
+        toolbarInputRef.current?.click();
+    }, []);
 
     const fullModules = useMemo(() => ({
         toolbar: {
@@ -174,6 +180,68 @@ export default function RichTextEditor({
                 modules={modules}
                 formats={formats}
             />
+
+            {/* Persistent hidden input for toolbar image button */}
+            <input
+                ref={toolbarInputRef}
+                type="file"
+                accept="image/*"
+                className="hidden"
+                onChange={async (e) => {
+                    const file = e.target.files?.[0];
+                    if (file) await insertImageFromFile(file);
+                    e.target.value = '';
+                }}
+            />
+
+            {/* Camera / gallery buttons for mobile (essay answer) */}
+            {showCamera && (
+                <div className="flex gap-2 mt-2">
+                    {/* Hidden input: kamera langsung (capture environment = kamera belakang) */}
+                    <input
+                        ref={cameraInputRef}
+                        type="file"
+                        accept="image/*"
+                        capture="environment"
+                        className="hidden"
+                        onChange={async (e) => {
+                            const file = e.target.files?.[0];
+                            if (file) await insertImageFromFile(file);
+                            e.target.value = '';
+                            onCameraClose?.();
+                        }}
+                    />
+                    {/* Hidden input: galeri */}
+                    <input
+                        ref={galleryInputRef}
+                        type="file"
+                        accept="image/*"
+                        className="hidden"
+                        onChange={async (e) => {
+                            const file = e.target.files?.[0];
+                            if (file) await insertImageFromFile(file);
+                            e.target.value = '';
+                            onCameraClose?.();
+                        }}
+                    />
+                    <button
+                        type="button"
+                        onClick={() => { onCameraOpen?.(); cameraInputRef.current?.click(); }}
+                        className="flex items-center gap-1.5 rounded-md border border-border bg-muted/50 px-3 py-1.5 text-xs font-medium text-foreground hover:bg-muted transition"
+                    >
+                        <Camera size={14} />
+                        Foto Langsung
+                    </button>
+                    <button
+                        type="button"
+                        onClick={() => { onCameraOpen?.(); galleryInputRef.current?.click(); }}
+                        className="flex items-center gap-1.5 rounded-md border border-border bg-muted/50 px-3 py-1.5 text-xs font-medium text-foreground hover:bg-muted transition"
+                    >
+                        <ImagePlus size={14} />
+                        Unggah Gambar
+                    </button>
+                </div>
+            )}
         </div>
     );
 }

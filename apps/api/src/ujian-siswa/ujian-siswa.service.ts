@@ -9,7 +9,7 @@ import { StatusUjian, StatusPengerjaan, TipeSoal } from '@prisma/client';
 @Injectable()
 export class UjianSiswaService {
     private activityLogs: Map<string, any[]> = new Map(); // In-memory storage for activity logs
-    private readonly MAX_VIOLATIONS = 1; // Auto-block after 1 violation
+    private readonly MAX_VIOLATIONS = 1; // Auto-block after 1 violations
 
     constructor(private prisma: PrismaService) { }
     private normalizeText(text: string) {
@@ -442,7 +442,7 @@ export class UjianSiswaService {
         this.activityLogs.set(ujianSiswaId, logs);
 
         // Check if this activity is a violation
-        const VIOLATION_TYPES = ['TAB_SWITCH', 'EXIT_FULLSCREEN', 'FLOATING_WINDOW', 'WINDOW_BLUR'];
+        const VIOLATION_TYPES = ['TAB_SWITCH', 'FLOATING_WINDOW'];
         const isViolation = VIOLATION_TYPES.includes(activityType);
 
         // Persist violation to database if it's a violation event
@@ -648,7 +648,7 @@ export class UjianSiswaService {
         // Attach violation count and PG stats from in-memory logs and DB
         return result.map(u => {
             const logs = this.activityLogs.get(u.id) || [];
-            const VIOLATION_TYPES = ['TAB_SWITCH', 'EXIT_FULLSCREEN', 'FLOATING_WINDOW', 'WINDOW_BLUR'];
+            const VIOLATION_TYPES = ['TAB_SWITCH', 'FLOATING_WINDOW'];
             const memViolationCount = logs.filter(
                 (log) => VIOLATION_TYPES.includes(log.activityType)
             ).length;

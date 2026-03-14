@@ -157,6 +157,7 @@ export default function KerjakanUjianPage() {
     const [isFullscreen, setIsFullscreen] = useState(false);
     const [isFloatingWindow, setIsFloatingWindow] = useState(false);
     const floatingLoggedRef = useRef(false);
+    const cameraActiveRef = useRef(false); // true while camera/gallery picker is open → suppress anti-cheat
     const [activeSoalId, setActiveSoalId] = useState<string | null>(null);
     const [currentIndex, setCurrentIndex] = useState(0);
     const [hasLoadedSavedAnswers, setHasLoadedSavedAnswers] = useState(false);
@@ -239,6 +240,8 @@ export default function KerjakanUjianPage() {
     // Log activity mutation
     const logActivityMutation = useMutation({
         mutationFn: async (activityType: string) => {
+            // Skip all violation logging while camera/gallery is open
+            if (cameraActiveRef.current) return { logged: false, skipped: true };
             const res = await fetch(
                 `${API_URL}/ujian-siswa/log-activity`,
                 {
@@ -439,7 +442,7 @@ export default function KerjakanUjianPage() {
     // Anti-cheat: Tab visibility
     useEffect(() => {
         const handleVisibilityChange = () => {
-            if (document.hidden) {
+            if (document.hidden && !cameraActiveRef.current) {
                 logActivityMutation.mutate("TAB_SWITCH");
             }
         };
@@ -547,10 +550,34 @@ export default function KerjakanUjianPage() {
     // Anti-cheat: Window blur (switching to another app while page still visible)
     useEffect(() => {
         const handleBlur = () => {
-            logActivityMutation.mutate("WINDOW_BLUR");
+            if (!cameraActiveRef.current) {
+                logActivityMutation.mutate("WINDOW_BLUR");
+            }
         };
         window.addEventListener("blur", handleBlur);
         return () => window.removeEventListener("blur", handleBlur);
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+    }, []);
+
+    // Reset cameraActiveRef after page regains focus (failsafe if onCameraClose not fired)
+    useEffect(() => {
+        const handleFocus = () => {
+            if (cameraActiveRef.current) {
+                setTimeout(() => { cameraActiveRef.current = false; }, 500);
+            }
+        };
+        const handleVisibilityResume = () => {
+            if (!document.hidden && cameraActiveRef.current) {
+                setTimeout(() => { cameraActiveRef.current = false; }, 500);
+            }
+        };
+        window.addEventListener("focus", handleFocus);
+        document.addEventListener("visibilitychange", handleVisibilityResume);
+        return () => {
+            window.removeEventListener("focus", handleFocus);
+            document.removeEventListener("visibilitychange", handleVisibilityResume);
+        };
+    // eslint-disable-next-line react-hooks/exhaustive-deps
     }, []);
 
     // Format time
@@ -879,6 +906,13 @@ export default function KerjakanUjianPage() {
                                             placeholder="Tulis jawaban Anda di sini..."
                                             compact
                                             minHeight={180}
+                                            token={token ?? undefined}
+                                            showCamera
+                                            onCameraOpen={() => { cameraActiveRef.current = true; }}
+                                            onCameraClose={() => {
+                                                // Delay reset so focus/visibility events from camera close are ignored
+                                                setTimeout(() => { cameraActiveRef.current = false; }, 2000);
+                                            }}
                                         />
                                     )}
 
