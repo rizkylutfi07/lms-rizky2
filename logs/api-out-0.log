@@ -2772,3 +2772,615 @@
 2026-03-15 20:21:31: dYs? API ready on:
 2026-03-15 20:21:31:   - Local:   http://localhost:3001
 2026-03-15 20:21:31:   - Network: http://192.168.1.11:3001
+2026-03-15 22:07:30: [32m[Nest] 23376  - [39m15/03/2026, 22.07.30 [32m    LOG[39m [38;5;3m[NestFactory] [39m[32mStarting Nest application...[39m
+2026-03-15 22:07:30: [32m[Nest] 23376  - [39m15/03/2026, 22.07.30 [32m    LOG[39m [38;5;3m[InstanceLoader] [39m[32mPrismaModule dependencies initialized[39m[38;5;3m +20ms[39m
+2026-03-15 22:07:30: [32m[Nest] 23376  - [39m15/03/2026, 22.07.30 [32m    LOG[39m [38;5;3m[InstanceLoader] [39m[32mPassportModule dependencies initialized[39m[38;5;3m +0ms[39m
+2026-03-15 22:07:30: [32m[Nest] 23376  - [39m15/03/2026, 22.07.30 [32m    LOG[39m [38;5;3m[InstanceLoader] [39m[32mConfigHostModule dependencies initialized[39m[38;5;3m +2ms[39m
+2026-03-15 22:07:30: [32m[Nest] 23376  - [39m15/03/2026, 22.07.30 [32m    LOG[39m [38;5;3m[InstanceLoader] [39m[32mDiscoveryModule dependencies initialized[39m[38;5;3m +1ms[39m
+2026-03-15 22:07:30: [32m[Nest] 23376  - [39m15/03/2026, 22.07.30 [32m    LOG[39m [38;5;3m[InstanceLoader] [39m[32mAppModule dependencies initialized[39m[38;5;3m +1ms[39m
+2026-03-15 22:07:30: [32m[Nest] 23376  - [39m15/03/2026, 22.07.30 [32m    LOG[39m [38;5;3m[InstanceLoader] [39m[32mConfigModule dependencies initialized[39m[38;5;3m +1ms[39m
+2026-03-15 22:07:30: [32m[Nest] 23376  - [39m15/03/2026, 22.07.30 [32m    LOG[39m [38;5;3m[InstanceLoader] [39m[32mConfigModule dependencies initialized[39m[38;5;3m +0ms[39m
+2026-03-15 22:07:30: [32m[Nest] 23376  - [39m15/03/2026, 22.07.30 [32m    LOG[39m [38;5;3m[InstanceLoader] [39m[32mServeStaticModule dependencies initialized[39m[38;5;3m +0ms[39m
+2026-03-15 22:07:30: [32m[Nest] 23376  - [39m15/03/2026, 22.07.30 [32m    LOG[39m [38;5;3m[InstanceLoader] [39m[32mScheduleModule dependencies initialized[39m[38;5;3m +0ms[39m
+2026-03-15 22:07:30: [32m[Nest] 23376  - [39m15/03/2026, 22.07.30 [32m    LOG[39m [38;5;3m[InstanceLoader] [39m[32mJwtModule dependencies initialized[39m[38;5;3m +2ms[39m
+2026-03-15 22:07:30: [32m[Nest] 23376  - [39m15/03/2026, 22.07.30 [32m    LOG[39m [38;5;3m[InstanceLoader] [39m[32mDatabaseModule dependencies initialized[39m[38;5;3m +0ms[39m
+2026-03-15 22:07:30: [32m[Nest] 23376  - [39m15/03/2026, 22.07.30 [32m    LOG[39m [38;5;3m[InstanceLoader] [39m[32mUploadModule dependencies initialized[39m[38;5;3m +0ms[39m
+2026-03-15 22:07:30: [32m[Nest] 23376  - [39m15/03/2026, 22.07.30 [32m    LOG[39m [38;5;3m[InstanceLoader] [39m[32mUsersModule dependencies initialized[39m[38;5;3m +1ms[39m
+2026-03-15 22:07:30: [32m[Nest] 23376  - [39m15/03/2026, 22.07.30 [32m    LOG[39m [38;5;3m[InstanceLoader] [39m[32mTahunAjaranModule dependencies initialized[39m[38;5;3m +0ms[39m
+2026-03-15 22:07:30: [32m[Nest] 23376  - [39m15/03/2026, 22.07.30 [32m    LOG[39m [38;5;3m[InstanceLoader] [39m[32mMataPelajaranModule dependencies initialized[39m[38;5;3m +0ms[39m
+2026-03-15 22:07:30: [32m[Nest] 23376  - [39m15/03/2026, 22.07.30 [32m    LOG[39m [38;5;3m[InstanceLoader] [39m[32mGuruModule dependencies initialized[39m[38;5;3m +0ms[39m
+2026-03-15 22:07:30: [32m[Nest] 23376  - [39m15/03/2026, 22.07.30 [32m    LOG[39m [38;5;3m[InstanceLoader] [39m[32mKelasModule dependencies initialized[39m[38;5;3m +0ms[39m
+2026-03-15 22:07:30: [32m[Nest] 23376  - [39m15/03/2026, 22.07.30 [32m    LOG[39m [38;5;3m[InstanceLoader] [39m[32mSiswaModule dependencies initialized[39m[38;5;3m +0ms[39m
+2026-03-15 22:07:30: [32m[Nest] 23376  - [39m15/03/2026, 22.07.30 [32m    LOG[39m [38;5;3m[InstanceLoader] [39m[32mJurusanModule dependencies initialized[39m[38;5;3m +0ms[39m
+2026-03-15 22:07:30: [32m[Nest] 23376  - [39m15/03/2026, 22.07.30 [32m    LOG[39m [38;5;3m[InstanceLoader] [39m[32mSettingsModule dependencies initialized[39m[38;5;3m +0ms[39m
+2026-03-15 22:07:30: [32m[Nest] 23376  - [39m15/03/2026, 22.07.30 [32m    LOG[39m [38;5;3m[InstanceLoader] [39m[32mBankSoalModule dependencies initialized[39m[38;5;3m +0ms[39m
+2026-03-15 22:07:30: [32m[Nest] 23376  - [39m15/03/2026, 22.07.30 [32m    LOG[39m [38;5;3m[InstanceLoader] [39m[32mUjianModule dependencies initialized[39m[38;5;3m +0ms[39m
+2026-03-15 22:07:30: [32m[Nest] 23376  - [39m15/03/2026, 22.07.30 [32m    LOG[39m [38;5;3m[InstanceLoader] [39m[32mUjianSiswaModule dependencies initialized[39m[38;5;3m +0ms[39m
+2026-03-15 22:07:30: [32m[Nest] 23376  - [39m15/03/2026, 22.07.30 [32m    LOG[39m [38;5;3m[InstanceLoader] [39m[32mJadwalPelajaranModule dependencies initialized[39m[38;5;3m +0ms[39m
+2026-03-15 22:07:30: [32m[Nest] 23376  - [39m15/03/2026, 22.07.30 [32m    LOG[39m [38;5;3m[InstanceLoader] [39m[32mForumModule dependencies initialized[39m[38;5;3m +0ms[39m
+2026-03-15 22:07:30: [32m[Nest] 23376  - [39m15/03/2026, 22.07.30 [32m    LOG[39m [38;5;3m[InstanceLoader] [39m[32mAnalyticsModule dependencies initialized[39m[38;5;3m +0ms[39m
+2026-03-15 22:07:30: [32m[Nest] 23376  - [39m15/03/2026, 22.07.30 [32m    LOG[39m [38;5;3m[InstanceLoader] [39m[32mAbsensiKelasModule dependencies initialized[39m[38;5;3m +0ms[39m
+2026-03-15 22:07:30: [32m[Nest] 23376  - [39m15/03/2026, 22.07.30 [32m    LOG[39m [38;5;3m[InstanceLoader] [39m[32mJenisUjianModule dependencies initialized[39m[38;5;3m +0ms[39m
+2026-03-15 22:07:30: [32m[Nest] 23376  - [39m15/03/2026, 22.07.30 [32m    LOG[39m [38;5;3m[InstanceLoader] [39m[32mKelompokSoalModule dependencies initialized[39m[38;5;3m +0ms[39m
+2026-03-15 22:07:30: [32m[Nest] 23376  - [39m15/03/2026, 22.07.30 [32m    LOG[39m [38;5;3m[InstanceLoader] [39m[32mPaketSoalModule dependencies initialized[39m[38;5;3m +0ms[39m
+2026-03-15 22:07:30: [32m[Nest] 23376  - [39m15/03/2026, 22.07.30 [32m    LOG[39m [38;5;3m[InstanceLoader] [39m[32mNotifikasiModule dependencies initialized[39m[38;5;3m +1ms[39m
+2026-03-15 22:07:30: [32m[Nest] 23376  - [39m15/03/2026, 22.07.30 [32m    LOG[39m [38;5;3m[InstanceLoader] [39m[32mAttendanceModule dependencies initialized[39m[38;5;3m +0ms[39m
+2026-03-15 22:07:30: [32m[Nest] 23376  - [39m15/03/2026, 22.07.30 [32m    LOG[39m [38;5;3m[InstanceLoader] [39m[32mTugasModule dependencies initialized[39m[38;5;3m +0ms[39m
+2026-03-15 22:07:30: [32m[Nest] 23376  - [39m15/03/2026, 22.07.30 [32m    LOG[39m [38;5;3m[InstanceLoader] [39m[32mPengumumanModule dependencies initialized[39m[38;5;3m +0ms[39m
+2026-03-15 22:07:30: [32m[Nest] 23376  - [39m15/03/2026, 22.07.30 [32m    LOG[39m [38;5;3m[InstanceLoader] [39m[32mMateriModule dependencies initialized[39m[38;5;3m +0ms[39m
+2026-03-15 22:07:30: [32m[Nest] 23376  - [39m15/03/2026, 22.07.30 [32m    LOG[39m [38;5;3m[InstanceLoader] [39m[32mRppModule dependencies initialized[39m[38;5;3m +0ms[39m
+2026-03-15 22:07:30: [32m[Nest] 23376  - [39m15/03/2026, 22.07.30 [32m    LOG[39m [38;5;3m[InstanceLoader] [39m[32mAuthModule dependencies initialized[39m[38;5;3m +0ms[39m
+2026-03-15 22:07:30: [32m[Nest] 23376  - [39m15/03/2026, 22.07.30 [32m    LOG[39m [38;5;3m[RoutesResolver] [39m[32mAppController {/}:[39m[38;5;3m +4ms[39m
+2026-03-15 22:07:30: [32m[Nest] 23376  - [39m15/03/2026, 22.07.30 [32m    LOG[39m [38;5;3m[RouterExplorer] [39m[32mMapped {/health, GET} route[39m[38;5;3m +2ms[39m
+2026-03-15 22:07:30: [32m[Nest] 23376  - [39m15/03/2026, 22.07.30 [32m    LOG[39m [38;5;3m[RoutesResolver] [39m[32mAuthController {/auth}:[39m[38;5;3m +0ms[39m
+2026-03-15 22:07:30: [32m[Nest] 23376  - [39m15/03/2026, 22.07.30 [32m    LOG[39m [38;5;3m[RouterExplorer] [39m[32mMapped {/auth/register, POST} route[39m[38;5;3m +0ms[39m
+2026-03-15 22:07:30: [32m[Nest] 23376  - [39m15/03/2026, 22.07.30 [32m    LOG[39m [38;5;3m[RouterExplorer] [39m[32mMapped {/auth/login, POST} route[39m[38;5;3m +1ms[39m
+2026-03-15 22:07:30: [32m[Nest] 23376  - [39m15/03/2026, 22.07.30 [32m    LOG[39m [38;5;3m[RouterExplorer] [39m[32mMapped {/auth/login-nisn, POST} route[39m[38;5;3m +0ms[39m
+2026-03-15 22:07:30: [32m[Nest] 23376  - [39m15/03/2026, 22.07.30 [32m    LOG[39m [38;5;3m[RouterExplorer] [39m[32mMapped {/auth/profile, GET} route[39m[38;5;3m +0ms[39m
+2026-03-15 22:07:30: [32m[Nest] 23376  - [39m15/03/2026, 22.07.30 [32m    LOG[39m [38;5;3m[RouterExplorer] [39m[32mMapped {/auth/profile, PUT} route[39m[38;5;3m +1ms[39m
+2026-03-15 22:07:30: [32m[Nest] 23376  - [39m15/03/2026, 22.07.30 [32m    LOG[39m [38;5;3m[RouterExplorer] [39m[32mMapped {/auth/change-password, POST} route[39m[38;5;3m +0ms[39m
+2026-03-15 22:07:30: [32m[Nest] 23376  - [39m15/03/2026, 22.07.30 [32m    LOG[39m [38;5;3m[RouterExplorer] [39m[32mMapped {/auth/admin/reset-password, POST} route[39m[38;5;3m +0ms[39m
+2026-03-15 22:07:30: [32m[Nest] 23376  - [39m15/03/2026, 22.07.30 [32m    LOG[39m [38;5;3m[RouterExplorer] [39m[32mMapped {/auth/me, GET} route[39m[38;5;3m +0ms[39m
+2026-03-15 22:07:30: [32m[Nest] 23376  - [39m15/03/2026, 22.07.30 [32m    LOG[39m [38;5;3m[RoutesResolver] [39m[32mUsersController {/users}:[39m[38;5;3m +0ms[39m
+2026-03-15 22:07:30: [32m[Nest] 23376  - [39m15/03/2026, 22.07.30 [32m    LOG[39m [38;5;3m[RouterExplorer] [39m[32mMapped {/users, GET} route[39m[38;5;3m +1ms[39m
+2026-03-15 22:07:30: [32m[Nest] 23376  - [39m15/03/2026, 22.07.30 [32m    LOG[39m [38;5;3m[RouterExplorer] [39m[32mMapped {/users/:id, GET} route[39m[38;5;3m +0ms[39m
+2026-03-15 22:07:30: [32m[Nest] 23376  - [39m15/03/2026, 22.07.30 [32m    LOG[39m [38;5;3m[RouterExplorer] [39m[32mMapped {/users, POST} route[39m[38;5;3m +0ms[39m
+2026-03-15 22:07:30: [32m[Nest] 23376  - [39m15/03/2026, 22.07.30 [32m    LOG[39m [38;5;3m[RouterExplorer] [39m[32mMapped {/users/:id, PUT} route[39m[38;5;3m +0ms[39m
+2026-03-15 22:07:30: [32m[Nest] 23376  - [39m15/03/2026, 22.07.30 [32m    LOG[39m [38;5;3m[RouterExplorer] [39m[32mMapped {/users/:id, DELETE} route[39m[38;5;3m +1ms[39m
+2026-03-15 22:07:30: [32m[Nest] 23376  - [39m15/03/2026, 22.07.30 [32m    LOG[39m [38;5;3m[RoutesResolver] [39m[32mTahunAjaranController {/tahun-ajaran}:[39m[38;5;3m +0ms[39m
+2026-03-15 22:07:30: [32m[Nest] 23376  - [39m15/03/2026, 22.07.30 [32m    LOG[39m [38;5;3m[RouterExplorer] [39m[32mMapped {/tahun-ajaran, GET} route[39m[38;5;3m +0ms[39m
+2026-03-15 22:07:30: [32m[Nest] 23376  - [39m15/03/2026, 22.07.30 [32m    LOG[39m [38;5;3m[RouterExplorer] [39m[32mMapped {/tahun-ajaran/:id, GET} route[39m[38;5;3m +0ms[39m
+2026-03-15 22:07:30: [32m[Nest] 23376  - [39m15/03/2026, 22.07.30 [32m    LOG[39m [38;5;3m[RouterExplorer] [39m[32mMapped {/tahun-ajaran, POST} route[39m[38;5;3m +0ms[39m
+2026-03-15 22:07:30: [32m[Nest] 23376  - [39m15/03/2026, 22.07.30 [32m    LOG[39m [38;5;3m[RouterExplorer] [39m[32mMapped {/tahun-ajaran/:id, PUT} route[39m[38;5;3m +0ms[39m
+2026-03-15 22:07:30: [32m[Nest] 23376  - [39m15/03/2026, 22.07.30 [32m    LOG[39m [38;5;3m[RouterExplorer] [39m[32mMapped {/tahun-ajaran/:id, DELETE} route[39m[38;5;3m +0ms[39m
+2026-03-15 22:07:30: [32m[Nest] 23376  - [39m15/03/2026, 22.07.30 [32m    LOG[39m [38;5;3m[RouterExplorer] [39m[32mMapped {/tahun-ajaran/active/current, GET} route[39m[38;5;3m +1ms[39m
+2026-03-15 22:07:30: [32m[Nest] 23376  - [39m15/03/2026, 22.07.30 [32m    LOG[39m [38;5;3m[RouterExplorer] [39m[32mMapped {/tahun-ajaran/:id/set-active, POST} route[39m[38;5;3m +0ms[39m
+2026-03-15 22:07:30: [32m[Nest] 23376  - [39m15/03/2026, 22.07.30 [32m    LOG[39m [38;5;3m[RoutesResolver] [39m[32mMataPelajaranController {/mata-pelajaran}:[39m[38;5;3m +0ms[39m
+2026-03-15 22:07:30: [32m[Nest] 23376  - [39m15/03/2026, 22.07.30 [32m    LOG[39m [38;5;3m[RouterExplorer] [39m[32mMapped {/mata-pelajaran, GET} route[39m[38;5;3m +0ms[39m
+2026-03-15 22:07:30: [32m[Nest] 23376  - [39m15/03/2026, 22.07.30 [32m    LOG[39m [38;5;3m[RouterExplorer] [39m[32mMapped {/mata-pelajaran/export, GET} route[39m[38;5;3m +0ms[39m
+2026-03-15 22:07:30: [32m[Nest] 23376  - [39m15/03/2026, 22.07.30 [32m    LOG[39m [38;5;3m[RouterExplorer] [39m[32mMapped {/mata-pelajaran/template, GET} route[39m[38;5;3m +0ms[39m
+2026-03-15 22:07:30: [32m[Nest] 23376  - [39m15/03/2026, 22.07.30 [32m    LOG[39m [38;5;3m[RouterExplorer] [39m[32mMapped {/mata-pelajaran/:id, GET} route[39m[38;5;3m +0ms[39m
+2026-03-15 22:07:30: [32m[Nest] 23376  - [39m15/03/2026, 22.07.30 [32m    LOG[39m [38;5;3m[RouterExplorer] [39m[32mMapped {/mata-pelajaran, POST} route[39m[38;5;3m +0ms[39m
+2026-03-15 22:07:30: [32m[Nest] 23376  - [39m15/03/2026, 22.07.30 [32m    LOG[39m [38;5;3m[RouterExplorer] [39m[32mMapped {/mata-pelajaran/:id, PUT} route[39m[38;5;3m +1ms[39m
+2026-03-15 22:07:30: [32m[Nest] 23376  - [39m15/03/2026, 22.07.30 [32m    LOG[39m [38;5;3m[RouterExplorer] [39m[32mMapped {/mata-pelajaran/:id, DELETE} route[39m[38;5;3m +0ms[39m
+2026-03-15 22:07:30: [32m[Nest] 23376  - [39m15/03/2026, 22.07.30 [32m    LOG[39m [38;5;3m[RouterExplorer] [39m[32mMapped {/mata-pelajaran/import, POST} route[39m[38;5;3m +0ms[39m
+2026-03-15 22:07:30: [32m[Nest] 23376  - [39m15/03/2026, 22.07.30 [32m    LOG[39m [38;5;3m[RoutesResolver] [39m[32mGuruController {/guru}:[39m[38;5;3m +0ms[39m
+2026-03-15 22:07:30: [32m[Nest] 23376  - [39m15/03/2026, 22.07.30 [32m    LOG[39m [38;5;3m[RouterExplorer] [39m[32mMapped {/guru, GET} route[39m[38;5;3m +0ms[39m
+2026-03-15 22:07:30: [32m[Nest] 23376  - [39m15/03/2026, 22.07.30 [32m    LOG[39m [38;5;3m[RouterExplorer] [39m[32mMapped {/guru/export, GET} route[39m[38;5;3m +0ms[39m
+2026-03-15 22:07:30: [32m[Nest] 23376  - [39m15/03/2026, 22.07.30 [32m    LOG[39m [38;5;3m[RouterExplorer] [39m[32mMapped {/guru/template, GET} route[39m[38;5;3m +0ms[39m
+2026-03-15 22:07:30: [32m[Nest] 23376  - [39m15/03/2026, 22.07.30 [32m    LOG[39m [38;5;3m[RouterExplorer] [39m[32mMapped {/guru/:id, GET} route[39m[38;5;3m +1ms[39m
+2026-03-15 22:07:30: [32m[Nest] 23376  - [39m15/03/2026, 22.07.30 [32m    LOG[39m [38;5;3m[RouterExplorer] [39m[32mMapped {/guru, POST} route[39m[38;5;3m +0ms[39m
+2026-03-15 22:07:30: [32m[Nest] 23376  - [39m15/03/2026, 22.07.30 [32m    LOG[39m [38;5;3m[RouterExplorer] [39m[32mMapped {/guru/:id, PUT} route[39m[38;5;3m +0ms[39m
+2026-03-15 22:07:30: [32m[Nest] 23376  - [39m15/03/2026, 22.07.30 [32m    LOG[39m [38;5;3m[RouterExplorer] [39m[32mMapped {/guru/:id, DELETE} route[39m[38;5;3m +0ms[39m
+2026-03-15 22:07:30: [32m[Nest] 23376  - [39m15/03/2026, 22.07.30 [32m    LOG[39m [38;5;3m[RouterExplorer] [39m[32mMapped {/guru/import, POST} route[39m[38;5;3m +0ms[39m
+2026-03-15 22:07:30: [32m[Nest] 23376  - [39m15/03/2026, 22.07.30 [32m    LOG[39m [38;5;3m[RoutesResolver] [39m[32mKelasController {/kelas}:[39m[38;5;3m +0ms[39m
+2026-03-15 22:07:30: [32m[Nest] 23376  - [39m15/03/2026, 22.07.30 [32m    LOG[39m [38;5;3m[RouterExplorer] [39m[32mMapped {/kelas, GET} route[39m[38;5;3m +0ms[39m
+2026-03-15 22:07:30: [32m[Nest] 23376  - [39m15/03/2026, 22.07.30 [32m    LOG[39m [38;5;3m[RouterExplorer] [39m[32mMapped {/kelas/export, GET} route[39m[38;5;3m +0ms[39m
+2026-03-15 22:07:30: [32m[Nest] 23376  - [39m15/03/2026, 22.07.30 [32m    LOG[39m [38;5;3m[RouterExplorer] [39m[32mMapped {/kelas/template, GET} route[39m[38;5;3m +1ms[39m
+2026-03-15 22:07:30: [32m[Nest] 23376  - [39m15/03/2026, 22.07.30 [32m    LOG[39m [38;5;3m[RouterExplorer] [39m[32mMapped {/kelas/:id, GET} route[39m[38;5;3m +0ms[39m
+2026-03-15 22:07:30: [32m[Nest] 23376  - [39m15/03/2026, 22.07.30 [32m    LOG[39m [38;5;3m[RouterExplorer] [39m[32mMapped {/kelas, POST} route[39m[38;5;3m +0ms[39m
+2026-03-15 22:07:30: [32m[Nest] 23376  - [39m15/03/2026, 22.07.30 [32m    LOG[39m [38;5;3m[RouterExplorer] [39m[32mMapped {/kelas/:id, PUT} route[39m[38;5;3m +0ms[39m
+2026-03-15 22:07:30: [32m[Nest] 23376  - [39m15/03/2026, 22.07.30 [32m    LOG[39m [38;5;3m[RouterExplorer] [39m[32mMapped {/kelas/:id, DELETE} route[39m[38;5;3m +0ms[39m
+2026-03-15 22:07:30: [32m[Nest] 23376  - [39m15/03/2026, 22.07.30 [32m    LOG[39m [38;5;3m[RouterExplorer] [39m[32mMapped {/kelas/import, POST} route[39m[38;5;3m +0ms[39m
+2026-03-15 22:07:30: [32m[Nest] 23376  - [39m15/03/2026, 22.07.30 [32m    LOG[39m [38;5;3m[RoutesResolver] [39m[32mSiswaController {/siswa}:[39m[38;5;3m +0ms[39m
+2026-03-15 22:07:30: [32m[Nest] 23376  - [39m15/03/2026, 22.07.30 [32m    LOG[39m [38;5;3m[RouterExplorer] [39m[32mMapped {/siswa, GET} route[39m[38;5;3m +0ms[39m
+2026-03-15 22:07:30: [32m[Nest] 23376  - [39m15/03/2026, 22.07.30 [32m    LOG[39m [38;5;3m[RouterExplorer] [39m[32mMapped {/siswa/export, GET} route[39m[38;5;3m +0ms[39m
+2026-03-15 22:07:30: [32m[Nest] 23376  - [39m15/03/2026, 22.07.30 [32m    LOG[39m [38;5;3m[RouterExplorer] [39m[32mMapped {/siswa/template, GET} route[39m[38;5;3m +1ms[39m
+2026-03-15 22:07:30: [32m[Nest] 23376  - [39m15/03/2026, 22.07.30 [32m    LOG[39m [38;5;3m[RouterExplorer] [39m[32mMapped {/siswa/:id, GET} route[39m[38;5;3m +0ms[39m
+2026-03-15 22:07:30: [32m[Nest] 23376  - [39m15/03/2026, 22.07.30 [32m    LOG[39m [38;5;3m[RouterExplorer] [39m[32mMapped {/siswa, POST} route[39m[38;5;3m +0ms[39m
+2026-03-15 22:07:30: [32m[Nest] 23376  - [39m15/03/2026, 22.07.30 [32m    LOG[39m [38;5;3m[RouterExplorer] [39m[32mMapped {/siswa/import, POST} route[39m[38;5;3m +0ms[39m
+2026-03-15 22:07:30: [32m[Nest] 23376  - [39m15/03/2026, 22.07.30 [32m    LOG[39m [38;5;3m[RouterExplorer] [39m[32mMapped {/siswa/:id, PUT} route[39m[38;5;3m +0ms[39m
+2026-03-15 22:07:30: [32m[Nest] 23376  - [39m15/03/2026, 22.07.30 [32m    LOG[39m [38;5;3m[RouterExplorer] [39m[32mMapped {/siswa/:id, DELETE} route[39m[38;5;3m +0ms[39m
+2026-03-15 22:07:30: [32m[Nest] 23376  - [39m15/03/2026, 22.07.30 [32m    LOG[39m [38;5;3m[RouterExplorer] [39m[32mMapped {/siswa/kenaikan-kelas, POST} route[39m[38;5;3m +0ms[39m
+2026-03-15 22:07:30: [32m[Nest] 23376  - [39m15/03/2026, 22.07.30 [32m    LOG[39m [38;5;3m[RoutesResolver] [39m[32mJurusanController {/jurusan}:[39m[38;5;3m +0ms[39m
+2026-03-15 22:07:30: [32m[Nest] 23376  - [39m15/03/2026, 22.07.30 [32m    LOG[39m [38;5;3m[RouterExplorer] [39m[32mMapped {/jurusan, GET} route[39m[38;5;3m +1ms[39m
+2026-03-15 22:07:30: [32m[Nest] 23376  - [39m15/03/2026, 22.07.30 [32m    LOG[39m [38;5;3m[RouterExplorer] [39m[32mMapped {/jurusan/export/excel, GET} route[39m[38;5;3m +0ms[39m
+2026-03-15 22:07:30: [32m[Nest] 23376  - [39m15/03/2026, 22.07.30 [32m    LOG[39m [38;5;3m[RouterExplorer] [39m[32mMapped {/jurusan/template/excel, GET} route[39m[38;5;3m +0ms[39m
+2026-03-15 22:07:30: [32m[Nest] 23376  - [39m15/03/2026, 22.07.30 [32m    LOG[39m [38;5;3m[RouterExplorer] [39m[32mMapped {/jurusan/:id, GET} route[39m[38;5;3m +0ms[39m
+2026-03-15 22:07:30: [32m[Nest] 23376  - [39m15/03/2026, 22.07.30 [32m    LOG[39m [38;5;3m[RouterExplorer] [39m[32mMapped {/jurusan, POST} route[39m[38;5;3m +0ms[39m
+2026-03-15 22:07:30: [32m[Nest] 23376  - [39m15/03/2026, 22.07.30 [32m    LOG[39m [38;5;3m[RouterExplorer] [39m[32mMapped {/jurusan/:id, PUT} route[39m[38;5;3m +0ms[39m
+2026-03-15 22:07:30: [32m[Nest] 23376  - [39m15/03/2026, 22.07.30 [32m    LOG[39m [38;5;3m[RouterExplorer] [39m[32mMapped {/jurusan/:id, DELETE} route[39m[38;5;3m +0ms[39m
+2026-03-15 22:07:30: [32m[Nest] 23376  - [39m15/03/2026, 22.07.30 [32m    LOG[39m [38;5;3m[RouterExplorer] [39m[32mMapped {/jurusan/import/excel, POST} route[39m[38;5;3m +0ms[39m
+2026-03-15 22:07:30: [32m[Nest] 23376  - [39m15/03/2026, 22.07.30 [32m    LOG[39m [38;5;3m[RoutesResolver] [39m[32mDatabaseController {/database}:[39m[38;5;3m +1ms[39m
+2026-03-15 22:07:30: [32m[Nest] 23376  - [39m15/03/2026, 22.07.30 [32m    LOG[39m [38;5;3m[RouterExplorer] [39m[32mMapped {/database/export, GET} route[39m[38;5;3m +0ms[39m
+2026-03-15 22:07:30: [32m[Nest] 23376  - [39m15/03/2026, 22.07.30 [32m    LOG[39m [38;5;3m[RouterExplorer] [39m[32mMapped {/database/import, POST} route[39m[38;5;3m +0ms[39m
+2026-03-15 22:07:30: [32m[Nest] 23376  - [39m15/03/2026, 22.07.30 [32m    LOG[39m [38;5;3m[RouterExplorer] [39m[32mMapped {/database/backups, GET} route[39m[38;5;3m +0ms[39m
+2026-03-15 22:07:30: [32m[Nest] 23376  - [39m15/03/2026, 22.07.30 [32m    LOG[39m [38;5;3m[RouterExplorer] [39m[32mMapped {/database/backups/:filename, GET} route[39m[38;5;3m +0ms[39m
+2026-03-15 22:07:30: [32m[Nest] 23376  - [39m15/03/2026, 22.07.30 [32m    LOG[39m [38;5;3m[RouterExplorer] [39m[32mMapped {/database/backups/:filename, DELETE} route[39m[38;5;3m +0ms[39m
+2026-03-15 22:07:30: [32m[Nest] 23376  - [39m15/03/2026, 22.07.30 [32m    LOG[39m [38;5;3m[RoutesResolver] [39m[32mAttendanceController {/attendance}:[39m[38;5;3m +0ms[39m
+2026-03-15 22:07:30: [32m[Nest] 23376  - [39m15/03/2026, 22.07.30 [32m    LOG[39m [38;5;3m[RouterExplorer] [39m[32mMapped {/attendance/scan, POST} route[39m[38;5;3m +0ms[39m
+2026-03-15 22:07:30: [32m[Nest] 23376  - [39m15/03/2026, 22.07.30 [32m    LOG[39m [38;5;3m[RouterExplorer] [39m[32mMapped {/attendance/check-in, POST} route[39m[38;5;3m +1ms[39m
+2026-03-15 22:07:30: [32m[Nest] 23376  - [39m15/03/2026, 22.07.30 [32m    LOG[39m [38;5;3m[RouterExplorer] [39m[32mMapped {/attendance/check-out, POST} route[39m[38;5;3m +0ms[39m
+2026-03-15 22:07:30: [32m[Nest] 23376  - [39m15/03/2026, 22.07.30 [32m    LOG[39m [38;5;3m[RouterExplorer] [39m[32mMapped {/attendance/today, GET} route[39m[38;5;3m +0ms[39m
+2026-03-15 22:07:30: [32m[Nest] 23376  - [39m15/03/2026, 22.07.30 [32m    LOG[39m [38;5;3m[RouterExplorer] [39m[32mMapped {/attendance/absent-students, GET} route[39m[38;5;3m +0ms[39m
+2026-03-15 22:07:30: [32m[Nest] 23376  - [39m15/03/2026, 22.07.30 [32m    LOG[39m [38;5;3m[RouterExplorer] [39m[32mMapped {/attendance/date/:date, GET} route[39m[38;5;3m +0ms[39m
+2026-03-15 22:07:30: [32m[Nest] 23376  - [39m15/03/2026, 22.07.30 [32m    LOG[39m [38;5;3m[RouterExplorer] [39m[32mMapped {/attendance/student/:id, GET} route[39m[38;5;3m +0ms[39m
+2026-03-15 22:07:30: [32m[Nest] 23376  - [39m15/03/2026, 22.07.30 [32m    LOG[39m [38;5;3m[RouterExplorer] [39m[32mMapped {/attendance/report, GET} route[39m[38;5;3m +0ms[39m
+2026-03-15 22:07:30: [32m[Nest] 23376  - [39m15/03/2026, 22.07.30 [32m    LOG[39m [38;5;3m[RouterExplorer] [39m[32mMapped {/attendance/manual, GET} route[39m[38;5;3m +0ms[39m
+2026-03-15 22:07:30: [32m[Nest] 23376  - [39m15/03/2026, 22.07.30 [32m    LOG[39m [38;5;3m[RouterExplorer] [39m[32mMapped {/attendance/:id, PUT} route[39m[38;5;3m +1ms[39m
+2026-03-15 22:07:30: [32m[Nest] 23376  - [39m15/03/2026, 22.07.30 [32m    LOG[39m [38;5;3m[RouterExplorer] [39m[32mMapped {/attendance/manual, POST} route[39m[38;5;3m +0ms[39m
+2026-03-15 22:07:30: [32m[Nest] 23376  - [39m15/03/2026, 22.07.30 [32m    LOG[39m [38;5;3m[RoutesResolver] [39m[32mSettingsController {/settings}:[39m[38;5;3m +0ms[39m
+2026-03-15 22:07:30: [32m[Nest] 23376  - [39m15/03/2026, 22.07.30 [32m    LOG[39m [38;5;3m[RouterExplorer] [39m[32mMapped {/settings, GET} route[39m[38;5;3m +0ms[39m
+2026-03-15 22:07:30: [32m[Nest] 23376  - [39m15/03/2026, 22.07.30 [32m    LOG[39m [38;5;3m[RouterExplorer] [39m[32mMapped {/settings/school, GET} route[39m[38;5;3m +0ms[39m
+2026-03-15 22:07:30: [32m[Nest] 23376  - [39m15/03/2026, 22.07.30 [32m    LOG[39m [38;5;3m[RouterExplorer] [39m[32mMapped {/settings/:key, GET} route[39m[38;5;3m +0ms[39m
+2026-03-15 22:07:30: [32m[Nest] 23376  - [39m15/03/2026, 22.07.30 [32m    LOG[39m [38;5;3m[RouterExplorer] [39m[32mMapped {/settings, PUT} route[39m[38;5;3m +0ms[39m
+2026-03-15 22:07:30: [32m[Nest] 23376  - [39m15/03/2026, 22.07.30 [32m    LOG[39m [38;5;3m[RouterExplorer] [39m[32mMapped {/settings/school, PUT} route[39m[38;5;3m +0ms[39m
+2026-03-15 22:07:30: [32m[Nest] 23376  - [39m15/03/2026, 22.07.30 [32m    LOG[39m [38;5;3m[RoutesResolver] [39m[32mBankSoalController {/bank-soal}:[39m[38;5;3m +0ms[39m
+2026-03-15 22:07:30: [32m[Nest] 23376  - [39m15/03/2026, 22.07.30 [32m    LOG[39m [38;5;3m[RouterExplorer] [39m[32mMapped {/bank-soal, POST} route[39m[38;5;3m +0ms[39m
+2026-03-15 22:07:30: [32m[Nest] 23376  - [39m15/03/2026, 22.07.30 [32m    LOG[39m [38;5;3m[RouterExplorer] [39m[32mMapped {/bank-soal, GET} route[39m[38;5;3m +1ms[39m
+2026-03-15 22:07:30: [32m[Nest] 23376  - [39m15/03/2026, 22.07.30 [32m    LOG[39m [38;5;3m[RouterExplorer] [39m[32mMapped {/bank-soal/generate-kode, GET} route[39m[38;5;3m +0ms[39m
+2026-03-15 22:07:30: [32m[Nest] 23376  - [39m15/03/2026, 22.07.30 [32m    LOG[39m [38;5;3m[RouterExplorer] [39m[32mMapped {/bank-soal/:id, GET} route[39m[38;5;3m +0ms[39m
+2026-03-15 22:07:30: [32m[Nest] 23376  - [39m15/03/2026, 22.07.30 [32m    LOG[39m [38;5;3m[RouterExplorer] [39m[32mMapped {/bank-soal/:id, PATCH} route[39m[38;5;3m +0ms[39m
+2026-03-15 22:07:30: [32m[Nest] 23376  - [39m15/03/2026, 22.07.30 [32m    LOG[39m [38;5;3m[RouterExplorer] [39m[32mMapped {/bank-soal/bulk, DELETE} route[39m[38;5;3m +0ms[39m
+2026-03-15 22:07:30: [32m[Nest] 23376  - [39m15/03/2026, 22.07.30 [32m    LOG[39m [38;5;3m[RouterExplorer] [39m[32mMapped {/bank-soal/:id, DELETE} route[39m[38;5;3m +0ms[39m
+2026-03-15 22:07:30: [32m[Nest] 23376  - [39m15/03/2026, 22.07.30 [32m    LOG[39m [38;5;3m[RouterExplorer] [39m[32mMapped {/bank-soal/import, POST} route[39m[38;5;3m +0ms[39m
+2026-03-15 22:07:30: [32m[Nest] 23376  - [39m15/03/2026, 22.07.30 [32m    LOG[39m [38;5;3m[RouterExplorer] [39m[32mMapped {/bank-soal/import/file, POST} route[39m[38;5;3m +0ms[39m
+2026-03-15 22:07:30: [32m[Nest] 23376  - [39m15/03/2026, 22.07.30 [32m    LOG[39m [38;5;3m[RouterExplorer] [39m[32mMapped {/bank-soal/template/word, GET} route[39m[38;5;3m +1ms[39m
+2026-03-15 22:07:30: [32m[Nest] 23376  - [39m15/03/2026, 22.07.30 [32m    LOG[39m [38;5;3m[RoutesResolver] [39m[32mPaketSoalController {/paket-soal}:[39m[38;5;3m +0ms[39m
+2026-03-15 22:07:30: [32m[Nest] 23376  - [39m15/03/2026, 22.07.30 [32m    LOG[39m [38;5;3m[RouterExplorer] [39m[32mMapped {/paket-soal, POST} route[39m[38;5;3m +0ms[39m
+2026-03-15 22:07:30: [32m[Nest] 23376  - [39m15/03/2026, 22.07.30 [32m    LOG[39m [38;5;3m[RouterExplorer] [39m[32mMapped {/paket-soal, GET} route[39m[38;5;3m +0ms[39m
+2026-03-15 22:07:30: [32m[Nest] 23376  - [39m15/03/2026, 22.07.30 [32m    LOG[39m [38;5;3m[RouterExplorer] [39m[32mMapped {/paket-soal/generate-kode, GET} route[39m[38;5;3m +0ms[39m
+2026-03-15 22:07:30: [32m[Nest] 23376  - [39m15/03/2026, 22.07.30 [32m    LOG[39m [38;5;3m[RouterExplorer] [39m[32mMapped {/paket-soal/:id, GET} route[39m[38;5;3m +0ms[39m
+2026-03-15 22:07:30: [32m[Nest] 23376  - [39m15/03/2026, 22.07.30 [32m    LOG[39m [38;5;3m[RouterExplorer] [39m[32mMapped {/paket-soal/:id, PATCH} route[39m[38;5;3m +0ms[39m
+2026-03-15 22:07:30: [32m[Nest] 23376  - [39m15/03/2026, 22.07.30 [32m    LOG[39m [38;5;3m[RouterExplorer] [39m[32mMapped {/paket-soal/:id, DELETE} route[39m[38;5;3m +0ms[39m
+2026-03-15 22:07:30: [32m[Nest] 23376  - [39m15/03/2026, 22.07.30 [32m    LOG[39m [38;5;3m[RouterExplorer] [39m[32mMapped {/paket-soal/:id/soal, POST} route[39m[38;5;3m +0ms[39m
+2026-03-15 22:07:30: [32m[Nest] 23376  - [39m15/03/2026, 22.07.30 [32m    LOG[39m [38;5;3m[RouterExplorer] [39m[32mMapped {/paket-soal/:id/preview, POST} route[39m[38;5;3m +1ms[39m
+2026-03-15 22:07:30: [32m[Nest] 23376  - [39m15/03/2026, 22.07.30 [32m    LOG[39m [38;5;3m[RouterExplorer] [39m[32mMapped {/paket-soal/:id/import, POST} route[39m[38;5;3m +0ms[39m
+2026-03-15 22:07:30: [32m[Nest] 23376  - [39m15/03/2026, 22.07.30 [32m    LOG[39m [38;5;3m[RouterExplorer] [39m[32mMapped {/paket-soal/:id/soal/:itemId, DELETE} route[39m[38;5;3m +0ms[39m
+2026-03-15 22:07:30: [32m[Nest] 23376  - [39m15/03/2026, 22.07.30 [32m    LOG[39m [38;5;3m[RoutesResolver] [39m[32mUploadController {/upload}:[39m[38;5;3m +0ms[39m
+2026-03-15 22:07:30: [32m[Nest] 23376  - [39m15/03/2026, 22.07.30 [32m    LOG[39m [38;5;3m[RouterExplorer] [39m[32mMapped {/upload/image, POST} route[39m[38;5;3m +0ms[39m
+2026-03-15 22:07:30: [32m[Nest] 23376  - [39m15/03/2026, 22.07.30 [32m    LOG[39m [38;5;3m[RoutesResolver] [39m[32mUjianController {/ujian}:[39m[38;5;3m +0ms[39m
+2026-03-15 22:07:30: [32m[Nest] 23376  - [39m15/03/2026, 22.07.30 [32m    LOG[39m [38;5;3m[RouterExplorer] [39m[32mMapped {/ujian, POST} route[39m[38;5;3m +0ms[39m
+2026-03-15 22:07:30: [32m[Nest] 23376  - [39m15/03/2026, 22.07.30 [32m    LOG[39m [38;5;3m[RouterExplorer] [39m[32mMapped {/ujian, GET} route[39m[38;5;3m +0ms[39m
+2026-03-15 22:07:30: [32m[Nest] 23376  - [39m15/03/2026, 22.07.30 [32m    LOG[39m [38;5;3m[RouterExplorer] [39m[32mMapped {/ujian/generate-kode, GET} route[39m[38;5;3m +1ms[39m
+2026-03-15 22:07:30: [32m[Nest] 23376  - [39m15/03/2026, 22.07.30 [32m    LOG[39m [38;5;3m[RouterExplorer] [39m[32mMapped {/ujian/students-by-classes, GET} route[39m[38;5;3m +0ms[39m
+2026-03-15 22:07:30: [32m[Nest] 23376  - [39m15/03/2026, 22.07.30 [32m    LOG[39m [38;5;3m[RouterExplorer] [39m[32mMapped {/ujian/:id, GET} route[39m[38;5;3m +0ms[39m
+2026-03-15 22:07:30: [32m[Nest] 23376  - [39m15/03/2026, 22.07.30 [32m    LOG[39m [38;5;3m[RouterExplorer] [39m[32mMapped {/ujian/:id, PATCH} route[39m[38;5;3m +0ms[39m
+2026-03-15 22:07:30: [32m[Nest] 23376  - [39m15/03/2026, 22.07.30 [32m    LOG[39m [38;5;3m[RouterExplorer] [39m[32mMapped {/ujian/:id, DELETE} route[39m[38;5;3m +0ms[39m
+2026-03-15 22:07:30: [32m[Nest] 23376  - [39m15/03/2026, 22.07.30 [32m    LOG[39m [38;5;3m[RouterExplorer] [39m[32mMapped {/ujian/:id/publish, POST} route[39m[38;5;3m +0ms[39m
+2026-03-15 22:07:30: [32m[Nest] 23376  - [39m15/03/2026, 22.07.30 [32m    LOG[39m [38;5;3m[RouterExplorer] [39m[32mMapped {/ujian/:id/assign, POST} route[39m[38;5;3m +0ms[39m
+2026-03-15 22:07:30: [32m[Nest] 23376  - [39m15/03/2026, 22.07.30 [32m    LOG[39m [38;5;3m[RouterExplorer] [39m[32mMapped {/ujian/:id/status, POST} route[39m[38;5;3m +1ms[39m
+2026-03-15 22:07:30: [32m[Nest] 23376  - [39m15/03/2026, 22.07.30 [32m    LOG[39m [38;5;3m[RouterExplorer] [39m[32mMapped {/ujian/:id/toggle-detection, POST} route[39m[38;5;3m +0ms[39m
+2026-03-15 22:07:30: [32m[Nest] 23376  - [39m15/03/2026, 22.07.30 [32m    LOG[39m [38;5;3m[RouterExplorer] [39m[32mMapped {/ujian/:id/toggle-nilai, POST} route[39m[38;5;3m +0ms[39m
+2026-03-15 22:07:30: [32m[Nest] 23376  - [39m15/03/2026, 22.07.30 [32m    LOG[39m [38;5;3m[RoutesResolver] [39m[32mUjianSiswaController {/ujian-siswa}:[39m[38;5;3m +0ms[39m
+2026-03-15 22:07:30: [32m[Nest] 23376  - [39m15/03/2026, 22.07.30 [32m    LOG[39m [38;5;3m[RouterExplorer] [39m[32mMapped {/ujian-siswa/available, GET} route[39m[38;5;3m +0ms[39m
+2026-03-15 22:07:30: [32m[Nest] 23376  - [39m15/03/2026, 22.07.30 [32m    LOG[39m [38;5;3m[RouterExplorer] [39m[32mMapped {/ujian-siswa/completed, GET} route[39m[38;5;3m +0ms[39m
+2026-03-15 22:07:30: [32m[Nest] 23376  - [39m15/03/2026, 22.07.30 [32m    LOG[39m [38;5;3m[RouterExplorer] [39m[32mMapped {/ujian-siswa/start, POST} route[39m[38;5;3m +0ms[39m
+2026-03-15 22:07:30: [32m[Nest] 23376  - [39m15/03/2026, 22.07.30 [32m    LOG[39m [38;5;3m[RouterExplorer] [39m[32mMapped {/ujian-siswa/session/:id, GET} route[39m[38;5;3m +0ms[39m
+2026-03-15 22:07:30: [32m[Nest] 23376  - [39m15/03/2026, 22.07.30 [32m    LOG[39m [38;5;3m[RouterExplorer] [39m[32mMapped {/ujian-siswa/submit/:id, POST} route[39m[38;5;3m +1ms[39m
+2026-03-15 22:07:30: [32m[Nest] 23376  - [39m15/03/2026, 22.07.30 [32m    LOG[39m [38;5;3m[RouterExplorer] [39m[32mMapped {/ujian-siswa/progress/:id, POST} route[39m[38;5;3m +0ms[39m
+2026-03-15 22:07:30: [32m[Nest] 23376  - [39m15/03/2026, 22.07.30 [32m    LOG[39m [38;5;3m[RouterExplorer] [39m[32mMapped {/ujian-siswa/log-activity, POST} route[39m[38;5;3m +0ms[39m
+2026-03-15 22:07:30: [32m[Nest] 23376  - [39m15/03/2026, 22.07.30 [32m    LOG[39m [38;5;3m[RouterExplorer] [39m[32mMapped {/ujian-siswa/result/:id, GET} route[39m[38;5;3m +0ms[39m
+2026-03-15 22:07:30: [32m[Nest] 23376  - [39m15/03/2026, 22.07.30 [32m    LOG[39m [38;5;3m[RouterExplorer] [39m[32mMapped {/ujian-siswa/review/:id, GET} route[39m[38;5;3m +0ms[39m
+2026-03-15 22:07:30: [32m[Nest] 23376  - [39m15/03/2026, 22.07.30 [32m    LOG[39m [38;5;3m[RouterExplorer] [39m[32mMapped {/ujian-siswa/:id/grade, POST} route[39m[38;5;3m +0ms[39m
+2026-03-15 22:07:30: [32m[Nest] 23376  - [39m15/03/2026, 22.07.30 [32m    LOG[39m [38;5;3m[RouterExplorer] [39m[32mMapped {/ujian-siswa/activity-logs/:id, GET} route[39m[38;5;3m +0ms[39m
+2026-03-15 22:07:30: [32m[Nest] 23376  - [39m15/03/2026, 22.07.30 [32m    LOG[39m [38;5;3m[RouterExplorer] [39m[32mMapped {/ujian-siswa/:id/block, POST} route[39m[38;5;3m +0ms[39m
+2026-03-15 22:07:30: [32m[Nest] 23376  - [39m15/03/2026, 22.07.30 [32m    LOG[39m [38;5;3m[RouterExplorer] [39m[32mMapped {/ujian-siswa/:id/unblock, POST} route[39m[38;5;3m +1ms[39m
+2026-03-15 22:07:30: [32m[Nest] 23376  - [39m15/03/2026, 22.07.30 [32m    LOG[39m [38;5;3m[RouterExplorer] [39m[32mMapped {/ujian-siswa/monitoring/:ujianId, GET} route[39m[38;5;3m +0ms[39m
+2026-03-15 22:07:30: [32m[Nest] 23376  - [39m15/03/2026, 22.07.30 [32m    LOG[39m [38;5;3m[RoutesResolver] [39m[32mJadwalPelajaranController {/jadwal-pelajaran}:[39m[38;5;3m +0ms[39m
+2026-03-15 22:07:30: [32m[Nest] 23376  - [39m15/03/2026, 22.07.30 [32m    LOG[39m [38;5;3m[RouterExplorer] [39m[32mMapped {/jadwal-pelajaran, GET} route[39m[38;5;3m +0ms[39m
+2026-03-15 22:07:30: [32m[Nest] 23376  - [39m15/03/2026, 22.07.30 [32m    LOG[39m [38;5;3m[RouterExplorer] [39m[32mMapped {/jadwal-pelajaran/kelas/:kelasId, GET} route[39m[38;5;3m +0ms[39m
+2026-03-15 22:07:30: [32m[Nest] 23376  - [39m15/03/2026, 22.07.30 [32m    LOG[39m [38;5;3m[RouterExplorer] [39m[32mMapped {/jadwal-pelajaran/:id, GET} route[39m[38;5;3m +0ms[39m
+2026-03-15 22:07:30: [32m[Nest] 23376  - [39m15/03/2026, 22.07.30 [32m    LOG[39m [38;5;3m[RouterExplorer] [39m[32mMapped {/jadwal-pelajaran, POST} route[39m[38;5;3m +0ms[39m
+2026-03-15 22:07:30: [32m[Nest] 23376  - [39m15/03/2026, 22.07.30 [32m    LOG[39m [38;5;3m[RouterExplorer] [39m[32mMapped {/jadwal-pelajaran/:id, PUT} route[39m[38;5;3m +0ms[39m
+2026-03-15 22:07:30: [32m[Nest] 23376  - [39m15/03/2026, 22.07.30 [32m    LOG[39m [38;5;3m[RouterExplorer] [39m[32mMapped {/jadwal-pelajaran/:id, DELETE} route[39m[38;5;3m +0ms[39m
+2026-03-15 22:07:30: [32m[Nest] 23376  - [39m15/03/2026, 22.07.30 [32m    LOG[39m [38;5;3m[RouterExplorer] [39m[32mMapped {/jadwal-pelajaran/export/xlsx, GET} route[39m[38;5;3m +0ms[39m
+2026-03-15 22:07:30: [32m[Nest] 23376  - [39m15/03/2026, 22.07.30 [32m    LOG[39m [38;5;3m[RouterExplorer] [39m[32mMapped {/jadwal-pelajaran/template/xlsx, GET} route[39m[38;5;3m +1ms[39m
+2026-03-15 22:07:30: [32m[Nest] 23376  - [39m15/03/2026, 22.07.30 [32m    LOG[39m [38;5;3m[RouterExplorer] [39m[32mMapped {/jadwal-pelajaran/import/xlsx, POST} route[39m[38;5;3m +0ms[39m
+2026-03-15 22:07:30: [32m[Nest] 23376  - [39m15/03/2026, 22.07.30 [32m    LOG[39m [38;5;3m[RoutesResolver] [39m[32mMateriController {/materi}:[39m[38;5;3m +0ms[39m
+2026-03-15 22:07:30: [32m[Nest] 23376  - [39m15/03/2026, 22.07.30 [32m    LOG[39m [38;5;3m[RouterExplorer] [39m[32mMapped {/materi/generate, POST} route[39m[38;5;3m +0ms[39m
+2026-03-15 22:07:30: [32m[Nest] 23376  - [39m15/03/2026, 22.07.30 [32m    LOG[39m [38;5;3m[RouterExplorer] [39m[32mMapped {/materi, POST} route[39m[38;5;3m +0ms[39m
+2026-03-15 22:07:30: [32m[Nest] 23376  - [39m15/03/2026, 22.07.30 [32m    LOG[39m [38;5;3m[RouterExplorer] [39m[32mMapped {/materi, GET} route[39m[38;5;3m +0ms[39m
+2026-03-15 22:07:30: [32m[Nest] 23376  - [39m15/03/2026, 22.07.30 [32m    LOG[39m [38;5;3m[RouterExplorer] [39m[32mMapped {/materi/:id, GET} route[39m[38;5;3m +0ms[39m
+2026-03-15 22:07:30: [32m[Nest] 23376  - [39m15/03/2026, 22.07.30 [32m    LOG[39m [38;5;3m[RouterExplorer] [39m[32mMapped {/materi/:id, PUT} route[39m[38;5;3m +0ms[39m
+2026-03-15 22:07:30: [32m[Nest] 23376  - [39m15/03/2026, 22.07.30 [32m    LOG[39m [38;5;3m[RouterExplorer] [39m[32mMapped {/materi/:id, DELETE} route[39m[38;5;3m +0ms[39m
+2026-03-15 22:07:30: [32m[Nest] 23376  - [39m15/03/2026, 22.07.30 [32m    LOG[39m [38;5;3m[RouterExplorer] [39m[32mMapped {/materi/:id/bookmark, POST} route[39m[38;5;3m +1ms[39m
+2026-03-15 22:07:30: [32m[Nest] 23376  - [39m15/03/2026, 22.07.30 [32m    LOG[39m [38;5;3m[RouterExplorer] [39m[32mMapped {/materi/bookmarked/list, GET} route[39m[38;5;3m +0ms[39m
+2026-03-15 22:07:30: [32m[Nest] 23376  - [39m15/03/2026, 22.07.30 [32m    LOG[39m [38;5;3m[RoutesResolver] [39m[32mTugasController {/tugas}:[39m[38;5;3m +0ms[39m
+2026-03-15 22:07:30: [32m[Nest] 23376  - [39m15/03/2026, 22.07.30 [32m    LOG[39m [38;5;3m[RouterExplorer] [39m[32mMapped {/tugas, POST} route[39m[38;5;3m +0ms[39m
+2026-03-15 22:07:30: [32m[Nest] 23376  - [39m15/03/2026, 22.07.30 [32m    LOG[39m [38;5;3m[RouterExplorer] [39m[32mMapped {/tugas, GET} route[39m[38;5;3m +0ms[39m
+2026-03-15 22:07:30: [32m[Nest] 23376  - [39m15/03/2026, 22.07.30 [32m    LOG[39m [38;5;3m[RouterExplorer] [39m[32mMapped {/tugas/:id, GET} route[39m[38;5;3m +0ms[39m
+2026-03-15 22:07:30: [32m[Nest] 23376  - [39m15/03/2026, 22.07.30 [32m    LOG[39m [38;5;3m[RouterExplorer] [39m[32mMapped {/tugas/:id, PUT} route[39m[38;5;3m +0ms[39m
+2026-03-15 22:07:30: [32m[Nest] 23376  - [39m15/03/2026, 22.07.30 [32m    LOG[39m [38;5;3m[RouterExplorer] [39m[32mMapped {/tugas/:id, DELETE} route[39m[38;5;3m +0ms[39m
+2026-03-15 22:07:30: [32m[Nest] 23376  - [39m15/03/2026, 22.07.30 [32m    LOG[39m [38;5;3m[RouterExplorer] [39m[32mMapped {/tugas/:id/submissions, GET} route[39m[38;5;3m +0ms[39m
+2026-03-15 22:07:30: [32m[Nest] 23376  - [39m15/03/2026, 22.07.30 [32m    LOG[39m [38;5;3m[RouterExplorer] [39m[32mMapped {/tugas/:id/submit, POST} route[39m[38;5;3m +0ms[39m
+2026-03-15 22:07:30: [32m[Nest] 23376  - [39m15/03/2026, 22.07.30 [32m    LOG[39m [38;5;3m[RouterExplorer] [39m[32mMapped {/tugas/:tugasId/grade/:siswaId, PUT} route[39m[38;5;3m +1ms[39m
+2026-03-15 22:07:30: [32m[Nest] 23376  - [39m15/03/2026, 22.07.30 [32m    LOG[39m [38;5;3m[RoutesResolver] [39m[32mNotifikasiController {/notifikasi}:[39m[38;5;3m +0ms[39m
+2026-03-15 22:07:30: [32m[Nest] 23376  - [39m15/03/2026, 22.07.30 [32m    LOG[39m [38;5;3m[RouterExplorer] [39m[32mMapped {/notifikasi, GET} route[39m[38;5;3m +0ms[39m
+2026-03-15 22:07:30: [32m[Nest] 23376  - [39m15/03/2026, 22.07.30 [32m    LOG[39m [38;5;3m[RouterExplorer] [39m[32mMapped {/notifikasi/unread-count, GET} route[39m[38;5;3m +0ms[39m
+2026-03-15 22:07:30: [32m[Nest] 23376  - [39m15/03/2026, 22.07.30 [32m    LOG[39m [38;5;3m[RouterExplorer] [39m[32mMapped {/notifikasi/:id/read, PUT} route[39m[38;5;3m +0ms[39m
+2026-03-15 22:07:30: [32m[Nest] 23376  - [39m15/03/2026, 22.07.30 [32m    LOG[39m [38;5;3m[RouterExplorer] [39m[32mMapped {/notifikasi/mark-all-read, PUT} route[39m[38;5;3m +0ms[39m
+2026-03-15 22:07:30: [32m[Nest] 23376  - [39m15/03/2026, 22.07.30 [32m    LOG[39m [38;5;3m[RouterExplorer] [39m[32mMapped {/notifikasi/:id, DELETE} route[39m[38;5;3m +0ms[39m
+2026-03-15 22:07:30: [32m[Nest] 23376  - [39m15/03/2026, 22.07.30 [32m    LOG[39m [38;5;3m[RoutesResolver] [39m[32mForumController {/forum}:[39m[38;5;3m +0ms[39m
+2026-03-15 22:07:30: [32m[Nest] 23376  - [39m15/03/2026, 22.07.30 [32m    LOG[39m [38;5;3m[RouterExplorer] [39m[32mMapped {/forum/threads, POST} route[39m[38;5;3m +0ms[39m
+2026-03-15 22:07:30: [32m[Nest] 23376  - [39m15/03/2026, 22.07.30 [32m    LOG[39m [38;5;3m[RouterExplorer] [39m[32mMapped {/forum/threads, GET} route[39m[38;5;3m +0ms[39m
+2026-03-15 22:07:30: [32m[Nest] 23376  - [39m15/03/2026, 22.07.30 [32m    LOG[39m [38;5;3m[RouterExplorer] [39m[32mMapped {/forum/threads/:id, GET} route[39m[38;5;3m +0ms[39m
+2026-03-15 22:07:30: [32m[Nest] 23376  - [39m15/03/2026, 22.07.30 [32m    LOG[39m [38;5;3m[RouterExplorer] [39m[32mMapped {/forum/threads/:id/posts, POST} route[39m[38;5;3m +0ms[39m
+2026-03-15 22:07:30: [32m[Nest] 23376  - [39m15/03/2026, 22.07.30 [32m    LOG[39m [38;5;3m[RouterExplorer] [39m[32mMapped {/forum/posts/:id/react, POST} route[39m[38;5;3m +0ms[39m
+2026-03-15 22:07:30: [32m[Nest] 23376  - [39m15/03/2026, 22.07.30 [32m    LOG[39m [38;5;3m[RoutesResolver] [39m[32mAnalyticsController {/analytics}:[39m[38;5;3m +0ms[39m
+2026-03-15 22:07:30: [32m[Nest] 23376  - [39m15/03/2026, 22.07.30 [32m    LOG[39m [38;5;3m[RouterExplorer] [39m[32mMapped {/analytics/dashboard, GET} route[39m[38;5;3m +0ms[39m
+2026-03-15 22:07:30: [32m[Nest] 23376  - [39m15/03/2026, 22.07.30 [32m    LOG[39m [38;5;3m[RouterExplorer] [39m[32mMapped {/analytics/upcoming-tasks, GET} route[39m[38;5;3m +0ms[39m
+2026-03-15 22:07:30: [32m[Nest] 23376  - [39m15/03/2026, 22.07.30 [32m    LOG[39m [38;5;3m[RouterExplorer] [39m[32mMapped {/analytics/admin, GET} route[39m[38;5;3m +0ms[39m
+2026-03-15 22:07:30: [32m[Nest] 23376  - [39m15/03/2026, 22.07.30 [32m    LOG[39m [38;5;3m[RouterExplorer] [39m[32mMapped {/analytics/guru, GET} route[39m[38;5;3m +0ms[39m
+2026-03-15 22:07:30: [32m[Nest] 23376  - [39m15/03/2026, 22.07.30 [32m    LOG[39m [38;5;3m[RoutesResolver] [39m[32mPengumumanController {/pengumuman}:[39m[38;5;3m +0ms[39m
+2026-03-15 22:07:30: [32m[Nest] 23376  - [39m15/03/2026, 22.07.30 [32m    LOG[39m [38;5;3m[RouterExplorer] [39m[32mMapped {/pengumuman, POST} route[39m[38;5;3m +0ms[39m
+2026-03-15 22:07:30: [32m[Nest] 23376  - [39m15/03/2026, 22.07.30 [32m    LOG[39m [38;5;3m[RouterExplorer] [39m[32mMapped {/pengumuman, GET} route[39m[38;5;3m +0ms[39m
+2026-03-15 22:07:30: [32m[Nest] 23376  - [39m15/03/2026, 22.07.30 [32m    LOG[39m [38;5;3m[RouterExplorer] [39m[32mMapped {/pengumuman/manage, GET} route[39m[38;5;3m +0ms[39m
+2026-03-15 22:07:30: [32m[Nest] 23376  - [39m15/03/2026, 22.07.30 [32m    LOG[39m [38;5;3m[RouterExplorer] [39m[32mMapped {/pengumuman/:id, GET} route[39m[38;5;3m +1ms[39m
+2026-03-15 22:07:30: [32m[Nest] 23376  - [39m15/03/2026, 22.07.30 [32m    LOG[39m [38;5;3m[RouterExplorer] [39m[32mMapped {/pengumuman/:id, PATCH} route[39m[38;5;3m +0ms[39m
+2026-03-15 22:07:30: [32m[Nest] 23376  - [39m15/03/2026, 22.07.30 [32m    LOG[39m [38;5;3m[RouterExplorer] [39m[32mMapped {/pengumuman/:id, DELETE} route[39m[38;5;3m +0ms[39m
+2026-03-15 22:07:30: [32m[Nest] 23376  - [39m15/03/2026, 22.07.30 [32m    LOG[39m [38;5;3m[RoutesResolver] [39m[32mRppController {/rpp}:[39m[38;5;3m +0ms[39m
+2026-03-15 22:07:30: [32m[Nest] 23376  - [39m15/03/2026, 22.07.30 [32m    LOG[39m [38;5;3m[RouterExplorer] [39m[32mMapped {/rpp, POST} route[39m[38;5;3m +0ms[39m
+2026-03-15 22:07:30: [32m[Nest] 23376  - [39m15/03/2026, 22.07.30 [32m    LOG[39m [38;5;3m[RouterExplorer] [39m[32mMapped {/rpp, GET} route[39m[38;5;3m +0ms[39m
+2026-03-15 22:07:30: [32m[Nest] 23376  - [39m15/03/2026, 22.07.30 [32m    LOG[39m [38;5;3m[RouterExplorer] [39m[32mMapped {/rpp/my, GET} route[39m[38;5;3m +0ms[39m
+2026-03-15 22:07:30: [32m[Nest] 23376  - [39m15/03/2026, 22.07.30 [32m    LOG[39m [38;5;3m[RouterExplorer] [39m[32mMapped {/rpp/stats, GET} route[39m[38;5;3m +0ms[39m
+2026-03-15 22:07:30: [32m[Nest] 23376  - [39m15/03/2026, 22.07.30 [32m    LOG[39m [38;5;3m[RouterExplorer] [39m[32mMapped {/rpp/:id, GET} route[39m[38;5;3m +0ms[39m
+2026-03-15 22:07:30: [32m[Nest] 23376  - [39m15/03/2026, 22.07.30 [32m    LOG[39m [38;5;3m[RouterExplorer] [39m[32mMapped {/rpp/:id, PUT} route[39m[38;5;3m +0ms[39m
+2026-03-15 22:07:30: [32m[Nest] 23376  - [39m15/03/2026, 22.07.30 [32m    LOG[39m [38;5;3m[RouterExplorer] [39m[32mMapped {/rpp/:id, DELETE} route[39m[38;5;3m +1ms[39m
+2026-03-15 22:07:30: [32m[Nest] 23376  - [39m15/03/2026, 22.07.30 [32m    LOG[39m [38;5;3m[RouterExplorer] [39m[32mMapped {/rpp/:id/publish, POST} route[39m[38;5;3m +0ms[39m
+2026-03-15 22:07:30: [32m[Nest] 23376  - [39m15/03/2026, 22.07.30 [32m    LOG[39m [38;5;3m[RouterExplorer] [39m[32mMapped {/rpp/:id/duplicate, POST} route[39m[38;5;3m +0ms[39m
+2026-03-15 22:07:30: [32m[Nest] 23376  - [39m15/03/2026, 22.07.30 [32m    LOG[39m [38;5;3m[RouterExplorer] [39m[32mMapped {/rpp/generate, POST} route[39m[38;5;3m +0ms[39m
+2026-03-15 22:07:30: [32m[Nest] 23376  - [39m15/03/2026, 22.07.30 [32m    LOG[39m [38;5;3m[RoutesResolver] [39m[32mAbsensiKelasController {/absensi-kelas}:[39m[38;5;3m +0ms[39m
+2026-03-15 22:07:30: [32m[Nest] 23376  - [39m15/03/2026, 22.07.30 [32m    LOG[39m [38;5;3m[RouterExplorer] [39m[32mMapped {/absensi-kelas/my-today, GET} route[39m[38;5;3m +0ms[39m
+2026-03-15 22:07:30: [32m[Nest] 23376  - [39m15/03/2026, 22.07.30 [32m    LOG[39m [38;5;3m[RouterExplorer] [39m[32mMapped {/absensi-kelas/jadwal/:jadwalId/students, GET} route[39m[38;5;3m +0ms[39m
+2026-03-15 22:07:30: [32m[Nest] 23376  - [39m15/03/2026, 22.07.30 [32m    LOG[39m [38;5;3m[RouterExplorer] [39m[32mMapped {/absensi-kelas/rekap, GET} route[39m[38;5;3m +0ms[39m
+2026-03-15 22:07:30: [32m[Nest] 23376  - [39m15/03/2026, 22.07.30 [32m    LOG[39m [38;5;3m[RouterExplorer] [39m[32mMapped {/absensi-kelas, GET} route[39m[38;5;3m +0ms[39m
+2026-03-15 22:07:30: [32m[Nest] 23376  - [39m15/03/2026, 22.07.30 [32m    LOG[39m [38;5;3m[RouterExplorer] [39m[32mMapped {/absensi-kelas/:id, GET} route[39m[38;5;3m +0ms[39m
+2026-03-15 22:07:30: [32m[Nest] 23376  - [39m15/03/2026, 22.07.30 [32m    LOG[39m [38;5;3m[RouterExplorer] [39m[32mMapped {/absensi-kelas, POST} route[39m[38;5;3m +0ms[39m
+2026-03-15 22:07:30: [32m[Nest] 23376  - [39m15/03/2026, 22.07.30 [32m    LOG[39m [38;5;3m[RouterExplorer] [39m[32mMapped {/absensi-kelas/:id, PUT} route[39m[38;5;3m +1ms[39m
+2026-03-15 22:07:30: [32m[Nest] 23376  - [39m15/03/2026, 22.07.30 [32m    LOG[39m [38;5;3m[RoutesResolver] [39m[32mJenisUjianController {/jenis-ujian}:[39m[38;5;3m +0ms[39m
+2026-03-15 22:07:30: [32m[Nest] 23376  - [39m15/03/2026, 22.07.30 [32m    LOG[39m [38;5;3m[RouterExplorer] [39m[32mMapped {/jenis-ujian, POST} route[39m[38;5;3m +0ms[39m
+2026-03-15 22:07:30: [32m[Nest] 23376  - [39m15/03/2026, 22.07.30 [32m    LOG[39m [38;5;3m[RouterExplorer] [39m[32mMapped {/jenis-ujian, GET} route[39m[38;5;3m +0ms[39m
+2026-03-15 22:07:30: [32m[Nest] 23376  - [39m15/03/2026, 22.07.30 [32m    LOG[39m [38;5;3m[RouterExplorer] [39m[32mMapped {/jenis-ujian/:id, GET} route[39m[38;5;3m +0ms[39m
+2026-03-15 22:07:30: [32m[Nest] 23376  - [39m15/03/2026, 22.07.30 [32m    LOG[39m [38;5;3m[RouterExplorer] [39m[32mMapped {/jenis-ujian/:id, PATCH} route[39m[38;5;3m +0ms[39m
+2026-03-15 22:07:30: [32m[Nest] 23376  - [39m15/03/2026, 22.07.30 [32m    LOG[39m [38;5;3m[RouterExplorer] [39m[32mMapped {/jenis-ujian/:id, DELETE} route[39m[38;5;3m +0ms[39m
+2026-03-15 22:07:30: [32m[Nest] 23376  - [39m15/03/2026, 22.07.30 [32m    LOG[39m [38;5;3m[RouterExplorer] [39m[32mMapped {/jenis-ujian/reorder, POST} route[39m[38;5;3m +0ms[39m
+2026-03-15 22:07:30: [32m[Nest] 23376  - [39m15/03/2026, 22.07.30 [32m    LOG[39m [38;5;3m[RoutesResolver] [39m[32mKelompokSoalController {/kelompok-soal}:[39m[38;5;3m +0ms[39m
+2026-03-15 22:07:30: [32m[Nest] 23376  - [39m15/03/2026, 22.07.30 [32m    LOG[39m [38;5;3m[RouterExplorer] [39m[32mMapped {/kelompok-soal, POST} route[39m[38;5;3m +0ms[39m
+2026-03-15 22:07:30: [32m[Nest] 23376  - [39m15/03/2026, 22.07.30 [32m    LOG[39m [38;5;3m[RouterExplorer] [39m[32mMapped {/kelompok-soal, GET} route[39m[38;5;3m +1ms[39m
+2026-03-15 22:07:30: [32m[Nest] 23376  - [39m15/03/2026, 22.07.30 [32m    LOG[39m [38;5;3m[RouterExplorer] [39m[32mMapped {/kelompok-soal/:id, GET} route[39m[38;5;3m +0ms[39m
+2026-03-15 22:07:30: [32m[Nest] 23376  - [39m15/03/2026, 22.07.30 [32m    LOG[39m [38;5;3m[RouterExplorer] [39m[32mMapped {/kelompok-soal/:id, PATCH} route[39m[38;5;3m +0ms[39m
+2026-03-15 22:07:30: [32m[Nest] 23376  - [39m15/03/2026, 22.07.30 [32m    LOG[39m [38;5;3m[RouterExplorer] [39m[32mMapped {/kelompok-soal/:id, DELETE} route[39m[38;5;3m +0ms[39m
+2026-03-15 22:07:30: [32m[Nest] 23376  - [39m15/03/2026, 22.07.30 [32m    LOG[39m [38;5;3m[NestApplication] [39m[32mNest application successfully started[39m[38;5;3m +52ms[39m
+2026-03-15 22:07:31: dYs? API ready on:
+2026-03-15 22:07:31:   - Local:   http://localhost:3001
+2026-03-15 22:07:31:   - Network: http://192.168.1.11:3001
+2026-03-15 22:07:39: [JadwalPelajaran] User: {
+  "userId": "cmj5gwztn001e35udd3b8c4mg",
+  "email": "example14@cbt.com",
+  "role": "SISWA",
+  "siswa": {
+    "id": "cmj5gwztr001f35udgp2iqne6",
+    "kelasId": "cmj5eca0e0003jsud1uxj50o4",
+    "nama": "BADRIA NUR ANISA",
+    "nisn": "0099940723",
+    "kelas": {
+      "id": "cmj5eca0e0003jsud1uxj50o4",
+      "nama": "X Teknik Komputer dan Jaringan"
+    }
+  },
+  "guru": null,
+  "siswaId": "cmj5gwztr001f35udgp2iqne6",
+  "guruId": null,
+  "mataPelajaranIds": []
+}
+2026-03-15 22:07:39: [JadwalPelajaran] Filtering for SISWA, userId: cmj5gwztn001e35udd3b8c4mg
+2026-03-15 22:07:39: [TUGAS CONTROLLER] Student request:
+2026-03-15 22:07:39:   kelasId: cmj5eca0e0003jsud1uxj50o4
+2026-03-15 22:07:39:   siswaId: cmj5gwztr001f35udgp2iqne6
+2026-03-15 22:07:39: [JadwalPelajaran] Found siswa: {
+  "kelasId": "cmj5eca0e0003jsud1uxj50o4",
+  "nama": "BADRIA NUR ANISA"
+}
+2026-03-15 22:07:39: [JadwalPelajaran] Using kelasId filter: cmj5eca0e0003jsud1uxj50o4
+2026-03-15 22:07:39: [JadwalPelajaran] Final where: {
+  "kelasId": "cmj5eca0e0003jsud1uxj50o4",
+  "hari": "SENIN"
+}
+2026-03-15 22:07:39: [JadwalPelajaran] Found 8 jadwal records
+2026-03-15 22:12:44: [32m[Nest] 25084  - [39m15/03/2026, 22.12.44 [32m    LOG[39m [38;5;3m[NestFactory] [39m[32mStarting Nest application...[39m
+2026-03-15 22:12:44: [32m[Nest] 25084  - [39m15/03/2026, 22.12.44 [32m    LOG[39m [38;5;3m[InstanceLoader] [39m[32mPrismaModule dependencies initialized[39m[38;5;3m +20ms[39m
+2026-03-15 22:12:44: [32m[Nest] 25084  - [39m15/03/2026, 22.12.44 [32m    LOG[39m [38;5;3m[InstanceLoader] [39m[32mPassportModule dependencies initialized[39m[38;5;3m +0ms[39m
+2026-03-15 22:12:44: [32m[Nest] 25084  - [39m15/03/2026, 22.12.44 [32m    LOG[39m [38;5;3m[InstanceLoader] [39m[32mConfigHostModule dependencies initialized[39m[38;5;3m +1ms[39m
+2026-03-15 22:12:44: [32m[Nest] 25084  - [39m15/03/2026, 22.12.44 [32m    LOG[39m [38;5;3m[InstanceLoader] [39m[32mDiscoveryModule dependencies initialized[39m[38;5;3m +0ms[39m
+2026-03-15 22:12:44: [32m[Nest] 25084  - [39m15/03/2026, 22.12.44 [32m    LOG[39m [38;5;3m[InstanceLoader] [39m[32mAppModule dependencies initialized[39m[38;5;3m +2ms[39m
+2026-03-15 22:12:44: [32m[Nest] 25084  - [39m15/03/2026, 22.12.44 [32m    LOG[39m [38;5;3m[InstanceLoader] [39m[32mConfigModule dependencies initialized[39m[38;5;3m +1ms[39m
+2026-03-15 22:12:44: [32m[Nest] 25084  - [39m15/03/2026, 22.12.44 [32m    LOG[39m [38;5;3m[InstanceLoader] [39m[32mConfigModule dependencies initialized[39m[38;5;3m +0ms[39m
+2026-03-15 22:12:44: [32m[Nest] 25084  - [39m15/03/2026, 22.12.44 [32m    LOG[39m [38;5;3m[InstanceLoader] [39m[32mServeStaticModule dependencies initialized[39m[38;5;3m +0ms[39m
+2026-03-15 22:12:44: [32m[Nest] 25084  - [39m15/03/2026, 22.12.44 [32m    LOG[39m [38;5;3m[InstanceLoader] [39m[32mScheduleModule dependencies initialized[39m[38;5;3m +0ms[39m
+2026-03-15 22:12:44: [32m[Nest] 25084  - [39m15/03/2026, 22.12.44 [32m    LOG[39m [38;5;3m[InstanceLoader] [39m[32mJwtModule dependencies initialized[39m[38;5;3m +1ms[39m
+2026-03-15 22:12:44: [32m[Nest] 25084  - [39m15/03/2026, 22.12.44 [32m    LOG[39m [38;5;3m[InstanceLoader] [39m[32mDatabaseModule dependencies initialized[39m[38;5;3m +1ms[39m
+2026-03-15 22:12:44: [32m[Nest] 25084  - [39m15/03/2026, 22.12.44 [32m    LOG[39m [38;5;3m[InstanceLoader] [39m[32mUploadModule dependencies initialized[39m[38;5;3m +0ms[39m
+2026-03-15 22:12:44: [32m[Nest] 25084  - [39m15/03/2026, 22.12.44 [32m    LOG[39m [38;5;3m[InstanceLoader] [39m[32mUsersModule dependencies initialized[39m[38;5;3m +0ms[39m
+2026-03-15 22:12:44: [32m[Nest] 25084  - [39m15/03/2026, 22.12.44 [32m    LOG[39m [38;5;3m[InstanceLoader] [39m[32mTahunAjaranModule dependencies initialized[39m[38;5;3m +0ms[39m
+2026-03-15 22:12:44: [32m[Nest] 25084  - [39m15/03/2026, 22.12.44 [32m    LOG[39m [38;5;3m[InstanceLoader] [39m[32mMataPelajaranModule dependencies initialized[39m[38;5;3m +0ms[39m
+2026-03-15 22:12:44: [32m[Nest] 25084  - [39m15/03/2026, 22.12.44 [32m    LOG[39m [38;5;3m[InstanceLoader] [39m[32mGuruModule dependencies initialized[39m[38;5;3m +0ms[39m
+2026-03-15 22:12:44: [32m[Nest] 25084  - [39m15/03/2026, 22.12.44 [32m    LOG[39m [38;5;3m[InstanceLoader] [39m[32mKelasModule dependencies initialized[39m[38;5;3m +1ms[39m
+2026-03-15 22:12:44: [32m[Nest] 25084  - [39m15/03/2026, 22.12.44 [32m    LOG[39m [38;5;3m[InstanceLoader] [39m[32mSiswaModule dependencies initialized[39m[38;5;3m +0ms[39m
+2026-03-15 22:12:44: [32m[Nest] 25084  - [39m15/03/2026, 22.12.44 [32m    LOG[39m [38;5;3m[InstanceLoader] [39m[32mJurusanModule dependencies initialized[39m[38;5;3m +0ms[39m
+2026-03-15 22:12:44: [32m[Nest] 25084  - [39m15/03/2026, 22.12.44 [32m    LOG[39m [38;5;3m[InstanceLoader] [39m[32mSettingsModule dependencies initialized[39m[38;5;3m +0ms[39m
+2026-03-15 22:12:44: [32m[Nest] 25084  - [39m15/03/2026, 22.12.44 [32m    LOG[39m [38;5;3m[InstanceLoader] [39m[32mBankSoalModule dependencies initialized[39m[38;5;3m +0ms[39m
+2026-03-15 22:12:44: [32m[Nest] 25084  - [39m15/03/2026, 22.12.44 [32m    LOG[39m [38;5;3m[InstanceLoader] [39m[32mUjianModule dependencies initialized[39m[38;5;3m +0ms[39m
+2026-03-15 22:12:44: [32m[Nest] 25084  - [39m15/03/2026, 22.12.44 [32m    LOG[39m [38;5;3m[InstanceLoader] [39m[32mUjianSiswaModule dependencies initialized[39m[38;5;3m +0ms[39m
+2026-03-15 22:12:44: [32m[Nest] 25084  - [39m15/03/2026, 22.12.44 [32m    LOG[39m [38;5;3m[InstanceLoader] [39m[32mJadwalPelajaranModule dependencies initialized[39m[38;5;3m +0ms[39m
+2026-03-15 22:12:44: [32m[Nest] 25084  - [39m15/03/2026, 22.12.44 [32m    LOG[39m [38;5;3m[InstanceLoader] [39m[32mForumModule dependencies initialized[39m[38;5;3m +0ms[39m
+2026-03-15 22:12:44: [32m[Nest] 25084  - [39m15/03/2026, 22.12.44 [32m    LOG[39m [38;5;3m[InstanceLoader] [39m[32mAnalyticsModule dependencies initialized[39m[38;5;3m +0ms[39m
+2026-03-15 22:12:44: [32m[Nest] 25084  - [39m15/03/2026, 22.12.44 [32m    LOG[39m [38;5;3m[InstanceLoader] [39m[32mAbsensiKelasModule dependencies initialized[39m[38;5;3m +0ms[39m
+2026-03-15 22:12:44: [32m[Nest] 25084  - [39m15/03/2026, 22.12.44 [32m    LOG[39m [38;5;3m[InstanceLoader] [39m[32mJenisUjianModule dependencies initialized[39m[38;5;3m +0ms[39m
+2026-03-15 22:12:44: [32m[Nest] 25084  - [39m15/03/2026, 22.12.44 [32m    LOG[39m [38;5;3m[InstanceLoader] [39m[32mKelompokSoalModule dependencies initialized[39m[38;5;3m +0ms[39m
+2026-03-15 22:12:44: [32m[Nest] 25084  - [39m15/03/2026, 22.12.44 [32m    LOG[39m [38;5;3m[InstanceLoader] [39m[32mPaketSoalModule dependencies initialized[39m[38;5;3m +0ms[39m
+2026-03-15 22:12:44: [32m[Nest] 25084  - [39m15/03/2026, 22.12.44 [32m    LOG[39m [38;5;3m[InstanceLoader] [39m[32mNotifikasiModule dependencies initialized[39m[38;5;3m +0ms[39m
+2026-03-15 22:12:44: [32m[Nest] 25084  - [39m15/03/2026, 22.12.44 [32m    LOG[39m [38;5;3m[InstanceLoader] [39m[32mAttendanceModule dependencies initialized[39m[38;5;3m +0ms[39m
+2026-03-15 22:12:44: [32m[Nest] 25084  - [39m15/03/2026, 22.12.44 [32m    LOG[39m [38;5;3m[InstanceLoader] [39m[32mTugasModule dependencies initialized[39m[38;5;3m +0ms[39m
+2026-03-15 22:12:44: [32m[Nest] 25084  - [39m15/03/2026, 22.12.44 [32m    LOG[39m [38;5;3m[InstanceLoader] [39m[32mPengumumanModule dependencies initialized[39m[38;5;3m +0ms[39m
+2026-03-15 22:12:44: [32m[Nest] 25084  - [39m15/03/2026, 22.12.44 [32m    LOG[39m [38;5;3m[InstanceLoader] [39m[32mMateriModule dependencies initialized[39m[38;5;3m +0ms[39m
+2026-03-15 22:12:44: [32m[Nest] 25084  - [39m15/03/2026, 22.12.44 [32m    LOG[39m [38;5;3m[InstanceLoader] [39m[32mRppModule dependencies initialized[39m[38;5;3m +0ms[39m
+2026-03-15 22:12:44: [32m[Nest] 25084  - [39m15/03/2026, 22.12.44 [32m    LOG[39m [38;5;3m[InstanceLoader] [39m[32mAuthModule dependencies initialized[39m[38;5;3m +1ms[39m
+2026-03-15 22:12:44: [32m[Nest] 25084  - [39m15/03/2026, 22.12.44 [32m    LOG[39m [38;5;3m[RoutesResolver] [39m[32mAppController {/}:[39m[38;5;3m +4ms[39m
+2026-03-15 22:12:44: [32m[Nest] 25084  - [39m15/03/2026, 22.12.44 [32m    LOG[39m [38;5;3m[RouterExplorer] [39m[32mMapped {/health, GET} route[39m[38;5;3m +2ms[39m
+2026-03-15 22:12:44: [32m[Nest] 25084  - [39m15/03/2026, 22.12.44 [32m    LOG[39m [38;5;3m[RoutesResolver] [39m[32mAuthController {/auth}:[39m[38;5;3m +0ms[39m
+2026-03-15 22:12:44: [32m[Nest] 25084  - [39m15/03/2026, 22.12.44 [32m    LOG[39m [38;5;3m[RouterExplorer] [39m[32mMapped {/auth/register, POST} route[39m[38;5;3m +0ms[39m
+2026-03-15 22:12:44: [32m[Nest] 25084  - [39m15/03/2026, 22.12.44 [32m    LOG[39m [38;5;3m[RouterExplorer] [39m[32mMapped {/auth/login, POST} route[39m[38;5;3m +1ms[39m
+2026-03-15 22:12:44: [32m[Nest] 25084  - [39m15/03/2026, 22.12.44 [32m    LOG[39m [38;5;3m[RouterExplorer] [39m[32mMapped {/auth/login-nisn, POST} route[39m[38;5;3m +0ms[39m
+2026-03-15 22:12:44: [32m[Nest] 25084  - [39m15/03/2026, 22.12.44 [32m    LOG[39m [38;5;3m[RouterExplorer] [39m[32mMapped {/auth/profile, GET} route[39m[38;5;3m +0ms[39m
+2026-03-15 22:12:44: [32m[Nest] 25084  - [39m15/03/2026, 22.12.44 [32m    LOG[39m [38;5;3m[RouterExplorer] [39m[32mMapped {/auth/profile, PUT} route[39m[38;5;3m +1ms[39m
+2026-03-15 22:12:44: [32m[Nest] 25084  - [39m15/03/2026, 22.12.44 [32m    LOG[39m [38;5;3m[RouterExplorer] [39m[32mMapped {/auth/change-password, POST} route[39m[38;5;3m +0ms[39m
+2026-03-15 22:12:44: [32m[Nest] 25084  - [39m15/03/2026, 22.12.44 [32m    LOG[39m [38;5;3m[RouterExplorer] [39m[32mMapped {/auth/admin/reset-password, POST} route[39m[38;5;3m +0ms[39m
+2026-03-15 22:12:44: [32m[Nest] 25084  - [39m15/03/2026, 22.12.44 [32m    LOG[39m [38;5;3m[RouterExplorer] [39m[32mMapped {/auth/me, GET} route[39m[38;5;3m +0ms[39m
+2026-03-15 22:12:44: [32m[Nest] 25084  - [39m15/03/2026, 22.12.44 [32m    LOG[39m [38;5;3m[RoutesResolver] [39m[32mUsersController {/users}:[39m[38;5;3m +0ms[39m
+2026-03-15 22:12:44: [32m[Nest] 25084  - [39m15/03/2026, 22.12.44 [32m    LOG[39m [38;5;3m[RouterExplorer] [39m[32mMapped {/users, GET} route[39m[38;5;3m +1ms[39m
+2026-03-15 22:12:44: [32m[Nest] 25084  - [39m15/03/2026, 22.12.44 [32m    LOG[39m [38;5;3m[RouterExplorer] [39m[32mMapped {/users/:id, GET} route[39m[38;5;3m +0ms[39m
+2026-03-15 22:12:44: [32m[Nest] 25084  - [39m15/03/2026, 22.12.44 [32m    LOG[39m [38;5;3m[RouterExplorer] [39m[32mMapped {/users, POST} route[39m[38;5;3m +0ms[39m
+2026-03-15 22:12:44: [32m[Nest] 25084  - [39m15/03/2026, 22.12.44 [32m    LOG[39m [38;5;3m[RouterExplorer] [39m[32mMapped {/users/:id, PUT} route[39m[38;5;3m +0ms[39m
+2026-03-15 22:12:44: [32m[Nest] 25084  - [39m15/03/2026, 22.12.44 [32m    LOG[39m [38;5;3m[RouterExplorer] [39m[32mMapped {/users/:id, DELETE} route[39m[38;5;3m +0ms[39m
+2026-03-15 22:12:44: [32m[Nest] 25084  - [39m15/03/2026, 22.12.44 [32m    LOG[39m [38;5;3m[RoutesResolver] [39m[32mTahunAjaranController {/tahun-ajaran}:[39m[38;5;3m +0ms[39m
+2026-03-15 22:12:44: [32m[Nest] 25084  - [39m15/03/2026, 22.12.44 [32m    LOG[39m [38;5;3m[RouterExplorer] [39m[32mMapped {/tahun-ajaran, GET} route[39m[38;5;3m +1ms[39m
+2026-03-15 22:12:44: [32m[Nest] 25084  - [39m15/03/2026, 22.12.44 [32m    LOG[39m [38;5;3m[RouterExplorer] [39m[32mMapped {/tahun-ajaran/:id, GET} route[39m[38;5;3m +0ms[39m
+2026-03-15 22:12:44: [32m[Nest] 25084  - [39m15/03/2026, 22.12.44 [32m    LOG[39m [38;5;3m[RouterExplorer] [39m[32mMapped {/tahun-ajaran, POST} route[39m[38;5;3m +0ms[39m
+2026-03-15 22:12:44: [32m[Nest] 25084  - [39m15/03/2026, 22.12.44 [32m    LOG[39m [38;5;3m[RouterExplorer] [39m[32mMapped {/tahun-ajaran/:id, PUT} route[39m[38;5;3m +0ms[39m
+2026-03-15 22:12:44: [32m[Nest] 25084  - [39m15/03/2026, 22.12.44 [32m    LOG[39m [38;5;3m[RouterExplorer] [39m[32mMapped {/tahun-ajaran/:id, DELETE} route[39m[38;5;3m +0ms[39m
+2026-03-15 22:12:44: [32m[Nest] 25084  - [39m15/03/2026, 22.12.44 [32m    LOG[39m [38;5;3m[RouterExplorer] [39m[32mMapped {/tahun-ajaran/active/current, GET} route[39m[38;5;3m +0ms[39m
+2026-03-15 22:12:44: [32m[Nest] 25084  - [39m15/03/2026, 22.12.44 [32m    LOG[39m [38;5;3m[RouterExplorer] [39m[32mMapped {/tahun-ajaran/:id/set-active, POST} route[39m[38;5;3m +1ms[39m
+2026-03-15 22:12:44: [32m[Nest] 25084  - [39m15/03/2026, 22.12.44 [32m    LOG[39m [38;5;3m[RoutesResolver] [39m[32mMataPelajaranController {/mata-pelajaran}:[39m[38;5;3m +0ms[39m
+2026-03-15 22:12:44: [32m[Nest] 25084  - [39m15/03/2026, 22.12.44 [32m    LOG[39m [38;5;3m[RouterExplorer] [39m[32mMapped {/mata-pelajaran, GET} route[39m[38;5;3m +0ms[39m
+2026-03-15 22:12:44: [32m[Nest] 25084  - [39m15/03/2026, 22.12.44 [32m    LOG[39m [38;5;3m[RouterExplorer] [39m[32mMapped {/mata-pelajaran/export, GET} route[39m[38;5;3m +0ms[39m
+2026-03-15 22:12:44: [32m[Nest] 25084  - [39m15/03/2026, 22.12.44 [32m    LOG[39m [38;5;3m[RouterExplorer] [39m[32mMapped {/mata-pelajaran/template, GET} route[39m[38;5;3m +0ms[39m
+2026-03-15 22:12:44: [32m[Nest] 25084  - [39m15/03/2026, 22.12.44 [32m    LOG[39m [38;5;3m[RouterExplorer] [39m[32mMapped {/mata-pelajaran/:id, GET} route[39m[38;5;3m +0ms[39m
+2026-03-15 22:12:44: [32m[Nest] 25084  - [39m15/03/2026, 22.12.44 [32m    LOG[39m [38;5;3m[RouterExplorer] [39m[32mMapped {/mata-pelajaran, POST} route[39m[38;5;3m +0ms[39m
+2026-03-15 22:12:44: [32m[Nest] 25084  - [39m15/03/2026, 22.12.44 [32m    LOG[39m [38;5;3m[RouterExplorer] [39m[32mMapped {/mata-pelajaran/:id, PUT} route[39m[38;5;3m +0ms[39m
+2026-03-15 22:12:44: [32m[Nest] 25084  - [39m15/03/2026, 22.12.44 [32m    LOG[39m [38;5;3m[RouterExplorer] [39m[32mMapped {/mata-pelajaran/:id, DELETE} route[39m[38;5;3m +1ms[39m
+2026-03-15 22:12:44: [32m[Nest] 25084  - [39m15/03/2026, 22.12.44 [32m    LOG[39m [38;5;3m[RouterExplorer] [39m[32mMapped {/mata-pelajaran/import, POST} route[39m[38;5;3m +0ms[39m
+2026-03-15 22:12:44: [32m[Nest] 25084  - [39m15/03/2026, 22.12.44 [32m    LOG[39m [38;5;3m[RoutesResolver] [39m[32mGuruController {/guru}:[39m[38;5;3m +0ms[39m
+2026-03-15 22:12:44: [32m[Nest] 25084  - [39m15/03/2026, 22.12.44 [32m    LOG[39m [38;5;3m[RouterExplorer] [39m[32mMapped {/guru, GET} route[39m[38;5;3m +0ms[39m
+2026-03-15 22:12:44: [32m[Nest] 25084  - [39m15/03/2026, 22.12.44 [32m    LOG[39m [38;5;3m[RouterExplorer] [39m[32mMapped {/guru/export, GET} route[39m[38;5;3m +0ms[39m
+2026-03-15 22:12:44: [32m[Nest] 25084  - [39m15/03/2026, 22.12.44 [32m    LOG[39m [38;5;3m[RouterExplorer] [39m[32mMapped {/guru/template, GET} route[39m[38;5;3m +0ms[39m
+2026-03-15 22:12:44: [32m[Nest] 25084  - [39m15/03/2026, 22.12.44 [32m    LOG[39m [38;5;3m[RouterExplorer] [39m[32mMapped {/guru/:id, GET} route[39m[38;5;3m +0ms[39m
+2026-03-15 22:12:44: [32m[Nest] 25084  - [39m15/03/2026, 22.12.44 [32m    LOG[39m [38;5;3m[RouterExplorer] [39m[32mMapped {/guru, POST} route[39m[38;5;3m +1ms[39m
+2026-03-15 22:12:44: [32m[Nest] 25084  - [39m15/03/2026, 22.12.44 [32m    LOG[39m [38;5;3m[RouterExplorer] [39m[32mMapped {/guru/:id, PUT} route[39m[38;5;3m +0ms[39m
+2026-03-15 22:12:44: [32m[Nest] 25084  - [39m15/03/2026, 22.12.44 [32m    LOG[39m [38;5;3m[RouterExplorer] [39m[32mMapped {/guru/:id, DELETE} route[39m[38;5;3m +0ms[39m
+2026-03-15 22:12:44: [32m[Nest] 25084  - [39m15/03/2026, 22.12.44 [32m    LOG[39m [38;5;3m[RouterExplorer] [39m[32mMapped {/guru/import, POST} route[39m[38;5;3m +0ms[39m
+2026-03-15 22:12:44: [32m[Nest] 25084  - [39m15/03/2026, 22.12.44 [32m    LOG[39m [38;5;3m[RoutesResolver] [39m[32mKelasController {/kelas}:[39m[38;5;3m +0ms[39m
+2026-03-15 22:12:44: [32m[Nest] 25084  - [39m15/03/2026, 22.12.44 [32m    LOG[39m [38;5;3m[RouterExplorer] [39m[32mMapped {/kelas, GET} route[39m[38;5;3m +0ms[39m
+2026-03-15 22:12:44: [32m[Nest] 25084  - [39m15/03/2026, 22.12.44 [32m    LOG[39m [38;5;3m[RouterExplorer] [39m[32mMapped {/kelas/export, GET} route[39m[38;5;3m +0ms[39m
+2026-03-15 22:12:44: [32m[Nest] 25084  - [39m15/03/2026, 22.12.44 [32m    LOG[39m [38;5;3m[RouterExplorer] [39m[32mMapped {/kelas/template, GET} route[39m[38;5;3m +0ms[39m
+2026-03-15 22:12:44: [32m[Nest] 25084  - [39m15/03/2026, 22.12.44 [32m    LOG[39m [38;5;3m[RouterExplorer] [39m[32mMapped {/kelas/:id, GET} route[39m[38;5;3m +1ms[39m
+2026-03-15 22:12:44: [32m[Nest] 25084  - [39m15/03/2026, 22.12.44 [32m    LOG[39m [38;5;3m[RouterExplorer] [39m[32mMapped {/kelas, POST} route[39m[38;5;3m +0ms[39m
+2026-03-15 22:12:44: [32m[Nest] 25084  - [39m15/03/2026, 22.12.44 [32m    LOG[39m [38;5;3m[RouterExplorer] [39m[32mMapped {/kelas/:id, PUT} route[39m[38;5;3m +0ms[39m
+2026-03-15 22:12:44: [32m[Nest] 25084  - [39m15/03/2026, 22.12.44 [32m    LOG[39m [38;5;3m[RouterExplorer] [39m[32mMapped {/kelas/:id, DELETE} route[39m[38;5;3m +0ms[39m
+2026-03-15 22:12:44: [32m[Nest] 25084  - [39m15/03/2026, 22.12.44 [32m    LOG[39m [38;5;3m[RouterExplorer] [39m[32mMapped {/kelas/import, POST} route[39m[38;5;3m +0ms[39m
+2026-03-15 22:12:44: [32m[Nest] 25084  - [39m15/03/2026, 22.12.44 [32m    LOG[39m [38;5;3m[RoutesResolver] [39m[32mSiswaController {/siswa}:[39m[38;5;3m +0ms[39m
+2026-03-15 22:12:44: [32m[Nest] 25084  - [39m15/03/2026, 22.12.44 [32m    LOG[39m [38;5;3m[RouterExplorer] [39m[32mMapped {/siswa, GET} route[39m[38;5;3m +0ms[39m
+2026-03-15 22:12:44: [32m[Nest] 25084  - [39m15/03/2026, 22.12.44 [32m    LOG[39m [38;5;3m[RouterExplorer] [39m[32mMapped {/siswa/export, GET} route[39m[38;5;3m +0ms[39m
+2026-03-15 22:12:44: [32m[Nest] 25084  - [39m15/03/2026, 22.12.44 [32m    LOG[39m [38;5;3m[RouterExplorer] [39m[32mMapped {/siswa/template, GET} route[39m[38;5;3m +0ms[39m
+2026-03-15 22:12:44: [32m[Nest] 25084  - [39m15/03/2026, 22.12.44 [32m    LOG[39m [38;5;3m[RouterExplorer] [39m[32mMapped {/siswa/:id, GET} route[39m[38;5;3m +1ms[39m
+2026-03-15 22:12:44: [32m[Nest] 25084  - [39m15/03/2026, 22.12.44 [32m    LOG[39m [38;5;3m[RouterExplorer] [39m[32mMapped {/siswa, POST} route[39m[38;5;3m +0ms[39m
+2026-03-15 22:12:44: [32m[Nest] 25084  - [39m15/03/2026, 22.12.44 [32m    LOG[39m [38;5;3m[RouterExplorer] [39m[32mMapped {/siswa/import, POST} route[39m[38;5;3m +0ms[39m
+2026-03-15 22:12:44: [32m[Nest] 25084  - [39m15/03/2026, 22.12.44 [32m    LOG[39m [38;5;3m[RouterExplorer] [39m[32mMapped {/siswa/:id, PUT} route[39m[38;5;3m +0ms[39m
+2026-03-15 22:12:44: [32m[Nest] 25084  - [39m15/03/2026, 22.12.44 [32m    LOG[39m [38;5;3m[RouterExplorer] [39m[32mMapped {/siswa/:id, DELETE} route[39m[38;5;3m +0ms[39m
+2026-03-15 22:12:44: [32m[Nest] 25084  - [39m15/03/2026, 22.12.44 [32m    LOG[39m [38;5;3m[RouterExplorer] [39m[32mMapped {/siswa/kenaikan-kelas, POST} route[39m[38;5;3m +0ms[39m
+2026-03-15 22:12:44: [32m[Nest] 25084  - [39m15/03/2026, 22.12.44 [32m    LOG[39m [38;5;3m[RoutesResolver] [39m[32mJurusanController {/jurusan}:[39m[38;5;3m +0ms[39m
+2026-03-15 22:12:44: [32m[Nest] 25084  - [39m15/03/2026, 22.12.44 [32m    LOG[39m [38;5;3m[RouterExplorer] [39m[32mMapped {/jurusan, GET} route[39m[38;5;3m +0ms[39m
+2026-03-15 22:12:44: [32m[Nest] 25084  - [39m15/03/2026, 22.12.44 [32m    LOG[39m [38;5;3m[RouterExplorer] [39m[32mMapped {/jurusan/export/excel, GET} route[39m[38;5;3m +1ms[39m
+2026-03-15 22:12:44: [32m[Nest] 25084  - [39m15/03/2026, 22.12.44 [32m    LOG[39m [38;5;3m[RouterExplorer] [39m[32mMapped {/jurusan/template/excel, GET} route[39m[38;5;3m +0ms[39m
+2026-03-15 22:12:44: [32m[Nest] 25084  - [39m15/03/2026, 22.12.44 [32m    LOG[39m [38;5;3m[RouterExplorer] [39m[32mMapped {/jurusan/:id, GET} route[39m[38;5;3m +0ms[39m
+2026-03-15 22:12:44: [32m[Nest] 25084  - [39m15/03/2026, 22.12.44 [32m    LOG[39m [38;5;3m[RouterExplorer] [39m[32mMapped {/jurusan, POST} route[39m[38;5;3m +0ms[39m
+2026-03-15 22:12:44: [32m[Nest] 25084  - [39m15/03/2026, 22.12.44 [32m    LOG[39m [38;5;3m[RouterExplorer] [39m[32mMapped {/jurusan/:id, PUT} route[39m[38;5;3m +0ms[39m
+2026-03-15 22:12:44: [32m[Nest] 25084  - [39m15/03/2026, 22.12.44 [32m    LOG[39m [38;5;3m[RouterExplorer] [39m[32mMapped {/jurusan/:id, DELETE} route[39m[38;5;3m +0ms[39m
+2026-03-15 22:12:44: [32m[Nest] 25084  - [39m15/03/2026, 22.12.44 [32m    LOG[39m [38;5;3m[RouterExplorer] [39m[32mMapped {/jurusan/import/excel, POST} route[39m[38;5;3m +1ms[39m
+2026-03-15 22:12:44: [32m[Nest] 25084  - [39m15/03/2026, 22.12.44 [32m    LOG[39m [38;5;3m[RoutesResolver] [39m[32mDatabaseController {/database}:[39m[38;5;3m +0ms[39m
+2026-03-15 22:12:44: [32m[Nest] 25084  - [39m15/03/2026, 22.12.44 [32m    LOG[39m [38;5;3m[RouterExplorer] [39m[32mMapped {/database/export, GET} route[39m[38;5;3m +0ms[39m
+2026-03-15 22:12:44: [32m[Nest] 25084  - [39m15/03/2026, 22.12.44 [32m    LOG[39m [38;5;3m[RouterExplorer] [39m[32mMapped {/database/import, POST} route[39m[38;5;3m +0ms[39m
+2026-03-15 22:12:44: [32m[Nest] 25084  - [39m15/03/2026, 22.12.44 [32m    LOG[39m [38;5;3m[RouterExplorer] [39m[32mMapped {/database/backups, GET} route[39m[38;5;3m +0ms[39m
+2026-03-15 22:12:44: [32m[Nest] 25084  - [39m15/03/2026, 22.12.44 [32m    LOG[39m [38;5;3m[RouterExplorer] [39m[32mMapped {/database/backups/:filename, GET} route[39m[38;5;3m +0ms[39m
+2026-03-15 22:12:44: [32m[Nest] 25084  - [39m15/03/2026, 22.12.44 [32m    LOG[39m [38;5;3m[RouterExplorer] [39m[32mMapped {/database/backups/:filename, DELETE} route[39m[38;5;3m +0ms[39m
+2026-03-15 22:12:44: [32m[Nest] 25084  - [39m15/03/2026, 22.12.44 [32m    LOG[39m [38;5;3m[RoutesResolver] [39m[32mAttendanceController {/attendance}:[39m[38;5;3m +0ms[39m
+2026-03-15 22:12:44: [32m[Nest] 25084  - [39m15/03/2026, 22.12.44 [32m    LOG[39m [38;5;3m[RouterExplorer] [39m[32mMapped {/attendance/scan, POST} route[39m[38;5;3m +0ms[39m
+2026-03-15 22:12:44: [32m[Nest] 25084  - [39m15/03/2026, 22.12.44 [32m    LOG[39m [38;5;3m[RouterExplorer] [39m[32mMapped {/attendance/check-in, POST} route[39m[38;5;3m +1ms[39m
+2026-03-15 22:12:44: [32m[Nest] 25084  - [39m15/03/2026, 22.12.44 [32m    LOG[39m [38;5;3m[RouterExplorer] [39m[32mMapped {/attendance/check-out, POST} route[39m[38;5;3m +0ms[39m
+2026-03-15 22:12:44: [32m[Nest] 25084  - [39m15/03/2026, 22.12.44 [32m    LOG[39m [38;5;3m[RouterExplorer] [39m[32mMapped {/attendance/today, GET} route[39m[38;5;3m +0ms[39m
+2026-03-15 22:12:44: [32m[Nest] 25084  - [39m15/03/2026, 22.12.44 [32m    LOG[39m [38;5;3m[RouterExplorer] [39m[32mMapped {/attendance/absent-students, GET} route[39m[38;5;3m +0ms[39m
+2026-03-15 22:12:44: [32m[Nest] 25084  - [39m15/03/2026, 22.12.44 [32m    LOG[39m [38;5;3m[RouterExplorer] [39m[32mMapped {/attendance/date/:date, GET} route[39m[38;5;3m +0ms[39m
+2026-03-15 22:12:44: [32m[Nest] 25084  - [39m15/03/2026, 22.12.44 [32m    LOG[39m [38;5;3m[RouterExplorer] [39m[32mMapped {/attendance/student/:id, GET} route[39m[38;5;3m +0ms[39m
+2026-03-15 22:12:44: [32m[Nest] 25084  - [39m15/03/2026, 22.12.44 [32m    LOG[39m [38;5;3m[RouterExplorer] [39m[32mMapped {/attendance/report, GET} route[39m[38;5;3m +0ms[39m
+2026-03-15 22:12:44: [32m[Nest] 25084  - [39m15/03/2026, 22.12.44 [32m    LOG[39m [38;5;3m[RouterExplorer] [39m[32mMapped {/attendance/manual, GET} route[39m[38;5;3m +0ms[39m
+2026-03-15 22:12:44: [32m[Nest] 25084  - [39m15/03/2026, 22.12.44 [32m    LOG[39m [38;5;3m[RouterExplorer] [39m[32mMapped {/attendance/:id, PUT} route[39m[38;5;3m +1ms[39m
+2026-03-15 22:12:44: [32m[Nest] 25084  - [39m15/03/2026, 22.12.44 [32m    LOG[39m [38;5;3m[RouterExplorer] [39m[32mMapped {/attendance/manual, POST} route[39m[38;5;3m +0ms[39m
+2026-03-15 22:12:44: [32m[Nest] 25084  - [39m15/03/2026, 22.12.44 [32m    LOG[39m [38;5;3m[RoutesResolver] [39m[32mSettingsController {/settings}:[39m[38;5;3m +0ms[39m
+2026-03-15 22:12:44: [32m[Nest] 25084  - [39m15/03/2026, 22.12.44 [32m    LOG[39m [38;5;3m[RouterExplorer] [39m[32mMapped {/settings, GET} route[39m[38;5;3m +0ms[39m
+2026-03-15 22:12:44: [32m[Nest] 25084  - [39m15/03/2026, 22.12.44 [32m    LOG[39m [38;5;3m[RouterExplorer] [39m[32mMapped {/settings/school, GET} route[39m[38;5;3m +0ms[39m
+2026-03-15 22:12:44: [32m[Nest] 25084  - [39m15/03/2026, 22.12.44 [32m    LOG[39m [38;5;3m[RouterExplorer] [39m[32mMapped {/settings/:key, GET} route[39m[38;5;3m +0ms[39m
+2026-03-15 22:12:44: [32m[Nest] 25084  - [39m15/03/2026, 22.12.44 [32m    LOG[39m [38;5;3m[RouterExplorer] [39m[32mMapped {/settings, PUT} route[39m[38;5;3m +0ms[39m
+2026-03-15 22:12:44: [32m[Nest] 25084  - [39m15/03/2026, 22.12.44 [32m    LOG[39m [38;5;3m[RouterExplorer] [39m[32mMapped {/settings/school, PUT} route[39m[38;5;3m +0ms[39m
+2026-03-15 22:12:44: [32m[Nest] 25084  - [39m15/03/2026, 22.12.44 [32m    LOG[39m [38;5;3m[RoutesResolver] [39m[32mBankSoalController {/bank-soal}:[39m[38;5;3m +0ms[39m
+2026-03-15 22:12:44: [32m[Nest] 25084  - [39m15/03/2026, 22.12.44 [32m    LOG[39m [38;5;3m[RouterExplorer] [39m[32mMapped {/bank-soal, POST} route[39m[38;5;3m +1ms[39m
+2026-03-15 22:12:44: [32m[Nest] 25084  - [39m15/03/2026, 22.12.44 [32m    LOG[39m [38;5;3m[RouterExplorer] [39m[32mMapped {/bank-soal, GET} route[39m[38;5;3m +0ms[39m
+2026-03-15 22:12:44: [32m[Nest] 25084  - [39m15/03/2026, 22.12.44 [32m    LOG[39m [38;5;3m[RouterExplorer] [39m[32mMapped {/bank-soal/generate-kode, GET} route[39m[38;5;3m +0ms[39m
+2026-03-15 22:12:44: [32m[Nest] 25084  - [39m15/03/2026, 22.12.44 [32m    LOG[39m [38;5;3m[RouterExplorer] [39m[32mMapped {/bank-soal/:id, GET} route[39m[38;5;3m +0ms[39m
+2026-03-15 22:12:44: [32m[Nest] 25084  - [39m15/03/2026, 22.12.44 [32m    LOG[39m [38;5;3m[RouterExplorer] [39m[32mMapped {/bank-soal/:id, PATCH} route[39m[38;5;3m +0ms[39m
+2026-03-15 22:12:44: [32m[Nest] 25084  - [39m15/03/2026, 22.12.44 [32m    LOG[39m [38;5;3m[RouterExplorer] [39m[32mMapped {/bank-soal/bulk, DELETE} route[39m[38;5;3m +0ms[39m
+2026-03-15 22:12:44: [32m[Nest] 25084  - [39m15/03/2026, 22.12.44 [32m    LOG[39m [38;5;3m[RouterExplorer] [39m[32mMapped {/bank-soal/:id, DELETE} route[39m[38;5;3m +0ms[39m
+2026-03-15 22:12:44: [32m[Nest] 25084  - [39m15/03/2026, 22.12.44 [32m    LOG[39m [38;5;3m[RouterExplorer] [39m[32mMapped {/bank-soal/import, POST} route[39m[38;5;3m +0ms[39m
+2026-03-15 22:12:44: [32m[Nest] 25084  - [39m15/03/2026, 22.12.44 [32m    LOG[39m [38;5;3m[RouterExplorer] [39m[32mMapped {/bank-soal/import/file, POST} route[39m[38;5;3m +0ms[39m
+2026-03-15 22:12:44: [32m[Nest] 25084  - [39m15/03/2026, 22.12.44 [32m    LOG[39m [38;5;3m[RouterExplorer] [39m[32mMapped {/bank-soal/template/word, GET} route[39m[38;5;3m +1ms[39m
+2026-03-15 22:12:44: [32m[Nest] 25084  - [39m15/03/2026, 22.12.44 [32m    LOG[39m [38;5;3m[RoutesResolver] [39m[32mPaketSoalController {/paket-soal}:[39m[38;5;3m +0ms[39m
+2026-03-15 22:12:44: [32m[Nest] 25084  - [39m15/03/2026, 22.12.44 [32m    LOG[39m [38;5;3m[RouterExplorer] [39m[32mMapped {/paket-soal, POST} route[39m[38;5;3m +0ms[39m
+2026-03-15 22:12:44: [32m[Nest] 25084  - [39m15/03/2026, 22.12.44 [32m    LOG[39m [38;5;3m[RouterExplorer] [39m[32mMapped {/paket-soal, GET} route[39m[38;5;3m +0ms[39m
+2026-03-15 22:12:44: [32m[Nest] 25084  - [39m15/03/2026, 22.12.44 [32m    LOG[39m [38;5;3m[RouterExplorer] [39m[32mMapped {/paket-soal/generate-kode, GET} route[39m[38;5;3m +0ms[39m
+2026-03-15 22:12:44: [32m[Nest] 25084  - [39m15/03/2026, 22.12.44 [32m    LOG[39m [38;5;3m[RouterExplorer] [39m[32mMapped {/paket-soal/:id, GET} route[39m[38;5;3m +0ms[39m
+2026-03-15 22:12:44: [32m[Nest] 25084  - [39m15/03/2026, 22.12.44 [32m    LOG[39m [38;5;3m[RouterExplorer] [39m[32mMapped {/paket-soal/:id, PATCH} route[39m[38;5;3m +0ms[39m
+2026-03-15 22:12:44: [32m[Nest] 25084  - [39m15/03/2026, 22.12.44 [32m    LOG[39m [38;5;3m[RouterExplorer] [39m[32mMapped {/paket-soal/:id, DELETE} route[39m[38;5;3m +0ms[39m
+2026-03-15 22:12:44: [32m[Nest] 25084  - [39m15/03/2026, 22.12.44 [32m    LOG[39m [38;5;3m[RouterExplorer] [39m[32mMapped {/paket-soal/:id/soal, POST} route[39m[38;5;3m +0ms[39m
+2026-03-15 22:12:44: [32m[Nest] 25084  - [39m15/03/2026, 22.12.44 [32m    LOG[39m [38;5;3m[RouterExplorer] [39m[32mMapped {/paket-soal/:id/preview, POST} route[39m[38;5;3m +1ms[39m
+2026-03-15 22:12:44: [32m[Nest] 25084  - [39m15/03/2026, 22.12.44 [32m    LOG[39m [38;5;3m[RouterExplorer] [39m[32mMapped {/paket-soal/:id/import, POST} route[39m[38;5;3m +0ms[39m
+2026-03-15 22:12:44: [32m[Nest] 25084  - [39m15/03/2026, 22.12.44 [32m    LOG[39m [38;5;3m[RouterExplorer] [39m[32mMapped {/paket-soal/:id/soal/:itemId, DELETE} route[39m[38;5;3m +0ms[39m
+2026-03-15 22:12:44: [32m[Nest] 25084  - [39m15/03/2026, 22.12.44 [32m    LOG[39m [38;5;3m[RoutesResolver] [39m[32mUploadController {/upload}:[39m[38;5;3m +0ms[39m
+2026-03-15 22:12:44: [32m[Nest] 25084  - [39m15/03/2026, 22.12.44 [32m    LOG[39m [38;5;3m[RouterExplorer] [39m[32mMapped {/upload/image, POST} route[39m[38;5;3m +0ms[39m
+2026-03-15 22:12:44: [32m[Nest] 25084  - [39m15/03/2026, 22.12.44 [32m    LOG[39m [38;5;3m[RoutesResolver] [39m[32mUjianController {/ujian}:[39m[38;5;3m +0ms[39m
+2026-03-15 22:12:44: [32m[Nest] 25084  - [39m15/03/2026, 22.12.44 [32m    LOG[39m [38;5;3m[RouterExplorer] [39m[32mMapped {/ujian, POST} route[39m[38;5;3m +0ms[39m
+2026-03-15 22:12:44: [32m[Nest] 25084  - [39m15/03/2026, 22.12.44 [32m    LOG[39m [38;5;3m[RouterExplorer] [39m[32mMapped {/ujian, GET} route[39m[38;5;3m +0ms[39m
+2026-03-15 22:12:44: [32m[Nest] 25084  - [39m15/03/2026, 22.12.44 [32m    LOG[39m [38;5;3m[RouterExplorer] [39m[32mMapped {/ujian/generate-kode, GET} route[39m[38;5;3m +1ms[39m
+2026-03-15 22:12:44: [32m[Nest] 25084  - [39m15/03/2026, 22.12.44 [32m    LOG[39m [38;5;3m[RouterExplorer] [39m[32mMapped {/ujian/students-by-classes, GET} route[39m[38;5;3m +0ms[39m
+2026-03-15 22:12:44: [32m[Nest] 25084  - [39m15/03/2026, 22.12.44 [32m    LOG[39m [38;5;3m[RouterExplorer] [39m[32mMapped {/ujian/:id, GET} route[39m[38;5;3m +0ms[39m
+2026-03-15 22:12:44: [32m[Nest] 25084  - [39m15/03/2026, 22.12.44 [32m    LOG[39m [38;5;3m[RouterExplorer] [39m[32mMapped {/ujian/:id, PATCH} route[39m[38;5;3m +0ms[39m
+2026-03-15 22:12:44: [32m[Nest] 25084  - [39m15/03/2026, 22.12.44 [32m    LOG[39m [38;5;3m[RouterExplorer] [39m[32mMapped {/ujian/:id, DELETE} route[39m[38;5;3m +0ms[39m
+2026-03-15 22:12:44: [32m[Nest] 25084  - [39m15/03/2026, 22.12.44 [32m    LOG[39m [38;5;3m[RouterExplorer] [39m[32mMapped {/ujian/:id/publish, POST} route[39m[38;5;3m +0ms[39m
+2026-03-15 22:12:44: [32m[Nest] 25084  - [39m15/03/2026, 22.12.44 [32m    LOG[39m [38;5;3m[RouterExplorer] [39m[32mMapped {/ujian/:id/assign, POST} route[39m[38;5;3m +0ms[39m
+2026-03-15 22:12:44: [32m[Nest] 25084  - [39m15/03/2026, 22.12.44 [32m    LOG[39m [38;5;3m[RouterExplorer] [39m[32mMapped {/ujian/:id/status, POST} route[39m[38;5;3m +0ms[39m
+2026-03-15 22:12:44: [32m[Nest] 25084  - [39m15/03/2026, 22.12.44 [32m    LOG[39m [38;5;3m[RouterExplorer] [39m[32mMapped {/ujian/:id/toggle-detection, POST} route[39m[38;5;3m +1ms[39m
+2026-03-15 22:12:44: [32m[Nest] 25084  - [39m15/03/2026, 22.12.44 [32m    LOG[39m [38;5;3m[RouterExplorer] [39m[32mMapped {/ujian/:id/toggle-nilai, POST} route[39m[38;5;3m +0ms[39m
+2026-03-15 22:12:44: [32m[Nest] 25084  - [39m15/03/2026, 22.12.44 [32m    LOG[39m [38;5;3m[RoutesResolver] [39m[32mUjianSiswaController {/ujian-siswa}:[39m[38;5;3m +0ms[39m
+2026-03-15 22:12:44: [32m[Nest] 25084  - [39m15/03/2026, 22.12.44 [32m    LOG[39m [38;5;3m[RouterExplorer] [39m[32mMapped {/ujian-siswa/available, GET} route[39m[38;5;3m +0ms[39m
+2026-03-15 22:12:44: [32m[Nest] 25084  - [39m15/03/2026, 22.12.44 [32m    LOG[39m [38;5;3m[RouterExplorer] [39m[32mMapped {/ujian-siswa/completed, GET} route[39m[38;5;3m +0ms[39m
+2026-03-15 22:12:44: [32m[Nest] 25084  - [39m15/03/2026, 22.12.44 [32m    LOG[39m [38;5;3m[RouterExplorer] [39m[32mMapped {/ujian-siswa/start, POST} route[39m[38;5;3m +0ms[39m
+2026-03-15 22:12:44: [32m[Nest] 25084  - [39m15/03/2026, 22.12.44 [32m    LOG[39m [38;5;3m[RouterExplorer] [39m[32mMapped {/ujian-siswa/session/:id, GET} route[39m[38;5;3m +0ms[39m
+2026-03-15 22:12:44: [32m[Nest] 25084  - [39m15/03/2026, 22.12.44 [32m    LOG[39m [38;5;3m[RouterExplorer] [39m[32mMapped {/ujian-siswa/submit/:id, POST} route[39m[38;5;3m +0ms[39m
+2026-03-15 22:12:44: [32m[Nest] 25084  - [39m15/03/2026, 22.12.44 [32m    LOG[39m [38;5;3m[RouterExplorer] [39m[32mMapped {/ujian-siswa/progress/:id, POST} route[39m[38;5;3m +1ms[39m
+2026-03-15 22:12:44: [32m[Nest] 25084  - [39m15/03/2026, 22.12.44 [32m    LOG[39m [38;5;3m[RouterExplorer] [39m[32mMapped {/ujian-siswa/log-activity, POST} route[39m[38;5;3m +0ms[39m
+2026-03-15 22:12:44: [32m[Nest] 25084  - [39m15/03/2026, 22.12.44 [32m    LOG[39m [38;5;3m[RouterExplorer] [39m[32mMapped {/ujian-siswa/result/:id, GET} route[39m[38;5;3m +0ms[39m
+2026-03-15 22:12:44: [32m[Nest] 25084  - [39m15/03/2026, 22.12.44 [32m    LOG[39m [38;5;3m[RouterExplorer] [39m[32mMapped {/ujian-siswa/review/:id, GET} route[39m[38;5;3m +0ms[39m
+2026-03-15 22:12:44: [32m[Nest] 25084  - [39m15/03/2026, 22.12.44 [32m    LOG[39m [38;5;3m[RouterExplorer] [39m[32mMapped {/ujian-siswa/:id/grade, POST} route[39m[38;5;3m +0ms[39m
+2026-03-15 22:12:44: [32m[Nest] 25084  - [39m15/03/2026, 22.12.44 [32m    LOG[39m [38;5;3m[RouterExplorer] [39m[32mMapped {/ujian-siswa/activity-logs/:id, GET} route[39m[38;5;3m +0ms[39m
+2026-03-15 22:12:44: [32m[Nest] 25084  - [39m15/03/2026, 22.12.44 [32m    LOG[39m [38;5;3m[RouterExplorer] [39m[32mMapped {/ujian-siswa/:id/block, POST} route[39m[38;5;3m +0ms[39m
+2026-03-15 22:12:44: [32m[Nest] 25084  - [39m15/03/2026, 22.12.44 [32m    LOG[39m [38;5;3m[RouterExplorer] [39m[32mMapped {/ujian-siswa/:id/unblock, POST} route[39m[38;5;3m +0ms[39m
+2026-03-15 22:12:44: [32m[Nest] 25084  - [39m15/03/2026, 22.12.44 [32m    LOG[39m [38;5;3m[RouterExplorer] [39m[32mMapped {/ujian-siswa/monitoring/:ujianId, GET} route[39m[38;5;3m +0ms[39m
+2026-03-15 22:12:44: [32m[Nest] 25084  - [39m15/03/2026, 22.12.44 [32m    LOG[39m [38;5;3m[RoutesResolver] [39m[32mJadwalPelajaranController {/jadwal-pelajaran}:[39m[38;5;3m +1ms[39m
+2026-03-15 22:12:44: [32m[Nest] 25084  - [39m15/03/2026, 22.12.44 [32m    LOG[39m [38;5;3m[RouterExplorer] [39m[32mMapped {/jadwal-pelajaran, GET} route[39m[38;5;3m +0ms[39m
+2026-03-15 22:12:44: [32m[Nest] 25084  - [39m15/03/2026, 22.12.44 [32m    LOG[39m [38;5;3m[RouterExplorer] [39m[32mMapped {/jadwal-pelajaran/kelas/:kelasId, GET} route[39m[38;5;3m +0ms[39m
+2026-03-15 22:12:44: [32m[Nest] 25084  - [39m15/03/2026, 22.12.44 [32m    LOG[39m [38;5;3m[RouterExplorer] [39m[32mMapped {/jadwal-pelajaran/:id, GET} route[39m[38;5;3m +0ms[39m
+2026-03-15 22:12:44: [32m[Nest] 25084  - [39m15/03/2026, 22.12.44 [32m    LOG[39m [38;5;3m[RouterExplorer] [39m[32mMapped {/jadwal-pelajaran, POST} route[39m[38;5;3m +0ms[39m
+2026-03-15 22:12:44: [32m[Nest] 25084  - [39m15/03/2026, 22.12.44 [32m    LOG[39m [38;5;3m[RouterExplorer] [39m[32mMapped {/jadwal-pelajaran/:id, PUT} route[39m[38;5;3m +0ms[39m
+2026-03-15 22:12:44: [32m[Nest] 25084  - [39m15/03/2026, 22.12.44 [32m    LOG[39m [38;5;3m[RouterExplorer] [39m[32mMapped {/jadwal-pelajaran/:id, DELETE} route[39m[38;5;3m +0ms[39m
+2026-03-15 22:12:44: [32m[Nest] 25084  - [39m15/03/2026, 22.12.44 [32m    LOG[39m [38;5;3m[RouterExplorer] [39m[32mMapped {/jadwal-pelajaran/export/xlsx, GET} route[39m[38;5;3m +0ms[39m
+2026-03-15 22:12:44: [32m[Nest] 25084  - [39m15/03/2026, 22.12.44 [32m    LOG[39m [38;5;3m[RouterExplorer] [39m[32mMapped {/jadwal-pelajaran/template/xlsx, GET} route[39m[38;5;3m +0ms[39m
+2026-03-15 22:12:44: [32m[Nest] 25084  - [39m15/03/2026, 22.12.44 [32m    LOG[39m [38;5;3m[RouterExplorer] [39m[32mMapped {/jadwal-pelajaran/import/xlsx, POST} route[39m[38;5;3m +1ms[39m
+2026-03-15 22:12:44: [32m[Nest] 25084  - [39m15/03/2026, 22.12.44 [32m    LOG[39m [38;5;3m[RoutesResolver] [39m[32mMateriController {/materi}:[39m[38;5;3m +0ms[39m
+2026-03-15 22:12:44: [32m[Nest] 25084  - [39m15/03/2026, 22.12.44 [32m    LOG[39m [38;5;3m[RouterExplorer] [39m[32mMapped {/materi/generate, POST} route[39m[38;5;3m +0ms[39m
+2026-03-15 22:12:44: [32m[Nest] 25084  - [39m15/03/2026, 22.12.44 [32m    LOG[39m [38;5;3m[RouterExplorer] [39m[32mMapped {/materi, POST} route[39m[38;5;3m +0ms[39m
+2026-03-15 22:12:44: [32m[Nest] 25084  - [39m15/03/2026, 22.12.44 [32m    LOG[39m [38;5;3m[RouterExplorer] [39m[32mMapped {/materi, GET} route[39m[38;5;3m +0ms[39m
+2026-03-15 22:12:44: [32m[Nest] 25084  - [39m15/03/2026, 22.12.44 [32m    LOG[39m [38;5;3m[RouterExplorer] [39m[32mMapped {/materi/:id, GET} route[39m[38;5;3m +0ms[39m
+2026-03-15 22:12:44: [32m[Nest] 25084  - [39m15/03/2026, 22.12.44 [32m    LOG[39m [38;5;3m[RouterExplorer] [39m[32mMapped {/materi/:id, PUT} route[39m[38;5;3m +0ms[39m
+2026-03-15 22:12:44: [32m[Nest] 25084  - [39m15/03/2026, 22.12.44 [32m    LOG[39m [38;5;3m[RouterExplorer] [39m[32mMapped {/materi/:id, DELETE} route[39m[38;5;3m +0ms[39m
+2026-03-15 22:12:44: [32m[Nest] 25084  - [39m15/03/2026, 22.12.44 [32m    LOG[39m [38;5;3m[RouterExplorer] [39m[32mMapped {/materi/:id/bookmark, POST} route[39m[38;5;3m +0ms[39m
+2026-03-15 22:12:44: [32m[Nest] 25084  - [39m15/03/2026, 22.12.44 [32m    LOG[39m [38;5;3m[RouterExplorer] [39m[32mMapped {/materi/bookmarked/list, GET} route[39m[38;5;3m +0ms[39m
+2026-03-15 22:12:44: [32m[Nest] 25084  - [39m15/03/2026, 22.12.44 [32m    LOG[39m [38;5;3m[RoutesResolver] [39m[32mTugasController {/tugas}:[39m[38;5;3m +1ms[39m
+2026-03-15 22:12:44: [32m[Nest] 25084  - [39m15/03/2026, 22.12.44 [32m    LOG[39m [38;5;3m[RouterExplorer] [39m[32mMapped {/tugas, POST} route[39m[38;5;3m +0ms[39m
+2026-03-15 22:12:44: [32m[Nest] 25084  - [39m15/03/2026, 22.12.44 [32m    LOG[39m [38;5;3m[RouterExplorer] [39m[32mMapped {/tugas, GET} route[39m[38;5;3m +0ms[39m
+2026-03-15 22:12:44: [32m[Nest] 25084  - [39m15/03/2026, 22.12.44 [32m    LOG[39m [38;5;3m[RouterExplorer] [39m[32mMapped {/tugas/:id, GET} route[39m[38;5;3m +0ms[39m
+2026-03-15 22:12:44: [32m[Nest] 25084  - [39m15/03/2026, 22.12.44 [32m    LOG[39m [38;5;3m[RouterExplorer] [39m[32mMapped {/tugas/:id, PUT} route[39m[38;5;3m +0ms[39m
+2026-03-15 22:12:44: [32m[Nest] 25084  - [39m15/03/2026, 22.12.44 [32m    LOG[39m [38;5;3m[RouterExplorer] [39m[32mMapped {/tugas/:id, DELETE} route[39m[38;5;3m +0ms[39m
+2026-03-15 22:12:44: [32m[Nest] 25084  - [39m15/03/2026, 22.12.44 [32m    LOG[39m [38;5;3m[RouterExplorer] [39m[32mMapped {/tugas/:id/submissions, GET} route[39m[38;5;3m +0ms[39m
+2026-03-15 22:12:44: [32m[Nest] 25084  - [39m15/03/2026, 22.12.44 [32m    LOG[39m [38;5;3m[RouterExplorer] [39m[32mMapped {/tugas/:id/submit, POST} route[39m[38;5;3m +0ms[39m
+2026-03-15 22:12:44: [32m[Nest] 25084  - [39m15/03/2026, 22.12.44 [32m    LOG[39m [38;5;3m[RouterExplorer] [39m[32mMapped {/tugas/:tugasId/grade/:siswaId, PUT} route[39m[38;5;3m +0ms[39m
+2026-03-15 22:12:44: [32m[Nest] 25084  - [39m15/03/2026, 22.12.44 [32m    LOG[39m [38;5;3m[RoutesResolver] [39m[32mNotifikasiController {/notifikasi}:[39m[38;5;3m +1ms[39m
+2026-03-15 22:12:44: [32m[Nest] 25084  - [39m15/03/2026, 22.12.44 [32m    LOG[39m [38;5;3m[RouterExplorer] [39m[32mMapped {/notifikasi, GET} route[39m[38;5;3m +0ms[39m
+2026-03-15 22:12:44: [32m[Nest] 25084  - [39m15/03/2026, 22.12.44 [32m    LOG[39m [38;5;3m[RouterExplorer] [39m[32mMapped {/notifikasi/unread-count, GET} route[39m[38;5;3m +0ms[39m
+2026-03-15 22:12:44: [32m[Nest] 25084  - [39m15/03/2026, 22.12.44 [32m    LOG[39m [38;5;3m[RouterExplorer] [39m[32mMapped {/notifikasi/:id/read, PUT} route[39m[38;5;3m +0ms[39m
+2026-03-15 22:12:44: [32m[Nest] 25084  - [39m15/03/2026, 22.12.44 [32m    LOG[39m [38;5;3m[RouterExplorer] [39m[32mMapped {/notifikasi/mark-all-read, PUT} route[39m[38;5;3m +0ms[39m
+2026-03-15 22:12:44: [32m[Nest] 25084  - [39m15/03/2026, 22.12.44 [32m    LOG[39m [38;5;3m[RouterExplorer] [39m[32mMapped {/notifikasi/:id, DELETE} route[39m[38;5;3m +0ms[39m
+2026-03-15 22:12:44: [32m[Nest] 25084  - [39m15/03/2026, 22.12.44 [32m    LOG[39m [38;5;3m[RoutesResolver] [39m[32mForumController {/forum}:[39m[38;5;3m +0ms[39m
+2026-03-15 22:12:44: [32m[Nest] 25084  - [39m15/03/2026, 22.12.44 [32m    LOG[39m [38;5;3m[RouterExplorer] [39m[32mMapped {/forum/threads, POST} route[39m[38;5;3m +0ms[39m
+2026-03-15 22:12:44: [32m[Nest] 25084  - [39m15/03/2026, 22.12.44 [32m    LOG[39m [38;5;3m[RouterExplorer] [39m[32mMapped {/forum/threads, GET} route[39m[38;5;3m +0ms[39m
+2026-03-15 22:12:44: [32m[Nest] 25084  - [39m15/03/2026, 22.12.44 [32m    LOG[39m [38;5;3m[RouterExplorer] [39m[32mMapped {/forum/threads/:id, GET} route[39m[38;5;3m +0ms[39m
+2026-03-15 22:12:44: [32m[Nest] 25084  - [39m15/03/2026, 22.12.44 [32m    LOG[39m [38;5;3m[RouterExplorer] [39m[32mMapped {/forum/threads/:id/posts, POST} route[39m[38;5;3m +1ms[39m
+2026-03-15 22:12:44: [32m[Nest] 25084  - [39m15/03/2026, 22.12.44 [32m    LOG[39m [38;5;3m[RouterExplorer] [39m[32mMapped {/forum/posts/:id/react, POST} route[39m[38;5;3m +0ms[39m
+2026-03-15 22:12:44: [32m[Nest] 25084  - [39m15/03/2026, 22.12.44 [32m    LOG[39m [38;5;3m[RoutesResolver] [39m[32mAnalyticsController {/analytics}:[39m[38;5;3m +0ms[39m
+2026-03-15 22:12:44: [32m[Nest] 25084  - [39m15/03/2026, 22.12.44 [32m    LOG[39m [38;5;3m[RouterExplorer] [39m[32mMapped {/analytics/dashboard, GET} route[39m[38;5;3m +0ms[39m
+2026-03-15 22:12:44: [32m[Nest] 25084  - [39m15/03/2026, 22.12.44 [32m    LOG[39m [38;5;3m[RouterExplorer] [39m[32mMapped {/analytics/upcoming-tasks, GET} route[39m[38;5;3m +0ms[39m
+2026-03-15 22:12:44: [32m[Nest] 25084  - [39m15/03/2026, 22.12.44 [32m    LOG[39m [38;5;3m[RouterExplorer] [39m[32mMapped {/analytics/admin, GET} route[39m[38;5;3m +0ms[39m
+2026-03-15 22:12:44: [32m[Nest] 25084  - [39m15/03/2026, 22.12.44 [32m    LOG[39m [38;5;3m[RouterExplorer] [39m[32mMapped {/analytics/guru, GET} route[39m[38;5;3m +0ms[39m
+2026-03-15 22:12:44: [32m[Nest] 25084  - [39m15/03/2026, 22.12.44 [32m    LOG[39m [38;5;3m[RoutesResolver] [39m[32mPengumumanController {/pengumuman}:[39m[38;5;3m +0ms[39m
+2026-03-15 22:12:44: [32m[Nest] 25084  - [39m15/03/2026, 22.12.44 [32m    LOG[39m [38;5;3m[RouterExplorer] [39m[32mMapped {/pengumuman, POST} route[39m[38;5;3m +0ms[39m
+2026-03-15 22:12:44: [32m[Nest] 25084  - [39m15/03/2026, 22.12.44 [32m    LOG[39m [38;5;3m[RouterExplorer] [39m[32mMapped {/pengumuman, GET} route[39m[38;5;3m +0ms[39m
+2026-03-15 22:12:44: [32m[Nest] 25084  - [39m15/03/2026, 22.12.44 [32m    LOG[39m [38;5;3m[RouterExplorer] [39m[32mMapped {/pengumuman/manage, GET} route[39m[38;5;3m +0ms[39m
+2026-03-15 22:12:44: [32m[Nest] 25084  - [39m15/03/2026, 22.12.44 [32m    LOG[39m [38;5;3m[RouterExplorer] [39m[32mMapped {/pengumuman/:id, GET} route[39m[38;5;3m +1ms[39m
+2026-03-15 22:12:44: [32m[Nest] 25084  - [39m15/03/2026, 22.12.44 [32m    LOG[39m [38;5;3m[RouterExplorer] [39m[32mMapped {/pengumuman/:id, PATCH} route[39m[38;5;3m +0ms[39m
+2026-03-15 22:12:44: [32m[Nest] 25084  - [39m15/03/2026, 22.12.44 [32m    LOG[39m [38;5;3m[RouterExplorer] [39m[32mMapped {/pengumuman/:id, DELETE} route[39m[38;5;3m +0ms[39m
+2026-03-15 22:12:44: [32m[Nest] 25084  - [39m15/03/2026, 22.12.44 [32m    LOG[39m [38;5;3m[RoutesResolver] [39m[32mRppController {/rpp}:[39m[38;5;3m +0ms[39m
+2026-03-15 22:12:44: [32m[Nest] 25084  - [39m15/03/2026, 22.12.44 [32m    LOG[39m [38;5;3m[RouterExplorer] [39m[32mMapped {/rpp, POST} route[39m[38;5;3m +0ms[39m
+2026-03-15 22:12:44: [32m[Nest] 25084  - [39m15/03/2026, 22.12.44 [32m    LOG[39m [38;5;3m[RouterExplorer] [39m[32mMapped {/rpp, GET} route[39m[38;5;3m +0ms[39m
+2026-03-15 22:12:44: [32m[Nest] 25084  - [39m15/03/2026, 22.12.44 [32m    LOG[39m [38;5;3m[RouterExplorer] [39m[32mMapped {/rpp/my, GET} route[39m[38;5;3m +0ms[39m
+2026-03-15 22:12:44: [32m[Nest] 25084  - [39m15/03/2026, 22.12.44 [32m    LOG[39m [38;5;3m[RouterExplorer] [39m[32mMapped {/rpp/stats, GET} route[39m[38;5;3m +0ms[39m
+2026-03-15 22:12:44: [32m[Nest] 25084  - [39m15/03/2026, 22.12.44 [32m    LOG[39m [38;5;3m[RouterExplorer] [39m[32mMapped {/rpp/:id, GET} route[39m[38;5;3m +0ms[39m
+2026-03-15 22:12:44: [32m[Nest] 25084  - [39m15/03/2026, 22.12.44 [32m    LOG[39m [38;5;3m[RouterExplorer] [39m[32mMapped {/rpp/:id, PUT} route[39m[38;5;3m +0ms[39m
+2026-03-15 22:12:44: [32m[Nest] 25084  - [39m15/03/2026, 22.12.44 [32m    LOG[39m [38;5;3m[RouterExplorer] [39m[32mMapped {/rpp/:id, DELETE} route[39m[38;5;3m +1ms[39m
+2026-03-15 22:12:44: [32m[Nest] 25084  - [39m15/03/2026, 22.12.44 [32m    LOG[39m [38;5;3m[RouterExplorer] [39m[32mMapped {/rpp/:id/publish, POST} route[39m[38;5;3m +0ms[39m
+2026-03-15 22:12:44: [32m[Nest] 25084  - [39m15/03/2026, 22.12.44 [32m    LOG[39m [38;5;3m[RouterExplorer] [39m[32mMapped {/rpp/:id/duplicate, POST} route[39m[38;5;3m +0ms[39m
+2026-03-15 22:12:44: [32m[Nest] 25084  - [39m15/03/2026, 22.12.44 [32m    LOG[39m [38;5;3m[RouterExplorer] [39m[32mMapped {/rpp/generate, POST} route[39m[38;5;3m +0ms[39m
+2026-03-15 22:12:44: [32m[Nest] 25084  - [39m15/03/2026, 22.12.44 [32m    LOG[39m [38;5;3m[RoutesResolver] [39m[32mAbsensiKelasController {/absensi-kelas}:[39m[38;5;3m +0ms[39m
+2026-03-15 22:12:44: [32m[Nest] 25084  - [39m15/03/2026, 22.12.44 [32m    LOG[39m [38;5;3m[RouterExplorer] [39m[32mMapped {/absensi-kelas/my-today, GET} route[39m[38;5;3m +0ms[39m
+2026-03-15 22:12:44: [32m[Nest] 25084  - [39m15/03/2026, 22.12.44 [32m    LOG[39m [38;5;3m[RouterExplorer] [39m[32mMapped {/absensi-kelas/jadwal/:jadwalId/students, GET} route[39m[38;5;3m +0ms[39m
+2026-03-15 22:12:44: [32m[Nest] 25084  - [39m15/03/2026, 22.12.44 [32m    LOG[39m [38;5;3m[RouterExplorer] [39m[32mMapped {/absensi-kelas/rekap, GET} route[39m[38;5;3m +0ms[39m
+2026-03-15 22:12:44: [32m[Nest] 25084  - [39m15/03/2026, 22.12.44 [32m    LOG[39m [38;5;3m[RouterExplorer] [39m[32mMapped {/absensi-kelas, GET} route[39m[38;5;3m +0ms[39m
+2026-03-15 22:12:44: [32m[Nest] 25084  - [39m15/03/2026, 22.12.44 [32m    LOG[39m [38;5;3m[RouterExplorer] [39m[32mMapped {/absensi-kelas/:id, GET} route[39m[38;5;3m +1ms[39m
+2026-03-15 22:12:44: [32m[Nest] 25084  - [39m15/03/2026, 22.12.44 [32m    LOG[39m [38;5;3m[RouterExplorer] [39m[32mMapped {/absensi-kelas, POST} route[39m[38;5;3m +0ms[39m
+2026-03-15 22:12:44: [32m[Nest] 25084  - [39m15/03/2026, 22.12.44 [32m    LOG[39m [38;5;3m[RouterExplorer] [39m[32mMapped {/absensi-kelas/:id, PUT} route[39m[38;5;3m +0ms[39m
+2026-03-15 22:12:44: [32m[Nest] 25084  - [39m15/03/2026, 22.12.44 [32m    LOG[39m [38;5;3m[RoutesResolver] [39m[32mJenisUjianController {/jenis-ujian}:[39m[38;5;3m +0ms[39m
+2026-03-15 22:12:44: [32m[Nest] 25084  - [39m15/03/2026, 22.12.44 [32m    LOG[39m [38;5;3m[RouterExplorer] [39m[32mMapped {/jenis-ujian, POST} route[39m[38;5;3m +0ms[39m
+2026-03-15 22:12:44: [32m[Nest] 25084  - [39m15/03/2026, 22.12.44 [32m    LOG[39m [38;5;3m[RouterExplorer] [39m[32mMapped {/jenis-ujian, GET} route[39m[38;5;3m +0ms[39m
+2026-03-15 22:12:44: [32m[Nest] 25084  - [39m15/03/2026, 22.12.44 [32m    LOG[39m [38;5;3m[RouterExplorer] [39m[32mMapped {/jenis-ujian/:id, GET} route[39m[38;5;3m +0ms[39m
+2026-03-15 22:12:44: [32m[Nest] 25084  - [39m15/03/2026, 22.12.44 [32m    LOG[39m [38;5;3m[RouterExplorer] [39m[32mMapped {/jenis-ujian/:id, PATCH} route[39m[38;5;3m +0ms[39m
+2026-03-15 22:12:44: [32m[Nest] 25084  - [39m15/03/2026, 22.12.44 [32m    LOG[39m [38;5;3m[RouterExplorer] [39m[32mMapped {/jenis-ujian/:id, DELETE} route[39m[38;5;3m +0ms[39m
+2026-03-15 22:12:44: [32m[Nest] 25084  - [39m15/03/2026, 22.12.44 [32m    LOG[39m [38;5;3m[RouterExplorer] [39m[32mMapped {/jenis-ujian/reorder, POST} route[39m[38;5;3m +1ms[39m
+2026-03-15 22:12:44: [32m[Nest] 25084  - [39m15/03/2026, 22.12.44 [32m    LOG[39m [38;5;3m[RoutesResolver] [39m[32mKelompokSoalController {/kelompok-soal}:[39m[38;5;3m +0ms[39m
+2026-03-15 22:12:44: [32m[Nest] 25084  - [39m15/03/2026, 22.12.44 [32m    LOG[39m [38;5;3m[RouterExplorer] [39m[32mMapped {/kelompok-soal, POST} route[39m[38;5;3m +0ms[39m
+2026-03-15 22:12:44: [32m[Nest] 25084  - [39m15/03/2026, 22.12.44 [32m    LOG[39m [38;5;3m[RouterExplorer] [39m[32mMapped {/kelompok-soal, GET} route[39m[38;5;3m +0ms[39m
+2026-03-15 22:12:44: [32m[Nest] 25084  - [39m15/03/2026, 22.12.44 [32m    LOG[39m [38;5;3m[RouterExplorer] [39m[32mMapped {/kelompok-soal/:id, GET} route[39m[38;5;3m +0ms[39m
+2026-03-15 22:12:44: [32m[Nest] 25084  - [39m15/03/2026, 22.12.44 [32m    LOG[39m [38;5;3m[RouterExplorer] [39m[32mMapped {/kelompok-soal/:id, PATCH} route[39m[38;5;3m +0ms[39m
+2026-03-15 22:12:44: [32m[Nest] 25084  - [39m15/03/2026, 22.12.44 [32m    LOG[39m [38;5;3m[RouterExplorer] [39m[32mMapped {/kelompok-soal/:id, DELETE} route[39m[38;5;3m +0ms[39m
+2026-03-15 22:12:44: [32m[Nest] 25084  - [39m15/03/2026, 22.12.44 [32m    LOG[39m [38;5;3m[NestApplication] [39m[32mNest application successfully started[39m[38;5;3m +58ms[39m
+2026-03-15 22:12:44: dYs? API ready on:
+2026-03-15 22:12:44:   - Local:   http://localhost:3001
+2026-03-15 22:12:44:   - Network: http://192.168.1.11:3001
+2026-03-15 22:12:49: [TUGAS CONTROLLER] Student request:
+2026-03-15 22:12:49:   kelasId: cmj5eca0e0003jsud1uxj50o4
+2026-03-15 22:12:49:   siswaId: cmj5gwztr001f35udgp2iqne6
+2026-03-15 22:12:49: [JadwalPelajaran] User: {
+  "userId": "cmj5gwztn001e35udd3b8c4mg",
+  "email": "example14@cbt.com",
+  "role": "SISWA",
+  "siswa": {
+    "id": "cmj5gwztr001f35udgp2iqne6",
+    "kelasId": "cmj5eca0e0003jsud1uxj50o4",
+    "nama": "BADRIA NUR ANISA",
+    "nisn": "0099940723",
+    "kelas": {
+      "id": "cmj5eca0e0003jsud1uxj50o4",
+      "nama": "X Teknik Komputer dan Jaringan"
+    }
+  },
+  "guru": null,
+  "siswaId": "cmj5gwztr001f35udgp2iqne6",
+  "guruId": null,
+  "mataPelajaranIds": []
+}
+2026-03-15 22:12:49: [JadwalPelajaran] Filtering for SISWA, userId: cmj5gwztn001e35udd3b8c4mg
+2026-03-15 22:12:49: [JadwalPelajaran] Found siswa: {
+  "kelasId": "cmj5eca0e0003jsud1uxj50o4",
+  "nama": "BADRIA NUR ANISA"
+}
+2026-03-15 22:12:49: [JadwalPelajaran] Using kelasId filter: cmj5eca0e0003jsud1uxj50o4
+2026-03-15 22:12:49: [JadwalPelajaran] Final where: {
+  "kelasId": "cmj5eca0e0003jsud1uxj50o4",
+  "hari": "SENIN"
+}
+2026-03-15 22:12:49: [JadwalPelajaran] Found 8 jadwal records

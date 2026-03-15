@@ -374,7 +374,7 @@ export default function KelolaUjianPage() {
                                     </tr>
                                 ) : (
                                     data.data.map((item: any) => {
-                                        const statusCfg = STATUS_CONFIG[item.status] ?? STATUS_CONFIG.DRAFT;
+                                        const statusCfg = STATUS_CONFIG[item.status] ?? { className: "bg-gray-500/15 text-gray-400", label: "Draft" };
                                         return (
                                             <tr key={item.id} className="border-b border-border hover:bg-muted/30 transition">
                                                 <td className="py-3 px-3">
