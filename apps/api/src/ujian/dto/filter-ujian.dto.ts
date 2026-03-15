@@ -42,4 +42,20 @@ export class FilterUjianDto {
     @IsOptional()
     @Type(() => Boolean)
     isArchived?: boolean;
+
+    @IsString()
+    @IsOptional()
+    dateFrom?: string;
+
+    @IsString()
+    @IsOptional()
+    dateTo?: string;
+
+    @IsString()
+    @IsOptional()
+    sortBy?: string;
+
+    @IsString()
+    @IsOptional()
+    sortOrder?: 'asc' | 'desc';
 }

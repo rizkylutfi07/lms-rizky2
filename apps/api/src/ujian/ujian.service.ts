@@ -255,7 +255,7 @@ export class UjianService {
     }
 
     async findAll(filterDto: FilterUjianDto) {
-        const { search, mataPelajaranId, kelasId, guruId, status, jenisUjianId, isArchived, page = 1, limit = 10 } = filterDto;
+        const { search, mataPelajaranId, kelasId, guruId, status, jenisUjianId, isArchived, page = 1, limit = 10, dateFrom, dateTo, sortBy, sortOrder } = filterDto;
         const skip = (page - 1) * limit;
 
         const isArchivedBool = isArchived === true || String(isArchived) === 'true';
@@ -296,6 +296,20 @@ export class UjianService {
             where.jenisUjianId = jenisUjianId;
         }
 
+        if (dateFrom || dateTo) {
+            where.tanggalSelesai = {};
+            if (dateFrom) where.tanggalSelesai.gte = new Date(dateFrom);
+            if (dateTo) {
+                const end = new Date(dateTo);
+                end.setHours(23, 59, 59, 999);
+                where.tanggalSelesai.lte = end;
+            }
+        }
+
+        const allowedSortBy = ['judul', 'tanggalSelesai', 'tanggalMulai', 'createdAt'];
+        const resolvedSortBy = allowedSortBy.includes(sortBy ?? '') ? sortBy! : 'createdAt';
+        const resolvedSortOrder = sortOrder === 'asc' ? 'asc' : 'desc';
+
         const [data, total] = await Promise.all([
             this.prisma.ujian.findMany({
                 where,
@@ -320,7 +334,7 @@ export class UjianService {
                     },
                 },
                 orderBy: {
-                    createdAt: 'desc',
+                    [resolvedSortBy]: resolvedSortOrder,
                 },
             }),
             this.prisma.ujian.count({ where }),

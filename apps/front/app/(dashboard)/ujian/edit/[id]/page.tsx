@@ -22,6 +22,7 @@ export default function EditUjianPage({ params }: { params: Promise<{ id: string
     const [formData, setFormData] = useState({
         judul: "",
         deskripsi: "",
+        jenisUjianId: "",
         mataPelajaranId: "",
         guruId: "",
         paketSoalId: "",
@@ -72,8 +73,9 @@ export default function EditUjianPage({ params }: { params: Promise<{ id: string
             setFormData({
                 judul: ujianData.judul || "",
                 deskripsi: ujianData.deskripsi || "",
+                jenisUjianId: ujianData.jenisUjianId || "",
                 mataPelajaranId: ujianData.mataPelajaranId || "",
-                guruId: ujianData.guruId || "",
+                guruId: role === "GURU" ? (user?.guru?.id || ujianData.guruId || "") : (ujianData.guruId || ""),
                 paketSoalId: ujianData.paketSoalId || "",
                 durasi: ujianData.durasi || 60,
                 tanggalMulai: formatDateTimeLocal(ujianData.tanggalMulai),
@@ -116,6 +118,13 @@ export default function EditUjianPage({ params }: { params: Promise<{ id: string
         enabled: !!formData.guruId,
     });
 
+    // Auto-set guruId for GURU role
+    useEffect(() => {
+        if (role === "GURU" && user?.guru?.id) {
+            setFormData(prev => ({ ...prev, guruId: user.guru!.id }));
+        }
+    }, [role, user?.guru?.id]);
+
     // Fetch kelas
     const { data: kelasRaw } = useQuery({
         queryKey: ["kelas-list"],
@@ -151,6 +160,18 @@ export default function EditUjianPage({ params }: { params: Promise<{ id: string
         }
         return kelasRaw;
     })();
+
+    // Fetch jenis ujian
+    const { data: jenisUjianList } = useQuery({
+        queryKey: ["jenis-ujian-list"],
+        queryFn: async () => {
+            const res = await fetch(`${API_URL}/jenis-ujian`, {
+                headers: { Authorization: `Bearer ${token}` },
+            });
+            return res.json();
+        },
+        enabled: !!token,
+    });
 
     // Fetch paket soal
     const { data: paketSoalList } = useQuery({
@@ -240,6 +261,7 @@ export default function EditUjianPage({ params }: { params: Promise<{ id: string
 
         const submitData = {
             ...formData,
+            jenisUjianId: formData.jenisUjianId || undefined,
             mataPelajaranId: formData.mataPelajaranId || undefined,
             guruId: formData.guruId || undefined,
             tanggalMulai: new Date(formData.tanggalMulai).toISOString(),
@@ -386,6 +408,25 @@ export default function EditUjianPage({ params }: { params: Promise<{ id: string
 
                             <div>
                                 <label className="mb-2 block text-sm font-medium">
+                                    Jenis Ujian *
+                                </label>
+                                <select
+                                    required
+                                    value={formData.jenisUjianId}
+                                    onChange={(e) => setFormData({ ...formData, jenisUjianId: e.target.value })}
+                                    className="w-full rounded-lg border border-border bg-background px-4 py-2 outline-none transition focus:border-primary/60 focus:ring-2 focus:ring-primary/20"
+                                >
+                                    <option value="">Pilih Jenis Ujian</option>
+                                    {(Array.isArray(jenisUjianList) ? jenisUjianList : (jenisUjianList?.data ?? []))
+                                        .filter((j: any) => j.aktif)
+                                        .map((jenis: any) => (
+                                            <option key={jenis.id} value={jenis.id}>{jenis.nama}</option>
+                                        ))}
+                                </select>
+                            </div>
+
+                            {role === "ADMIN" && (<div>
+                                <label className="mb-2 block text-sm font-medium">
                                     Guru *
                                 </label>
                                 <SearchableSelect
@@ -410,7 +451,7 @@ export default function EditUjianPage({ params }: { params: Promise<{ id: string
                                         Pilih guru terlebih dahulu untuk melihat mata pelajaran
                                     </p>
                                 )}
-                            </div>
+                            </div>)}
 
                             <div>
                                 <label className="mb-2 block text-sm font-medium">

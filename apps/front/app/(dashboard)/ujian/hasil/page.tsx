@@ -4,7 +4,7 @@ import * as XLSX from "xlsx";
 
 import { useState } from "react";
 import { useQuery, useMutation, useQueryClient } from "@tanstack/react-query";
-import { BarChart3, Eye, Download, EyeOff, Archive, Loader2 } from "lucide-react";
+import { BarChart3, Eye, Download, EyeOff, Archive, Loader2, ArrowUpDown, ArrowUp, ArrowDown, X } from "lucide-react";
 
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardHeader } from "@/components/ui/card";
@@ -25,7 +25,7 @@ import {
 } from "@/components/ui/alert-dialog";
 
 export default function HasilUjianPage() {
-    const { token } = useRole();
+    const { token, role, user } = useRole();
     const router = useRouter();
     const { toast } = useToast();
     const queryClient = useQueryClient();
@@ -35,11 +35,34 @@ export default function HasilUjianPage() {
     const [deleteId, setDeleteId] = useState<string | null>(null);
     const [filterKelasId, setFilterKelasId] = useState("");
     const [filterJenisUjianId, setFilterJenisUjianId] = useState("");
+    const [filterDateFrom, setFilterDateFrom] = useState("");
+    const [filterDateTo, setFilterDateTo] = useState("");
+    const [sortBy, setSortBy] = useState("tanggalSelesai");
+    const [sortOrder, setSortOrder] = useState<"asc" | "desc">("desc");
+
+    const toggleSort = (col: string) => {
+        if (sortBy === col) {
+            setSortOrder((o) => (o === "desc" ? "asc" : "desc"));
+        } else {
+            setSortBy(col);
+            setSortOrder("desc");
+        }
+        setPage(1);
+    };
+
+    const SortIcon = ({ col }: { col: string }) => {
+        if (sortBy !== col) return <ArrowUpDown size={13} className="ml-1 opacity-40" />;
+        return sortOrder === "asc" ? <ArrowUp size={13} className="ml-1 text-primary" /> : <ArrowDown size={13} className="ml-1 text-primary" />;
+    };
 
     const { data: kelasList } = useQuery({
-        queryKey: ["kelas", "list"],
+        queryKey: ["kelas", "list", user?.guru?.id],
         queryFn: async () => {
-            const res = await fetch(`${API_URL}/kelas?limit=100`, {
+            const params = new URLSearchParams({ limit: "100" });
+            if (role === "GURU" && user?.guru?.id) {
+                params.append("guruId", user.guru.id);
+            }
+            const res = await fetch(`${API_URL}/kelas?${params.toString()}`, {
                 headers: { Authorization: `Bearer ${token}` },
             });
             return res.json();
@@ -175,17 +198,21 @@ export default function HasilUjianPage() {
     };
 
     const { data, isLoading } = useQuery({
-        queryKey: ["ujian", "list", "selesai", page, search, tab, filterKelasId, filterJenisUjianId],
+        queryKey: ["ujian", "list", "selesai", page, search, tab, filterKelasId, filterJenisUjianId, filterDateFrom, filterDateTo, sortBy, sortOrder],
         queryFn: async () => {
             const params = new URLSearchParams({
                 page: page.toString(),
                 limit: "10",
                 status: "SELESAI",
+                sortBy,
+                sortOrder,
             });
             if (search) params.append("search", search);
             if (tab === "arsip") params.append("isArchived", "true");
             if (filterKelasId) params.append("kelasId", filterKelasId);
             if (filterJenisUjianId) params.append("jenisUjianId", filterJenisUjianId);
+            if (filterDateFrom) params.append("dateFrom", filterDateFrom);
+            if (filterDateTo) params.append("dateTo", filterDateTo);
 
             const res = await fetch(
                 `${API_URL}/ujian?${params.toString()}`,
@@ -265,6 +292,34 @@ export default function HasilUjianPage() {
                             ))}
                         </select>
                     </div>
+                    <div className="flex flex-col md:flex-row gap-2 items-center">
+                        <span className="text-xs text-muted-foreground whitespace-nowrap">Tanggal selesai:</span>
+                        <div className="flex items-center gap-1">
+                            <input
+                                type="date"
+                                value={filterDateFrom}
+                                onChange={(e) => { setFilterDateFrom(e.target.value); setPage(1); }}
+                                className="rounded-lg border border-border bg-background py-2 px-3 text-sm outline-none transition focus:border-primary/60 focus:ring-2 focus:ring-primary/20"
+                            />
+                            <span className="text-xs text-muted-foreground">–</span>
+                            <input
+                                type="date"
+                                value={filterDateTo}
+                                min={filterDateFrom || undefined}
+                                onChange={(e) => { setFilterDateTo(e.target.value); setPage(1); }}
+                                className="rounded-lg border border-border bg-background py-2 px-3 text-sm outline-none transition focus:border-primary/60 focus:ring-2 focus:ring-primary/20"
+                            />
+                            {(filterDateFrom || filterDateTo) && (
+                                <button
+                                    onClick={() => { setFilterDateFrom(""); setFilterDateTo(""); setPage(1); }}
+                                    title="Reset filter tanggal"
+                                    className="p-1.5 rounded-md hover:bg-muted text-muted-foreground hover:text-foreground transition"
+                                >
+                                    <X size={14} />
+                                </button>
+                            )}
+                        </div>
+                    </div>
                 </CardHeader>
 
                 <CardContent className="p-2 md:p-4">
@@ -273,12 +328,22 @@ export default function HasilUjianPage() {
                             <thead>
                                 <tr className="border-b border-border">
                                     <th className="text-left py-3 px-4 text-sm font-semibold text-muted-foreground">Kode</th>
-                                    <th className="text-left py-3 px-4 text-sm font-semibold text-muted-foreground">Judul</th>
+                                    <th
+                                        className="text-left py-3 px-4 text-sm font-semibold text-muted-foreground cursor-pointer select-none hover:text-foreground transition"
+                                        onClick={() => toggleSort("judul")}
+                                    >
+                                        <span className="inline-flex items-center">Judul<SortIcon col="judul" /></span>
+                                    </th>
                                     <th className="text-left py-3 px-4 text-sm font-semibold text-muted-foreground">Jenis Ujian</th>
                                     <th className="text-left py-3 px-4 text-sm font-semibold text-muted-foreground">Mata Pelajaran</th>
                                     <th className="text-left py-3 px-4 text-sm font-semibold text-muted-foreground">Kelas</th>
                                     <th className="text-center py-3 px-4 text-sm font-semibold text-muted-foreground">Peserta</th>
-                                    <th className="text-left py-3 px-4 text-sm font-semibold text-muted-foreground">Tanggal Selesai</th>
+                                    <th
+                                        className="text-left py-3 px-4 text-sm font-semibold text-muted-foreground cursor-pointer select-none hover:text-foreground transition"
+                                        onClick={() => toggleSort("tanggalSelesai")}
+                                    >
+                                        <span className="inline-flex items-center">Tanggal Selesai<SortIcon col="tanggalSelesai" /></span>
+                                    </th>
                                     <th className="text-center py-3 px-4 text-sm font-semibold text-muted-foreground">Tampil Nilai</th>
                                     <th className="text-right py-3 px-4 text-sm font-semibold text-muted-foreground">Aksi</th>
                                 </tr>
