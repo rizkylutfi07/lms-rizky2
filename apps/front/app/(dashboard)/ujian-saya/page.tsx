@@ -148,15 +148,7 @@ export default function UjianSayaPage() {
                                                                 </div>
                                                             </div>
                                                         )}
-                                                        <Button
-                                                            size="sm"
-                                                            variant="outline"
-                                                            onClick={() =>
-                                                                router.push(`/ujian-saya/hasil/${item.id}`)
-                                                            }
-                                                        >
-                                                            Lihat Hasil
-                                                        </Button>
+                                                        
                                                     </>
                                                 ) : item.status === "SEDANG_MENGERJAKAN" ? (
                                                     <Button

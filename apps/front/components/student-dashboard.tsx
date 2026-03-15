@@ -21,7 +21,10 @@ import {
     MapPin,
     User,
     XCircle,
-    AlertCircle
+    AlertCircle,
+    PlayCircle,
+    ShieldAlert,
+    Timer,
 } from "lucide-react";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
@@ -135,15 +138,19 @@ export default function StudentDashboard() {
             return res.json();
         },
         enabled: !!token,
+        refetchInterval: 30_000,
+        staleTime: 0,
     });
     const exams = Array.isArray(examsData) ? examsData : [];
-    const availableExams = exams.filter((item: any) => {
-        const ujian = item.ujian;
-        if (!ujian) return false;
-        const start = new Date(ujian.tanggalMulai);
-        const end = new Date(ujian.tanggalSelesai);
-        return now >= start && now <= end && item.status !== "SELESAI";
-    }).slice(0, 3);
+
+    // Sedang dikerjakan — highest priority
+    const sedangDikerjakan = exams.filter((item: any) => item.status === "SEDANG_MENGERJAKAN");
+    // Tersedia sekarang (belum mulai/belum selesai)
+    const tersediaSekarang = exams.filter((item: any) => item.status !== "SELESAI" && item.status !== "SEDANG_MENGERJAKAN");
+    // Semua yang relevan untuk ditampilkan di dashboard
+    const displayExams = [...sedangDikerjakan, ...tersediaSekarang].slice(0, 5);
+    // Ujian aktif untuk alert banner
+    const activeExam = sedangDikerjakan[0] ?? tersediaSekarang[0] ?? null;
 
 
     // 5. Fetch ATTENDANCE for current month
@@ -231,7 +238,43 @@ export default function StudentDashboard() {
                     </div>
                 </div>
 
-                {/* Top Navigation Buttons - Compact Design */}
+                {/* URGENT BANNER — Ujian sedang berjalan atau tersedia */}
+            {!examsLoading && activeExam && (
+                <Link href={
+                    activeExam.status === "SEDANG_MENGERJAKAN"
+                        ? `/ujian-saya/kerjakan/${activeExam.id}`
+                        : `/ujian-saya/mulai/${activeExam.ujian?.id}`
+                }>
+                    <div className={`flex items-center gap-3 rounded-xl border-2 px-4 py-3 transition hover:opacity-90 ${
+                        activeExam.status === "SEDANG_MENGERJAKAN"
+                            ? "border-yellow-400 bg-yellow-400/10 text-yellow-800 dark:text-yellow-300"
+                            : "border-purple-500 bg-purple-500/10 text-purple-800 dark:text-purple-300"
+                    }`}>
+                        <div className={`flex h-10 w-10 shrink-0 items-center justify-center rounded-full ${
+                            activeExam.status === "SEDANG_MENGERJAKAN" ? "bg-yellow-400" : "bg-purple-500"
+                        }`}>
+                            {activeExam.status === "SEDANG_MENGERJAKAN"
+                                ? <Timer className="h-5 w-5 text-white" />
+                                : <ShieldAlert className="h-5 w-5 text-white" />}
+                        </div>
+                        <div className="flex-1 min-w-0">
+                            <p className="font-bold text-sm">
+                                {activeExam.status === "SEDANG_MENGERJAKAN" ? "⚡ Ujian sedang dikerjakan!" : "🔔 Ujian tersedia sekarang!"}
+                            </p>
+                            <p className="text-xs truncate opacity-80">{activeExam.ujian?.judul}</p>
+                        </div>
+                        <div className="shrink-0">
+                            <span className={`text-xs font-semibold px-3 py-1.5 rounded-full ${
+                                activeExam.status === "SEDANG_MENGERJAKAN" ? "bg-yellow-400 text-white" : "bg-purple-500 text-white"
+                            }`}>
+                                {activeExam.status === "SEDANG_MENGERJAKAN" ? "Lanjutkan →" : "Mulai Ujian →"}
+                            </span>
+                        </div>
+                    </div>
+                </Link>
+            )}
+
+            {/* Top Navigation Buttons - Compact Design */}
                 <div className="grid grid-cols-2 lg:grid-cols-4 gap-3">
                     <Link href="/pengumuman" className="group">
                         <Card className="border-transparent shadow-sm transition-all hover:shadow-md hover:border-blue-500/30 bg-gradient-to-br from-blue-50 to-blue-100/50 dark:from-blue-950/30 dark:to-blue-900/20">
@@ -285,8 +328,76 @@ export default function StudentDashboard() {
                         <AnnouncementWidget role="SISWA" />
                     </div>
 
-                    {/* PRIORITY 2: JADWAL HARI INI */}
-                    <Card className="border-border bg-card/70 shadow-sm">
+                    {/* PRIORITY 3: UJIAN AKTIF */}
+                    <Card className="border-purple-500/30 bg-card/70 shadow-sm">
+                        <CardHeader className="flex flex-row items-center justify-between pb-3">
+                            <div>
+                                <CardTitle className="flex items-center gap-2">
+                                    <Award className="h-5 w-5 text-purple-500" />
+                                    Ujian Saya
+                                </CardTitle>
+                                <CardDescription>Ujian yang sedang & akan berlangsung</CardDescription>
+                            </div>
+                            <Button variant="ghost" size="sm" asChild>
+                                <Link href="/ujian-saya">Lihat Semua <ArrowRight className="ml-2 h-4 w-4" /></Link>
+                            </Button>
+                        </CardHeader>
+                        <CardContent>
+                            {examsLoading ? (
+                                <div className="space-y-2">{Array.from({length:2}).map((_,i)=><div key={i} className="h-16 animate-pulse rounded-lg bg-muted/50"/>)}</div>
+                            ) : displayExams.length > 0 ? (
+                                <div className="space-y-2">
+                                    {displayExams.map((item: any) => {
+                                        const ujian = item.ujian;
+                                        const isSedang = item.status === "SEDANG_MENGERJAKAN";
+                                        const href = isSedang
+                                            ? `/ujian-saya/kerjakan/${item.id}`
+                                            : `/ujian-saya/mulai/${ujian?.id}`;
+                                        return (
+                                            <div key={item.id} className={`flex items-center gap-3 rounded-lg border p-3 transition ${
+                                                isSedang
+                                                    ? "border-yellow-400/50 bg-yellow-400/5"
+                                                    : "border-purple-500/20 bg-purple-500/5 hover:bg-purple-500/10"
+                                            }`}>
+                                                <div className={`flex h-9 w-9 shrink-0 items-center justify-center rounded-lg ${
+                                                    isSedang ? "bg-yellow-400" : "bg-purple-500"
+                                                }`}>
+                                                    {isSedang
+                                                        ? <Timer className="h-4 w-4 text-white" />
+                                                        : <PlayCircle className="h-4 w-4 text-white" />}
+                                                </div>
+                                                <div className="flex-1 min-w-0">
+                                                    <p className="font-semibold text-sm truncate">{ujian?.judul}</p>
+                                                    <div className="flex items-center gap-2 text-xs text-muted-foreground mt-0.5">
+                                                        {ujian?.mataPelajaran && <span>{ujian.mataPelajaran.nama}</span>}
+                                                        <span>·</span>
+                                                        <Clock size={11} />
+                                                        <span>{ujian?.durasi} menit</span>
+                                                        <span>·</span>
+                                                        <span>{ujian?._count?.ujianSoal ?? 0} soal</span>
+                                                    </div>
+                                                    <p className="text-xs text-muted-foreground mt-0.5">
+                                                        Selesai: {ujian ? new Date(ujian.tanggalSelesai).toLocaleString("id-ID", {day:"2-digit",month:"short",hour:"2-digit",minute:"2-digit"}) : "-"}
+                                                    </p>
+                                                </div>
+                                                <Button size="sm" asChild className={isSedang ? "bg-yellow-400 hover:bg-yellow-500 text-black" : ""}>
+                                                    <Link href={href}>{isSedang ? "Lanjutkan" : "Mulai"}</Link>
+                                                </Button>
+                                            </div>
+                                        );
+                                    })}
+                                </div>
+                            ) : (
+                                <div className="text-center py-8 text-muted-foreground bg-muted/20 rounded-lg border border-dashed">
+                                    <Award className="h-8 w-8 mx-auto mb-2 opacity-20" />
+                                    <p className="text-sm">Tidak ada ujian aktif saat ini.</p>
+                                </div>
+                            )}
+                        </CardContent>
+                    </Card>
+
+                    {/* PRIORITY 3: JADWAL HARI INI */}
+                    {/* <Card className="border-border bg-card/70 shadow-sm">
                         <CardHeader>
                             <CardTitle className="flex items-center gap-2">
                                 <Calendar className="h-5 w-5 text-amber-500" />
@@ -354,9 +465,9 @@ export default function StudentDashboard() {
                                 </div>
                             )}
                         </CardContent>
-                    </Card>
+                    </Card> */}
 
-                    {/* PRIORITY 3: TUGAS */}
+                    {/* PRIORITY 4: TUGAS */}
                     <Card className="border-border bg-card/70 shadow-sm">
                         <CardHeader className="flex flex-row items-center justify-between">
                             <div>
@@ -410,48 +521,7 @@ export default function StudentDashboard() {
                         </CardContent>
                     </Card>
 
-                    {/* PRIORITY 4: UJIAN */}
-                    <Card className="border-border bg-card/70 shadow-sm">
-                        <CardHeader className="flex flex-row items-center justify-between">
-                            <div>
-                                <CardTitle className="flex items-center gap-2">
-                                    <Award className="h-5 w-5 text-purple-500" />
-                                    Ujian Tersedia
-                                </CardTitle>
-                                <CardDescription>Ujian yang sedang berlangsung</CardDescription>
-                            </div>
-                            <Button variant="ghost" size="sm" asChild>
-                                <Link href="/ujian-saya">Lihat Semua <ArrowRight className="ml-2 h-4 w-4" /></Link>
-                            </Button>
-                        </CardHeader>
-                        <CardContent>
-                            {examsLoading ? (
-                                <div className="text-center py-8">Memuat ujian...</div>
-                            ) : availableExams.length > 0 ? (
-                                <div className="grid gap-3">
-                                    {availableExams.map((item: any) => (
-                                        <div key={item.id} className="flex items-center justify-between rounded-lg border border-purple-500/20 bg-purple-500/5 p-4">
-                                            <div className="space-y-1">
-                                                <div className="flex items-center gap-2">
-                                                    <Badge className="bg-purple-500 hover:bg-purple-600">UJO</Badge>
-                                                    <h4 className="font-semibold">{item.ujian?.judul}</h4>
-                                                </div>
-                                                <p className="text-sm text-muted-foreground">{item.ujian?.mataPelajaran?.nama}</p>
-                                            </div>
-                                            <Button size="sm" asChild>
-                                                <Link href={`/ujian-saya/mulai/${item.ujian?.id}`}>Mulai</Link>
-                                            </Button>
-                                        </div>
-                                    ))}
-                                </div>
-                            ) : (
-                                <div className="text-center py-10 text-muted-foreground bg-muted/20 rounded-lg border border-dashed">
-                                    <Award className="h-10 w-10 mx-auto mb-2 opacity-20" />
-                                    <p>Tidak ada ujian aktif saat ini.</p>
-                                </div>
-                            )}
-                        </CardContent>
-                    </Card>
+                    {/* (UJIAN section moved to PRIORITY 2 above) */}
 
                 </div>
 

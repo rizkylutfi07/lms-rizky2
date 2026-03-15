@@ -151,6 +151,8 @@ export default function KerjakanUjianPage() {
     const STORAGE_KEY = `ujian-jawaban-${ujianSiswaId}`;
 
     const [jawaban, setJawaban] = useState<Record<string, string>>({});
+    const [ragu, setRagu] = useState<Record<string, boolean>>({});
+    const [fontSize, setFontSize] = useState(16); // px
     const [timeLeft, setTimeLeft] = useState(0);
     const [violations, setViolations] = useState(0);
     const [isSubmitting, setIsSubmitting] = useState(false);
@@ -727,48 +729,7 @@ export default function KerjakanUjianPage() {
             </div>
 
             {/* Content */}
-            <div className="max-w-5xl mx-auto pt-20 pb-2 px-4 space-y-6">
-                <Card>
-                    <CardContent className="p-4 space-y-3">
-                        <div className="flex items-center justify-between">
-                            <div>
-                                <p className="text-sm font-semibold">Navigasi Soal</p>
-                            </div>
-                            <div className="flex gap-3 text-xs text-muted-foreground">
-                                <span>
-                                    <span className="inline-flex h-3 w-3 rounded-full bg-muted mr-1" /> Belum
-                                </span>
-                                <span>
-                                    <span className="inline-flex h-3 w-3 rounded-full bg-green-500 mr-1" /> Terjawab
-                                </span>
-                            </div>
-                        </div>
-                        <div className="overflow-x-auto scrollbar-thin scrollbar-thumb-muted scrollbar-track-transparent">
-                            <div className="flex gap-2 pb-2" style={{ minWidth: 'max-content' }}>
-                                {soalList.map((soal: any, index: number) => {
-                                    const soalKey = soal.bankSoalId ?? soal.id;
-                                    const isActive = currentIndex === index;
-                                    const answered = Boolean(jawaban[soalKey]);
-                                    return (
-                                        <button
-                                            key={soalKey}
-                                            type="button"
-                                            onClick={() => handleNavigateSoal(index)}
-                                            className={`w-10 h-10 rounded-md border text-xs font-semibold transition flex-shrink-0 ${isActive
-                                                ? "border-primary bg-primary text-primary-foreground"
-                                                : answered
-                                                    ? "border-green-500 bg-green-500/10 text-green-700"
-                                                    : "border-muted bg-muted/40 text-muted-foreground"
-                                                }`}
-                                        >
-                                            {index + 1}
-                                        </button>
-                                    );
-                                })}
-                            </div>
-                        </div>
-                    </CardContent>
-                </Card>
+            <div className="max-w-5xl mx-auto pt-20 pb-52 px-4 space-y-6">
                 {soalList.length > 0 && activeSoalId ? (
                     (() => {
                         const currentSoal = soalList[currentIndex];
@@ -812,10 +773,27 @@ export default function KerjakanUjianPage() {
                             )}
                             <Card>
                                 <CardContent className="p-6 space-y-6">
-                                    
+                                    {/* Font size controls */}
+                                    <div className="flex items-center justify-end gap-1">
+                                        <span className="text-xs text-muted-foreground mr-1">Ukuran teks:</span>
+                                        <button
+                                            type="button"
+                                            onClick={() => setFontSize(s => Math.max(12, s - 2))}
+                                            className="w-7 h-7 rounded border border-border text-sm font-bold hover:bg-muted transition flex items-center justify-center"
+                                            title="Perkecil"
+                                        >A-</button>
+                                        <span className="text-xs w-8 text-center">{fontSize}px</span>
+                                        <button
+                                            type="button"
+                                            onClick={() => setFontSize(s => Math.min(28, s + 2))}
+                                            className="w-7 h-7 rounded border border-border text-sm font-bold hover:bg-muted transition flex items-center justify-center"
+                                            title="Perbesar"
+                                        >A+</button>
+                                    </div>
 
                                     <div
-                                            className="prose prose-sm max-w-none"
+                                            className="prose max-w-none"
+                                            style={{ fontSize }}
                                             dangerouslySetInnerHTML={{ __html: pertanyaan }}
                                         />
 
@@ -845,7 +823,8 @@ export default function KerjakanUjianPage() {
                                                         />
                                                         <div className="flex-1">
                                                             <div
-                                                                className="prose prose-sm max-w-none"
+                                                                className="prose max-w-none"
+                                                                style={{ fontSize }}
                                                                 dangerouslySetInnerHTML={{ __html: optionLabel }}
                                                             />
                                                             {optionImageUrl && (
@@ -930,27 +909,39 @@ export default function KerjakanUjianPage() {
                                         />
                                     )}
 
-                                    <div className="flex items-center justify-between pt-4">
+                                    <div className="pt-4 space-y-2">
+                                        {/* Ragu button — full width on mobile */}
                                         <Button
-                                            variant="outline"
-                                            onClick={() => goToIndex(currentIndex - 1)}
-                                            disabled={currentIndex === 0}
+                                            variant={ragu[soalKey] ? "default" : "outline"}
+                                            onClick={() => setRagu(prev => ({ ...prev, [soalKey]: !prev[soalKey] }))}
+                                            className={`w-full ${ragu[soalKey] ? "bg-yellow-500 hover:bg-yellow-600 text-white border-yellow-500" : "border-yellow-500 text-yellow-600 hover:bg-yellow-50"}`}
                                         >
-                                            Soal Sebelumnya
+                                            {ragu[soalKey] ? "★ Ragu-Ragu" : "☆ Tandai Ragu"}
                                         </Button>
-
-                                        <Button
-                                            variant="outline"
-                                            onClick={() => goToIndex(currentIndex + 1)}
-                                            disabled={currentIndex === soalList.length - 1}
-                                        >
-                                            Soal Berikutnya
-                                        </Button>
-                                    </div>
-                                    <div className="flex items-center justify-left">
-                                        <span className="text-sm text-muted-foreground">
-                                            Soal {currentIndex + 1} dari {soalList.length}
-                                        </span>
+                                        {/* Prev / counter / Next */}
+                                        <div className="flex items-center gap-2">
+                                            <Button
+                                                variant="outline"
+                                                size="sm"
+                                                className="flex-1"
+                                                onClick={() => goToIndex(currentIndex - 1)}
+                                                disabled={currentIndex === 0}
+                                            >
+                                                ← Sebelumnya
+                                            </Button>
+                                            <span className="text-xs text-muted-foreground whitespace-nowrap px-1">
+                                                {currentIndex + 1} / {soalList.length}
+                                            </span>
+                                            <Button
+                                                variant="outline"
+                                                size="sm"
+                                                className="flex-1"
+                                                onClick={() => goToIndex(currentIndex + 1)}
+                                                disabled={currentIndex === soalList.length - 1}
+                                            >
+                                                Berikutnya →
+                                            </Button>
+                                        </div>
                                     </div>
                                 </CardContent>
                             </Card>
@@ -963,44 +954,94 @@ export default function KerjakanUjianPage() {
                     </div>
                 )}
 
-                {/* Submit button at bottom */}
-                <Card className="sticky bottom-4 shadow-lg border-border">
-                    <CardContent className="p-4">
-                        <div className="flex items-center justify-between gap-4">
-                            <div className="text-sm text-muted-foreground space-y-1">
-                                <div>Terjawab: {answeredCount} / {soalList.length}</div>
-                                {saveProgressMutation.isPending ? (
-                                    <div className="text-xs text-primary flex items-center gap-1">
-                                        <Loader2 className="h-3 w-3 animate-spin" />
-                                        Menyimpan progres...
-                                    </div>
-                                ) : saveError ? (
-                                    <div className="text-xs text-destructive">Gagal simpan progres: {saveError}</div>
-                                ) : (
-                                    <div className="text-xs text-muted-foreground">Progres otomatis tersimpan</div>
-                                )}
+            </div>
+
+            {/* Fixed bottom navigation + submit bar */}
+            <div className="fixed bottom-0 left-0 right-0 z-40 bg-background/95 backdrop-blur-sm border-t shadow-lg">
+                <div className="max-w-5xl mx-auto px-3 py-2">
+                    {/* Mobile: submit row on top, numbers below */}
+                    {/* Desktop: side by side */}
+                    <div className="flex flex-col gap-1.5">
+                        {/* Top row: label + legend + submit */}
+                        <div className="flex items-center justify-between gap-2">
+                            <div className="flex items-center gap-2 flex-wrap">
+                                <p className="text-xs font-semibold shrink-0">Navigasi Soal</p>
+                                <div className="flex gap-2 text-xs text-muted-foreground">
+                                    <span><span className="inline-flex h-2.5 w-2.5 rounded-full bg-muted mr-1" />Belum</span>
+                                    <span><span className="inline-flex h-2.5 w-2.5 rounded-full bg-green-500 mr-1" />Terjawab</span>
+                                    <span><span className="inline-flex h-2.5 w-2.5 rounded-full bg-yellow-400 mr-1" />Ragu</span>
+                                </div>
                             </div>
-                            <Button
-                                onClick={handleSubmit}
-                                disabled={isSubmitting || submitMutation.isPending}
-                                size="lg"
-                                className="gap-2 px-5"
-                            >
-                                {isSubmitting || submitMutation.isPending ? (
-                                    <>
-                                        <Loader2 className="animate-spin mr-2" size={20} />
-                                        Submitting...
-                                    </>
-                                ) : (
-                                    <>
-                                        <ShieldCheck size={18} />
-                                        Kirim Jawaban
-                                    </>
-                                )}
-                            </Button>
+                            <div className="flex items-center gap-3 shrink-0">
+                                <div className="text-xs text-muted-foreground text-right hidden sm:block">
+                                    <div className="font-medium">Terjawab: {answeredCount} / {soalList.length}</div>
+                                    {saveProgressMutation.isPending ? (
+                                        <div className="text-primary flex items-center gap-1 justify-end">
+                                            <Loader2 className="h-3 w-3 animate-spin" />Menyimpan...
+                                        </div>
+                                    ) : saveError ? (
+                                        <div className="text-destructive">Gagal simpan</div>
+                                    ) : (
+                                        <div>Progres tersimpan</div>
+                                    )}
+                                </div>
+                                <Button
+                                    onClick={handleSubmit}
+                                    disabled={isSubmitting || submitMutation.isPending || currentIndex !== soalList.length - 1}
+                                    size="sm"
+                                    className="gap-1.5 px-3 shrink-0"
+                                    title={currentIndex !== soalList.length - 1 ? "Selesaikan semua soal terlebih dahulu" : ""}
+                                >
+                                    {isSubmitting || submitMutation.isPending ? (
+                                        <><Loader2 className="animate-spin" size={13} />Submitting...</>
+                                    ) : (
+                                        <><ShieldCheck size={13} />Kirim Jawaban</>
+                                    )}
+                                </Button>
+                            </div>
                         </div>
-                    </CardContent>
-                </Card>
+                        {/* Mobile: terjawab info */}
+                        <div className="sm:hidden text-xs text-muted-foreground flex items-center justify-between">
+                            <span className="font-medium">Terjawab: {answeredCount} / {soalList.length}</span>
+                            {saveProgressMutation.isPending ? (
+                                <span className="text-primary flex items-center gap-1"><Loader2 className="h-3 w-3 animate-spin" />Menyimpan...</span>
+                            ) : saveError ? (
+                                <span className="text-destructive">Gagal simpan</span>
+                            ) : (
+                                <span>Progres tersimpan</span>
+                            )}
+                        </div>
+                        {/* Numbers grid — scrollable on mobile, wrap on desktop */}
+                        <div className="max-h-24 sm:max-h-none overflow-y-auto sm:overflow-visible">
+                            <div className="flex flex-wrap gap-1">
+                                {soalList.map((soal: any, index: number) => {
+                                    const soalKey = soal.bankSoalId ?? soal.id;
+                                    const isActive = currentIndex === index;
+                                    const answered = Boolean(jawaban[soalKey]);
+                                    const isRagu = Boolean(ragu[soalKey]);
+                                    return (
+                                        <button
+                                            key={soalKey}
+                                            type="button"
+                                            onClick={() => handleNavigateSoal(index)}
+                                            className={`w-8 h-8 rounded border text-xs font-semibold transition ${
+                                                isActive
+                                                    ? "border-primary bg-primary text-primary-foreground"
+                                                    : isRagu
+                                                        ? "border-yellow-400 bg-yellow-400/20 text-yellow-700"
+                                                        : answered
+                                                            ? "border-green-500 bg-green-500/10 text-green-700"
+                                                            : "border-muted bg-muted/40 text-muted-foreground"
+                                            }`}
+                                        >
+                                            {index + 1}
+                                        </button>
+                                    );
+                                })}
+                            </div>
+                        </div>
+                    </div>
+                </div>
             </div>
             {/* Submit confirmation modal */}
             {showSubmitConfirm && (
