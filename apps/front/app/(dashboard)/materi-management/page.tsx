@@ -462,9 +462,7 @@ export default function MateriManagementPage() {
                                 <Badge tone="success">{hasActiveFilter ? `${filteredMateri.length} / ${materiList.length}` : materiList.length} materi</Badge>
                             </div>
                             <CardTitle className="text-3xl">Manajemen Materi Pelajaran</CardTitle>
-                            <CardDescription className="text-base">
-                                Kelola dan upload materi pembelajaran untuk siswa
-                            </CardDescription>
+                            
                         </div>
                         <Dialog open={dialogOpen} onOpenChange={setDialogOpen}>
                             <DialogTrigger asChild>

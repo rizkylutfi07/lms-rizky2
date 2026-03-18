@@ -194,10 +194,7 @@ export default function KelasPage() {
           </div>
 
           <div className="mt-4 flex flex-col gap-4 md:flex-row md:items-center">
-            <div className="min-w-[200px]">
-              <CardTitle>Daftar Data Kelas</CardTitle>
-              <CardDescription>Total {data?.meta.total || 0} data</CardDescription>
-            </div>
+            
             <div className="flex flex-1 flex-col gap-2 md:flex-row">
               <div className="relative flex-1">
                 <Search className="absolute left-3 top-1/2 -translate-y-1/2 text-muted-foreground" size={16} />

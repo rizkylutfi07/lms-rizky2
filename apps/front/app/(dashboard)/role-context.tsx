@@ -171,7 +171,6 @@ const navByRole: Record<Role, NavGroup[]> = {
         { label: "Absensi", icon: ClipboardList, href: "/attendance", note: "Scan & laporan" },
         { label: "Absensi Manual", icon: Users2, href: "/attendance/manual", note: "Tandai kehadiran" },
         { label: "Absensi Kelas", icon: ClipboardCheck, href: "/absensi-kelas", note: "Absen per mapel" },
-        { label: "Laporan Nilai", icon: BarChart3, href: "/laporan", note: "Rekap nilai" },
       ],
     },
     {

@@ -207,10 +207,7 @@ export default function BankSoalPage() {
                         </div>
 
                         <div className="flex gap-2 mt-4 md:mt-0">
-                            <Button className="border border-border bg-transparent text-muted-foreground" onClick={() => setIsImportModalOpen(true)}>
-                                <Upload size={16} />
-                                Import
-                            </Button>
+                            
                             <Button onClick={() => setIsCreateModalOpen(true)}>
                                 <Plus size={16} />
                                 Tambah Soal

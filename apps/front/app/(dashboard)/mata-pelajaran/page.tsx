@@ -141,10 +141,7 @@ export default function MataPelajaranPage() {
       <Card>
         <CardHeader>
           <div className="flex flex-col gap-4 md:flex-row md:items-center md:justify-between">
-            <div>
-              <CardTitle>Daftar Mata Pelajaran</CardTitle>
-              <CardDescription>Total {data?.meta?.total || data?.length || 0} data</CardDescription>
-            </div>
+            
             <div className="relative flex-1 md:w-64">
               <Search className="absolute left-3 top-1/2 -translate-y-1/2 text-muted-foreground" size={16} />
               <input
