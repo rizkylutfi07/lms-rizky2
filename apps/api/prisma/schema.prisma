@@ -34,18 +34,28 @@ model TahunAjaran {
   tanggalMulai   DateTime
   tanggalSelesai DateTime
   status         StatusTahunAjaran @default(AKAN_DATANG)
+  semester       Semester?         // Semester aktif saat ini: GANJIL atau GENAP
   createdAt      DateTime          @default(now())
   updatedAt      DateTime          @updatedAt
   deletedAt      DateTime? // soft delete
 
   siswa             Siswa[]
   siswaKelasHistory SiswaKelasHistory[]
+  ujian             Ujian[]
+  absensiKelas      AbsensiKelas[]
+  materi            Materi[]
+  tugas             Tugas[]
 }
 
 enum StatusTahunAjaran {
   AKTIF
   SELESAI
   AKAN_DATANG
+}
+
+enum Semester {
+  GANJIL
+  GENAP
 }
 
 model MataPelajaran {
@@ -370,6 +380,9 @@ model Ujian {
   paketSoal       PaketSoal?     @relation(fields: [paketSoalId], references: [id])
   kelasId         String?
   kelas           Kelas?        @relation(fields: [kelasId], references: [id])
+  tahunAjaranId   String?
+  tahunAjaran     TahunAjaran?  @relation(fields: [tahunAjaranId], references: [id])
+  semester        Semester?     // Semester saat ujian dibuat
   durasi          Int           // in minutes
   tanggalMulai    DateTime
   tanggalSelesai  DateTime
@@ -392,6 +405,7 @@ model Ujian {
   @@index([kelasId])
   @@index([jenisUjianId])
   @@index([tanggalMulai])
+  @@index([tahunAjaranId])
 }
 
 enum StatusUjian {
@@ -532,6 +546,10 @@ model Materi {
   
   kelasId         String?
   kelas           Kelas?        @relation(fields: [kelasId], references: [id])
+
+  tahunAjaranId   String?
+  tahunAjaran     TahunAjaran?  @relation(fields: [tahunAjaranId], references: [id])
+  semester        Semester?     // Semester saat materi dibuat
   
   isPinned        Boolean       @default(false)
   isPublished     Boolean       @default(true)
@@ -548,6 +566,7 @@ model Materi {
   @@index([guruId])
   @@index([kelasId])
   @@index([isPublished])
+  @@index([tahunAjaranId])
 }
 
 enum TipeMateri {
@@ -601,6 +620,10 @@ model Tugas {
   
   kelasId         String?
   kelas           Kelas?        @relation(fields: [kelasId], references: [id])
+
+  tahunAjaranId   String?
+  tahunAjaran     TahunAjaran?  @relation(fields: [tahunAjaranId], references: [id])
+  semester        Semester?     // Semester saat tugas dibuat
   
   deadline        DateTime
   maxScore        Int           @default(100)
@@ -619,6 +642,7 @@ model Tugas {
   @@index([guruId])
   @@index([kelasId])
   @@index([deadline])
+  @@index([tahunAjaranId])
 }
 
 enum TipePenilaian {
@@ -964,6 +988,10 @@ model AbsensiKelas {
   
   mataPelajaranId   String
   mataPelajaran     MataPelajaran       @relation(fields: [mataPelajaranId], references: [id])
+
+  tahunAjaranId     String?
+  tahunAjaran       TahunAjaran?        @relation(fields: [tahunAjaranId], references: [id])
+  semester          Semester?           // Semester saat absensi dibuat
   
   createdAt         DateTime            @default(now())
   updatedAt         DateTime            @updatedAt
@@ -976,6 +1004,7 @@ model AbsensiKelas {
   @@index([guruId])
   @@index([kelasId])
   @@index([tanggal])
+  @@index([tahunAjaranId])
 }
 
 model AbsensiKelasDetail {
@@ -1002,6 +1031,35 @@ enum AbsensiKelasStatus {
   IZIN
   SAKIT
   ALPHA
+}
+
+// ==================== KALENDER AKADEMIK ====================
+
+enum TipeKalender {
+  LIBUR_NASIONAL
+  LIBUR_SEKOLAH
+  UJIAN
+  ULANGAN
+  KEGIATAN
+  RAPAT
+  LAINNYA
+}
+
+model KalenderAkademik {
+  id             String        @id @default(cuid())
+  judul          String
+  deskripsi      String?       @db.Text
+  tanggalMulai   DateTime
+  tanggalSelesai DateTime
+  tipe           TipeKalender  @default(LAINNYA)
+  warna          String?       @default("#3b82f6")
+  isAllDay       Boolean       @default(true)
+
+  createdAt      DateTime      @default(now())
+  updatedAt      DateTime      @updatedAt
+
+  @@index([tanggalMulai])
+  @@index([tanggalSelesai])
 }
 
 // ==================== JURNAL MENGAJAR ====================

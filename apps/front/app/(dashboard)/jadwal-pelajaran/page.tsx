@@ -91,7 +91,7 @@ export default function JadwalPelajaranPage() {
     const [isImporting, setIsImporting] = useState(false);
     const { toast } = useToast();
 
-    const isReadOnly = role === 'SISWA';
+    const isReadOnly = role === 'SISWA' || role === 'GURU';
 
     // Fetch kelas list
     const { data: kelasList } = useQuery({
@@ -183,11 +183,18 @@ export default function JadwalPelajaranPage() {
                 method: "DELETE",
                 headers: { Authorization: `Bearer ${token}` },
             });
+            if (!res.ok) {
+                const err = await res.json().catch(() => ({ message: 'Gagal menghapus jadwal' }));
+                throw new Error(err.message || 'Gagal menghapus jadwal');
+            }
             return res.json();
         },
         onSuccess: () => {
             queryClient.invalidateQueries({ queryKey: ["jadwal-pelajaran"] });
             closeModal();
+        },
+        onError: (error: any) => {
+            toast({ title: "Gagal menghapus", description: error.message, variant: "destructive" });
         },
     });
 
@@ -433,7 +440,7 @@ export default function JadwalPelajaranPage() {
                             <table className="w-full border-collapse">
                                 <thead>
                                     <tr>
-                                        <th className="border border-border bg-muted/50 px-2 py-2 text-center text-xs font-medium w-[60px]">
+                                        <th className="sticky left-0 z-20 border border-border bg-muted px-2 py-2 text-center text-xs font-medium w-[60px]">
                                             Jam
                                         </th>
                                         {classList.map((kelas: any) => (
@@ -449,7 +456,7 @@ export default function JadwalPelajaranPage() {
                                 <tbody>
                                     {timeSlots.map((slot, rowIndex) => (
                                         <tr key={`${slot.mulai}-${slot.selesai}`} className={slot.isBreak ? "bg-amber-500/10" : ""}>
-                                            <td className={`border border-border px-1 py-1 text-xs font-medium text-center w-[60px] ${slot.isBreak ? "bg-amber-500/20 text-amber-600 dark:text-amber-400" : "bg-muted/30"}`}>
+                                            <td className={`sticky left-0 z-10 border border-border px-1 py-1 text-xs font-medium text-center w-[60px] ${slot.isBreak ? "bg-amber-100 dark:bg-amber-950 text-amber-600 dark:text-amber-400" : "bg-muted"}`}>
                                                 <div className="flex flex-col">
                                                     <span className="font-bold">
                                                         {slot.isBreak ? (slot.label || "Ist") : slot.jamKe}

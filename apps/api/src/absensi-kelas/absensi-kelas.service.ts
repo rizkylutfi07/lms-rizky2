@@ -2,10 +2,14 @@ import { Injectable, NotFoundException, BadRequestException } from '@nestjs/comm
 import { PrismaService } from '../prisma/prisma.service';
 import { CreateAbsensiKelasDto, UpdateAbsensiKelasDto } from './dto';
 import { Hari } from '@prisma/client';
+import { TahunAjaranService } from '../tahun-ajaran/tahun-ajaran.service';
 
 @Injectable()
 export class AbsensiKelasService {
-    constructor(private prisma: PrismaService) { }
+    constructor(
+        private prisma: PrismaService,
+        private tahunAjaranService: TahunAjaranService,
+    ) { }
 
     // Jakarta timezone offset in milliseconds (UTC+7)
     private readonly JAKARTA_OFFSET_MS = 7 * 60 * 60 * 1000;
@@ -208,6 +212,9 @@ export class AbsensiKelasService {
 
         // Create absensi with details and optional jurnal using transaction
         const absensi = await this.prisma.$transaction(async (tx) => {
+            // Auto-fetch active tahun ajaran
+            const activeTahunAjaran = await this.tahunAjaranService.getActiveOrNull();
+
             // Create main absensi
             const newAbsensi = await tx.absensiKelas.create({
                 data: {
@@ -216,6 +223,8 @@ export class AbsensiKelasService {
                     guruId: guru.id,
                     kelasId: jadwal.kelasId,
                     mataPelajaranId: jadwal.mataPelajaranId,
+                    tahunAjaranId: activeTahunAjaran?.id ?? null,
+                    semester: activeTahunAjaran?.semester ?? null,
                 },
             });
 
@@ -283,6 +292,7 @@ export class AbsensiKelasService {
         kelasId?: string;
         mataPelajaranId?: string;
         jadwalPelajaranId?: string;
+        tahunAjaranId?: string;
         startDate?: string;
         endDate?: string;
     }) {
@@ -308,6 +318,10 @@ export class AbsensiKelasService {
 
         if (query.jadwalPelajaranId) {
             where.jadwalPelajaranId = query.jadwalPelajaranId;
+        }
+
+        if (query.tahunAjaranId) {
+            where.tahunAjaranId = query.tahunAjaranId;
         }
 
         if (query.startDate || query.endDate) {

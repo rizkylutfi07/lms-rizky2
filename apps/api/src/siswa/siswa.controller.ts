@@ -75,6 +75,14 @@ export class SiswaController {
     return this.siswaService.findOne(id);
   }
 
+  @Put(':id/reset-password')
+  resetPassword(@Param('id') id: string, @Body('password') password: string) {
+    if (!password || password.length < 6) {
+      throw new BadRequestException('Password minimal 6 karakter');
+    }
+    return this.siswaService.updatePassword(id, password);
+  }
+
   @Post()
   create(@Body() createDto: any) {
     const { createUserAccount, ...dto } = createDto;

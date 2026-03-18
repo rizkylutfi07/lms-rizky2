@@ -99,6 +99,7 @@ const navByRole: Record<Role, NavGroup[]> = {
         { label: "Tahun Ajaran", icon: CalendarClock, href: "/tahun-ajaran", note: "Periode aktif" },
         { label: "Mata Pelajaran", icon: BookOpen, href: "/mata-pelajaran", note: "Silabus & mapel" },
         { label: "Jadwal Pelajaran", icon: CalendarRange, href: "/jadwal-pelajaran", note: "Jadwal per kelas" },
+        { label: "Kalender Akademik", icon: CalendarClock, href: "/kalender-akademik", note: "Kegiatan & hari penting" },
       ],
     },
     {
@@ -201,11 +202,13 @@ const navByRole: Record<Role, NavGroup[]> = {
       collapsible: true,
       items: [
         { label: "Jadwal Pelajaran", icon: CalendarRange, href: "/jadwal-pelajaran", note: "Jadwal kelas" },
+        { label: "Kalender Akademik", icon: CalendarClock, href: "/kalender-akademik", note: "Kegiatan & hari penting" },
         { label: "Kehadiran Saya", icon: ClipboardCheck, href: "/kehadiran-saya", note: "Riwayat kehadiran" },
         { label: "Materi Pelajaran", icon: BookOpen, href: "/materi", note: "Bank materi" },
         { label: "Tugas & PR", icon: ClipboardList, href: "/tugas", note: "Kumpulkan tugas" },
         { label: "Forum Diskusi", icon: Activity, href: "/forum", note: "Tanya & diskusi" },
         { label: "Pengumuman", icon: MessageSquare, href: "/pengumuman", note: "Info sekolah" },
+        { label: "Kalender Akademik", icon: CalendarClock, href: "/kalender-akademik", note: "Kegiatan & hari penting" },
       ],
     },
     {

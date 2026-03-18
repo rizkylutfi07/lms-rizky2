@@ -55,6 +55,7 @@ export class AbsensiKelasController {
         @Query('kelasId') kelasId?: string,
         @Query('mataPelajaranId') mataPelajaranId?: string,
         @Query('jadwalId') jadwalId?: string,
+        @Query('tahunAjaranId') tahunAjaranId?: string,
         @Query('startDate') startDate?: string,
         @Query('endDate') endDate?: string,
     ) {
@@ -65,6 +66,7 @@ export class AbsensiKelasController {
             kelasId,
             mataPelajaranId,
             jadwalPelajaranId: jadwalId,
+            tahunAjaranId,
             startDate,
             endDate,
         });

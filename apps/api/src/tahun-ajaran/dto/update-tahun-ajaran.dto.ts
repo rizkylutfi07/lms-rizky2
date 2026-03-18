@@ -1,5 +1,5 @@
-import { IsDateString, IsEnum, IsInt, IsOptional, IsString, Min, Max } from 'class-validator';
-import { StatusTahunAjaran } from './create-tahun-ajaran.dto';
+import { IsDateString, IsEnum, IsOptional, IsString } from 'class-validator';
+import { StatusTahunAjaran, Semester } from './create-tahun-ajaran.dto';
 
 export class UpdateTahunAjaranDto {
     @IsString()
@@ -17,4 +17,8 @@ export class UpdateTahunAjaranDto {
     @IsEnum(StatusTahunAjaran)
     @IsOptional()
     status?: StatusTahunAjaran;
+
+    @IsEnum(Semester)
+    @IsOptional()
+    semester?: Semester;
 }

@@ -3,7 +3,7 @@
 import { useState, useEffect } from "react";
 import { useRouter } from "next/navigation";
 import Image from "next/image";
-import { Lock, ArrowRight, Loader2, UserCircle } from "lucide-react";
+import { Lock, ArrowRight, Loader2, UserCircle, Eye, EyeOff, AlertCircle } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { apiFetch } from "@/lib/api-client";
@@ -16,6 +16,7 @@ export default function LoginPage() {
   const [password, setPassword] = useState("");
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState<string | null>(null);
+  const [showPassword, setShowPassword] = useState(false);
   const [isLoaded, setIsLoaded] = useState(false);
 
   useEffect(() => {
@@ -47,7 +48,15 @@ export default function LoginPage() {
       router.replace("/");
     } catch (err) {
       const message = err instanceof Error ? err.message : "Login gagal";
-      setError(message);
+      // Map common API messages to user-friendly Indonesian text
+      const friendlyMessage =
+        message.includes('Email atau password') ? 'Email atau password salah. Periksa kembali.' :
+        message.includes('NISN atau password') ? 'NISN atau password salah. Periksa kembali.' :
+        message.includes('tidak ditemukan') ? 'Akun tidak ditemukan.' :
+        message.includes('tidak aktif') || message.includes('inactive') ? 'Akun Anda tidak aktif.' :
+        message;
+      setError(friendlyMessage);
+      setPassword(""); // clear password field on error
     } finally {
       setLoading(false);
     }
@@ -104,7 +113,7 @@ export default function LoginPage() {
                     <Input
                       type="text"
                       value={identifier}
-                      onChange={(e) => setIdentifier(e.target.value)}
+                      onChange={(e) => { setIdentifier(e.target.value); if (error) setError(null); }}
                       className="pl-10 h-11 bg-background/50 border-input/50 focus:bg-background transition-all"
                       placeholder="Email atau NISN"
                       required
@@ -126,20 +135,28 @@ export default function LoginPage() {
                       <Lock size={18} />
                     </div>
                     <Input
-                      type="password"
+                      type={showPassword ? "text" : "password"}
                       value={password}
-                      onChange={(e) => setPassword(e.target.value)}
-                      className="pl-10 h-11 bg-background/50 border-input/50 focus:bg-background transition-all"
+                      onChange={(e) => { setPassword(e.target.value); if (error) setError(null); }}
+                      className="pl-10 pr-10 h-11 bg-background/50 border-input/50 focus:bg-background transition-all"
                       placeholder="••••••••"
                       required
                     />
+                    <button
+                      type="button"
+                      onClick={() => setShowPassword(!showPassword)}
+                      className="absolute right-3 top-1/2 -translate-y-1/2 text-muted-foreground hover:text-foreground transition-colors"
+                      tabIndex={-1}
+                    >
+                      {showPassword ? <EyeOff size={16} /> : <Eye size={16} />}
+                    </button>
                   </div>
                 </div>
 
                 {error && (
-                  <div className="rounded-lg bg-red-500/10 p-3 text-sm text-red-500 dark:text-red-400 border border-red-500/20 flex items-center gap-2 animate-in fade-in slide-in-from-top-1">
-                    <div className="h-1.5 w-1.5 rounded-full bg-red-500" />
-                    {error}
+                  <div className="rounded-lg bg-red-500/10 p-3 text-sm text-red-600 dark:text-red-400 border border-red-500/30 flex items-start gap-2 animate-in fade-in slide-in-from-top-1">
+                    <AlertCircle size={16} className="mt-0.5 shrink-0" />
+                    <span>{error}</span>
                   </div>
                 )}
 
@@ -164,7 +181,7 @@ export default function LoginPage() {
           </div>
 
           <p className="mt-8 text-center text-xs text-muted-foreground/60">
-            Powered by <span className="font-semibold text-foreground/80">Esgriba Team</span>
+            Powered by <span className="font-semibold text-foreground/80">rzk-developer</span>
             <br />
             &copy; 2025 All rights reserved.
           </p>

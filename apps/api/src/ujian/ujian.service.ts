@@ -4,13 +4,20 @@ import { CreateUjianDto } from './dto/create-ujian.dto';
 import { UpdateUjianDto } from './dto/update-ujian.dto';
 import { FilterUjianDto } from './dto/filter-ujian.dto';
 import { Prisma, StatusUjian, StatusPengerjaan } from '@prisma/client';
+import { TahunAjaranService } from '../tahun-ajaran/tahun-ajaran.service';
 
 @Injectable()
 export class UjianService {
-    constructor(private prisma: PrismaService) { }
+    constructor(
+        private prisma: PrismaService,
+        private tahunAjaranService: TahunAjaranService,
+    ) { }
 
     async create(createUjianDto: CreateUjianDto, createdBy: string) {
         const { paketSoalId, kelasIds, siswaIds, ...rest } = createUjianDto;
+
+        // Auto-fetch active tahun ajaran
+        const activeTahunAjaran = await this.tahunAjaranService.getActiveOrNull();
 
         // Prepare ujianData with only valid Prisma fields (exclude kelasIds and siswaIds which are handled separately)
         const tanggalMulai = new Date(rest.tanggalMulai);
@@ -27,6 +34,8 @@ export class UjianService {
             mataPelajaranId: rest.mataPelajaranId || null,
             guruId: rest.guruId || null,
             kelasId: kelasIds && kelasIds.length > 0 ? kelasIds[0] : null,
+            tahunAjaranId: activeTahunAjaran?.id ?? null,
+            semester: activeTahunAjaran?.semester ?? null,
             durasi: rest.durasi,
             tanggalMulai,
             tanggalSelesai,
@@ -255,7 +264,7 @@ export class UjianService {
     }
 
     async findAll(filterDto: FilterUjianDto) {
-        const { search, mataPelajaranId, kelasId, guruId, status, jenisUjianId, isArchived, page = 1, limit = 10, dateFrom, dateTo, sortBy, sortOrder } = filterDto;
+        const { search, mataPelajaranId, kelasId, guruId, status, jenisUjianId, tahunAjaranId, isArchived, page = 1, limit = 10, dateFrom, dateTo, sortBy, sortOrder } = filterDto;
         const skip = (page - 1) * limit;
 
         const isArchivedBool = isArchived === true || String(isArchived) === 'true';
@@ -296,6 +305,10 @@ export class UjianService {
             where.jenisUjianId = jenisUjianId;
         }
 
+        if (tahunAjaranId) {
+            where.tahunAjaranId = tahunAjaranId;
+        }
+
         if (dateFrom || dateTo) {
             where.tanggalSelesai = {};
             if (dateFrom) where.tanggalSelesai.gte = new Date(dateFrom);
@@ -321,6 +334,7 @@ export class UjianService {
                     guru: true,
                     paketSoal: true,
                     kelas: true,
+                    tahunAjaran: { select: { id: true, tahun: true, semester: true } },
                     ujianKelas: {
                         include: {
                             kelas: true,
@@ -362,6 +376,7 @@ export class UjianService {
                 guru: true,
                 paketSoal: true,
                 kelas: true,
+                tahunAjaran: { select: { id: true, tahun: true, semester: true } },
                 ujianKelas: true,
                 ujianSoal: {
                     include: {

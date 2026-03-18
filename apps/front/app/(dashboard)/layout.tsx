@@ -38,9 +38,9 @@ import { useRole, Role, NavItem, NavGroup } from "./role-context";
 
 
 const accessByRole: Record<Role, string[]> = {
-  ADMIN: ["/", "/profile", "/change-password", "/users", "/siswa", "/kenaikan-kelas", "/guru", "/kelas", "/jurusan", "/tahun-ajaran", "/mata-pelajaran", "/jadwal-pelajaran", "/rpp", "/materi", "/materi-management", "/tugas", "/tugas-management", "/forum", "/attendance", "/absensi-kelas", "/database", "/cbt", "/bank-soal", "/kelompok-soal", "/paket-soal", "/jenis-ujian", "/kelola-ujian", "/ujian", "/penilaian", "/laporan", "/keuangan", "/keamanan", "/settings", "/pengumuman"],
-  GURU: ["/", "/profile", "/change-password", "/kelas", "/mata-pelajaran", "/jadwal-pelajaran", "/rpp", "/materi", "/materi-management", "/tugas", "/tugas-management", "/forum", "/pengumuman", "/attendance", "/absensi-kelas", "/cbt", "/bank-soal", "/kelompok-soal", "/paket-soal", "/ujian", "/kelola-ujian", "/penilaian", "/laporan"],
-  SISWA: ["/", "/profile", "/change-password", "/jadwal-pelajaran", "/kehadiran-saya", "/materi", "/tugas", "/forum", "/pengumuman", "/ujian-saya", "/hasil-ujian-saya", "/keamanan"],
+  ADMIN: ["/", "/profile", "/change-password", "/users", "/siswa", "/kenaikan-kelas", "/guru", "/kelas", "/jurusan", "/tahun-ajaran", "/mata-pelajaran", "/jadwal-pelajaran", "/kalender-akademik", "/rpp", "/materi", "/materi-management", "/tugas", "/tugas-management", "/forum", "/attendance", "/absensi-kelas", "/database", "/cbt", "/bank-soal", "/kelompok-soal", "/paket-soal", "/jenis-ujian", "/kelola-ujian", "/ujian", "/penilaian", "/laporan", "/keuangan", "/keamanan", "/settings", "/pengumuman"],
+  GURU: ["/", "/profile", "/change-password", "/kelas", "/mata-pelajaran", "/jadwal-pelajaran", "/kalender-akademik", "/rpp", "/materi", "/materi-management", "/tugas", "/tugas-management", "/forum", "/pengumuman", "/attendance", "/absensi-kelas", "/cbt", "/bank-soal", "/kelompok-soal", "/paket-soal", "/ujian", "/kelola-ujian", "/penilaian", "/laporan"],
+  SISWA: ["/", "/profile", "/change-password", "/jadwal-pelajaran", "/kalender-akademik", "/kehadiran-saya", "/materi", "/tugas", "/forum", "/pengumuman", "/ujian-saya", "/hasil-ujian-saya", "/keamanan"],
   PETUGAS_ABSENSI: ["/", "/profile", "/change-password", "/attendance"],
 };
 
@@ -84,8 +84,8 @@ function SearchCommand({ navigation }: { navigation: NavGroup[] }) {
   // Handle keyboard shortcuts
   useEffect(() => {
     const handleGlobalKeyDown = (e: KeyboardEvent) => {
-      // "/" to focus search
-      if (e.key === "/" && document.activeElement !== inputRef.current) {
+      // "F8" to focus search
+      if (e.key === "F8" && document.activeElement !== inputRef.current) {
         e.preventDefault();
         inputRef.current?.focus();
         setIsOpen(true);

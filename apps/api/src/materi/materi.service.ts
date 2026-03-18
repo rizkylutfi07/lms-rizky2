@@ -2,16 +2,23 @@ import { Injectable, NotFoundException, ForbiddenException } from '@nestjs/commo
 import { PrismaService } from '../prisma/prisma.service';
 import { CreateMateriDto, UpdateMateriDto } from './dto/materi.dto';
 import { Prisma } from '@prisma/client';
+import { TahunAjaranService } from '../tahun-ajaran/tahun-ajaran.service';
 
 @Injectable()
 export class MateriService {
-    constructor(private readonly prisma: PrismaService) { }
+    constructor(
+        private readonly prisma: PrismaService,
+        private readonly tahunAjaranService: TahunAjaranService,
+    ) { }
 
     async create(guruId: string, createMateriDto: CreateMateriDto) {
+        const activeTahunAjaran = await this.tahunAjaranService.getActiveOrNull();
         return this.prisma.materi.create({
             data: {
                 ...createMateriDto,
                 guruId,
+                tahunAjaranId: activeTahunAjaran?.id ?? null,
+                semester: activeTahunAjaran?.semester ?? null,
             },
             include: {
                 mataPelajaran: true,
@@ -28,6 +35,7 @@ export class MateriService {
         guruId?: string;
         isPublished?: boolean;
         search?: string;
+        tahunAjaranId?: string;
     }) {
         const where: any = {
             deletedAt: null,
@@ -47,6 +55,10 @@ export class MateriService {
 
         if (filters?.isPublished !== undefined) {
             where.isPublished = filters.isPublished;
+        }
+
+        if (filters?.tahunAjaranId) {
+            where.tahunAjaranId = filters.tahunAjaranId;
         }
 
         if (filters?.search) {

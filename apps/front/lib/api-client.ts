@@ -30,18 +30,26 @@ export async function apiFetch<T>(
     headers,
   });
 
-  if (response.status === 401) {
-    // Token expired or invalid — clear auth state and redirect to login
-    if (typeof window !== "undefined") {
-      window.localStorage.removeItem("arunika-auth");
-      window.location.replace("/login");
-    }
-    throw new Error("Sesi habis, silakan login kembali");
-  }
-
   if (!response.ok) {
-    const text = await response.text();
-    throw new Error(text || `Request failed with ${response.status}`);
+    // Only redirect to login on 401 for authenticated calls (not for the login endpoint itself)
+    const isAuthEndpoint = path.startsWith('/auth/');
+    if (response.status === 401 && !isAuthEndpoint) {
+      if (typeof window !== "undefined") {
+        window.localStorage.removeItem("arunika-auth");
+        window.location.replace("/login");
+      }
+      throw new Error("Sesi habis, silakan login kembali");
+    }
+
+    // Try to parse the error message from the response body
+    let message: string;
+    try {
+      const body = await response.json();
+      message = body.message || body.error || JSON.stringify(body);
+    } catch {
+      message = (await response.text()) || `Request gagal (${response.status})`;
+    }
+    throw new Error(message);
   }
 
   return response.json() as Promise<T>;

@@ -114,6 +114,11 @@ export class JadwalPelajaranService {
     }
 
     async remove(id: string) {
+        // Delete related AbsensiKelas records first to avoid FK constraint violation
+        await this.prisma.absensiKelas.deleteMany({
+            where: { jadwalPelajaranId: id },
+        });
+
         return this.prisma.jadwalPelajaran.delete({
             where: { id },
         });

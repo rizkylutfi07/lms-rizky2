@@ -3,7 +3,7 @@ import { API_URL } from "@/lib/api";
 
 import { useState } from "react";
 import { useQuery, useMutation, useQueryClient } from "@tanstack/react-query";
-import { Loader2, Pencil, Trash2, Plus, Upload, Download, X, ArrowUp, ArrowDown, ChevronRight, ChevronLeft, Search } from "lucide-react";
+import { Loader2, Pencil, Trash2, Plus, Upload, Download, X, ArrowUp, ArrowDown, ChevronRight, ChevronLeft, Search, KeyRound } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
@@ -41,6 +41,7 @@ export default function SiswaPage() {
   const [editingItem, setEditingItem] = useState<any>(null);
   const [deletingItem, setDeletingItem] = useState<any>(null);
   const [isImportModalOpen, setIsImportModalOpen] = useState(false);
+  const [passwordItem, setPasswordItem] = useState<any>(null);
 
   const { data, isLoading } = useQuery({
     queryKey: ["siswa", page, search, filterKelas, filterStatus, sortBy, sortOrder, filterTahunAjaran],
@@ -151,6 +152,28 @@ export default function SiswaPage() {
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: ["siswa"] });
       setDeletingItem(null);
+    },
+  });
+
+  const resetPasswordMutation = useMutation({
+    mutationFn: async ({ id, password }: { id: string; password: string }) => {
+      const res = await fetch(`${API_URL}/siswa/${id}/reset-password`, {
+        method: "PUT",
+        headers: { "Content-Type": "application/json", Authorization: `Bearer ${token}` },
+        body: JSON.stringify({ password }),
+      });
+      if (!res.ok) {
+        const err = await res.json().catch(() => ({ message: 'Gagal reset password' }));
+        throw new Error(err.message);
+      }
+      return res.json();
+    },
+    onSuccess: (data) => {
+      toast({ title: "Berhasil!", description: data.message });
+      setPasswordItem(null);
+    },
+    onError: (error: any) => {
+      toast({ title: "Error", description: error.message, variant: "destructive" });
     },
   });
 
@@ -350,6 +373,15 @@ export default function SiswaPage() {
                           <Button
                             variant="ghost"
                             size="icon"
+                            onClick={() => setPasswordItem(item)}
+                            className="h-8 w-8 text-muted-foreground hover:text-amber-500"
+                            title="Reset Password"
+                          >
+                            <KeyRound size={16} />
+                          </Button>
+                          <Button
+                            variant="ghost"
+                            size="icon"
                             onClick={() => setEditingItem(item)}
                             className="h-8 w-8 text-muted-foreground hover:text-primary"
                           >
@@ -464,6 +496,15 @@ export default function SiswaPage() {
             queryClient.invalidateQueries({ queryKey: ["siswa"] });
             setIsImportModalOpen(false);
           }}
+        />
+      )}
+
+      {passwordItem && (
+        <ResetPasswordModal
+          item={passwordItem}
+          onClose={() => setPasswordItem(null)}
+          onSubmit={(password: string) => resetPasswordMutation.mutate({ id: passwordItem.id, password })}
+          isLoading={resetPasswordMutation.isPending}
         />
       )}
     </div>
@@ -769,5 +810,90 @@ function DeleteModal({ item, onClose, onConfirm, isLoading }: any) {
         </AlertDialogFooter>
       </AlertDialogContent>
     </AlertDialog>
+  );
+}
+
+function ResetPasswordModal({ item, onClose, onSubmit, isLoading }: any) {
+  const [password, setPassword] = useState('');
+  const [confirm, setConfirm] = useState('');
+  const [showPassword, setShowPassword] = useState(false);
+
+  const handleSubmit = (e: React.FormEvent) => {
+    e.preventDefault();
+    if (password !== confirm) return;
+    onSubmit(password);
+  };
+
+  const mismatch = confirm.length > 0 && password !== confirm;
+
+  return (
+    <Dialog open={true} onOpenChange={(open) => !open && onClose()}>
+      <DialogContent className="max-w-sm">
+        <DialogHeader>
+          <DialogTitle className="flex items-center gap-2">
+            <KeyRound size={18} className="text-amber-500" />
+            Reset Password
+          </DialogTitle>
+        </DialogHeader>
+        <p className="text-sm text-muted-foreground">
+          Atur password baru untuk <strong>{item.nama}</strong> ({item.nisn})
+          {!item.userId && (
+            <span className="block mt-1 text-amber-500 text-xs">⚠ Siswa ini belum memiliki akun user.</span>
+          )}
+        </p>
+        <form onSubmit={handleSubmit} className="space-y-4 mt-2">
+          <div>
+            <label className="mb-2 block text-sm font-medium">Password Baru</label>
+            <div className="relative">
+              <input
+                type={showPassword ? 'text' : 'password'}
+                required
+                minLength={6}
+                value={password}
+                onChange={(e) => setPassword(e.target.value)}
+                placeholder="Minimal 6 karakter"
+                className="w-full rounded-lg border border-border bg-background px-4 py-2 pr-10 outline-none transition focus:border-primary/60 focus:ring-2 focus:ring-primary/20"
+              />
+              <button
+                type="button"
+                onClick={() => setShowPassword(!showPassword)}
+                className="absolute right-3 top-2.5 text-muted-foreground hover:text-foreground"
+              >
+                {showPassword ? <X size={16} /> : <KeyRound size={16} />}
+              </button>
+            </div>
+          </div>
+          <div>
+            <label className="mb-2 block text-sm font-medium">Konfirmasi Password</label>
+            <input
+              type={showPassword ? 'text' : 'password'}
+              required
+              minLength={6}
+              value={confirm}
+              onChange={(e) => setConfirm(e.target.value)}
+              placeholder="Ulangi password baru"
+              className={`w-full rounded-lg border bg-background px-4 py-2 outline-none transition focus:ring-2 ${
+                mismatch
+                  ? 'border-red-500 focus:border-red-500 focus:ring-red-500/20'
+                  : 'border-border focus:border-primary/60 focus:ring-primary/20'
+              }`}
+            />
+            {mismatch && <p className="mt-1 text-xs text-red-500">Password tidak sama</p>}
+          </div>
+          <div className="flex gap-2 pt-2">
+            <Button type="button" variant="outline" onClick={onClose} className="flex-1">
+              Batal
+            </Button>
+            <Button
+              type="submit"
+              disabled={isLoading || mismatch || password.length < 6}
+              className="flex-1 bg-amber-600 hover:bg-amber-700"
+            >
+              {isLoading ? <Loader2 className="animate-spin" size={16} /> : "Simpan Password"}
+            </Button>
+          </div>
+        </form>
+      </DialogContent>
+    </Dialog>
   );
 }

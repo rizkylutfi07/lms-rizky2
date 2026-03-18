@@ -159,6 +159,26 @@ export class SiswaService {
     return { message: 'Siswa berhasil dihapus' };
   }
 
+  async updatePassword(id: string, password: string) {
+    const siswa = await this.prisma.siswa.findFirst({
+      where: { id, deletedAt: null },
+      select: { userId: true, nama: true },
+    });
+
+    if (!siswa) throw new NotFoundException(`Siswa dengan ID ${id} tidak ditemukan`);
+    if (!siswa.userId) throw new BadRequestException('Siswa ini belum memiliki akun user. Buat akun user terlebih dahulu.');
+
+    const bcrypt = require('bcrypt');
+    const hashedPassword = await bcrypt.hash(password, 10);
+
+    await this.prisma.user.update({
+      where: { id: siswa.userId },
+      data: { password: hashedPassword },
+    });
+
+    return { message: `Password untuk ${siswa.nama} berhasil diperbarui` };
+  }
+
   async createWithUser(dto: CreateSiswaDto, password?: string) {
     // Create user account first
     const bcrypt = require('bcrypt');

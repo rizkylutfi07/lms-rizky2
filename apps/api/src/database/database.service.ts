@@ -18,10 +18,11 @@ export class DatabaseService {
         }
     }
 
-    async exportDatabase(): Promise<Buffer> {
+    async exportDatabase(type: 'full' | 'data-only' = 'full'): Promise<{ buffer: Buffer; filename: string }> {
         try {
             const timestamp = new Date().toISOString().replace(/[:.]/g, '-').split('T')[0];
-            const filename = `backup_${timestamp}_${Date.now()}.sql`;
+            const suffix = type === 'data-only' ? 'data-only' : 'full';
+            const filename = `backup_${suffix}_${timestamp}_${Date.now()}.sql`;
             const filepath = path.join(this.backupDir, filename);
 
             // Get database connection info from environment
@@ -36,17 +37,20 @@ export class DatabaseService {
             const dbUser = url.username;
             const dbPassword = url.password;
 
-            // Execute pg_dump inside Docker container
-            const command = `docker exec ${this.dockerContainer} pg_dump -U ${dbUser} -d ${dbName} > "${filepath}"`;
+            // Build pg_dump flags based on backup type
+            const pgDumpFlags = type === 'data-only'
+                ? '--data-only --disable-triggers --column-inserts'
+                : '--if-exists --clean --disable-triggers';
 
-            await execAsync(command, {
-                env: { ...process.env, PGPASSWORD: dbPassword }
-            });
+            // Execute pg_dump inside Docker container
+            const command = `docker exec -e PGPASSWORD="${dbPassword}" ${this.dockerContainer} pg_dump -U ${dbUser} ${pgDumpFlags} -d ${dbName} > "${filepath}"`;
+
+            await execAsync(command);
 
             // Read the file and return as buffer
             const buffer = fs.readFileSync(filepath);
 
-            return buffer;
+            return { buffer, filename };
         } catch (error) {
             console.error('Export database error:', error);
             throw new BadRequestException(`Failed to export database: ${error.message}`);
@@ -69,12 +73,10 @@ export class DatabaseService {
             const dbUser = url.username;
             const dbPassword = url.password;
 
-            // Execute pg_dump inside Docker container
-            const command = `docker exec ${this.dockerContainer} pg_dump -U ${dbUser} -d ${dbName} > "${filepath}"`;
+            // Execute pg_dump inside Docker container (full backup for auto-backup)
+            const command = `docker exec -e PGPASSWORD="${dbPassword}" ${this.dockerContainer} pg_dump -U ${dbUser} --if-exists --clean --disable-triggers -d ${dbName} > "${filepath}"`;
 
-            await execAsync(command, {
-                env: { ...process.env, PGPASSWORD: dbPassword }
-            });
+            await execAsync(command);
 
             return filename;
         } catch (error) {
@@ -83,7 +85,12 @@ export class DatabaseService {
         }
     }
 
-    async importDatabase(sqlContent: string, createBackup: boolean = true): Promise<{ message: string; backupFile?: string; warning?: string }> {
+    async importDatabase(
+        sqlContent: string,
+        createBackup: boolean = true,
+        type: 'full' | 'data-only' = 'full',
+    ): Promise<{ message: string; backupFile?: string; warning?: string }> {
+        const tempFile = path.join(this.backupDir, `temp_import_${Date.now()}.sql`);
         try {
             let backupFile: string | undefined;
             let warning: string | undefined;
@@ -99,7 +106,6 @@ export class DatabaseService {
             }
 
             // Write SQL content to temp file
-            const tempFile = path.join(this.backupDir, `temp_import_${Date.now()}.sql`);
             fs.writeFileSync(tempFile, sqlContent);
 
             const dbUrl = process.env.DATABASE_URL;
@@ -112,39 +118,72 @@ export class DatabaseService {
             const dbUser = url.username;
             const dbPassword = url.password;
 
-            // Copy SQL file to Docker container
-            const containerTempFile = `/tmp/import_${Date.now()}.sql`;
-            await execAsync(`docker cp "${tempFile}" ${this.dockerContainer}:${containerTempFile}`);
+            const psqlExec = (args: string) =>
+                `docker exec -e PGPASSWORD="${dbPassword}" ${this.dockerContainer} psql -U ${dbUser} -d ${dbName} ${args}`;
 
-            // First, drop all tables to ensure clean import
-            // This ensures old data is removed before importing
-            const dropTablesCommand = `docker exec ${this.dockerContainer} psql -U ${dbUser} -d ${dbName} -c "DROP SCHEMA public CASCADE; CREATE SCHEMA public; GRANT ALL ON SCHEMA public TO ${dbUser}; GRANT ALL ON SCHEMA public TO public;"`;
+            if (type === 'full') {
+                // Full import: drop schema completely, then recreate and import (includes schema + data)
+                const dropCmd = psqlExec(`-c "DROP SCHEMA public CASCADE; CREATE SCHEMA public; GRANT ALL ON SCHEMA public TO ${dbUser}; GRANT ALL ON SCHEMA public TO public;"`);
+                try {
+                    await execAsync(dropCmd);
+                } catch (error) {
+                    console.warn('Drop schema warning:', error.message);
+                }
 
-            try {
-                await execAsync(dropTablesCommand, {
-                    env: { ...process.env, PGPASSWORD: dbPassword }
-                });
-            } catch (error) {
-                console.warn('Drop schema warning:', error.message);
+                // Copy SQL file to container
+                const containerTempFile = `/tmp/import_full_${Date.now()}.sql`;
+                await execAsync(`docker cp "${tempFile}" ${this.dockerContainer}:${containerTempFile}`);
+                try {
+                    await execAsync(psqlExec(`--set ON_ERROR_STOP=on -f ${containerTempFile}`));
+                } finally {
+                    await execAsync(`docker exec ${this.dockerContainer} rm -f ${containerTempFile}`);
+                }
+            } else {
+                // Data-only import:
+                // 1. Disable FK constraints via session_replication_role
+                // 2. TRUNCATE all tables (clears existing rows → no duplicate key errors)
+                // 3. Import the data
+                // 4. Re-enable FK constraints
+                // All in ONE psql session so session_replication_role stays active.
+                const truncateBlock = `
+DO $$
+DECLARE r RECORD;
+BEGIN
+  FOR r IN (SELECT tablename FROM pg_tables WHERE schemaname = 'public')
+  LOOP
+    EXECUTE 'TRUNCATE TABLE public."' || r.tablename || '" RESTART IDENTITY CASCADE';
+  END LOOP;
+END $$;
+`;
+                const wrappedContent =
+                    `SET session_replication_role = replica;\n` +
+                    truncateBlock +
+                    sqlContent +
+                    `\nSET session_replication_role = DEFAULT;\n`;
+
+                const wrappedFile = path.join(this.backupDir, `temp_import_wrapped_${Date.now()}.sql`);
+                fs.writeFileSync(wrappedFile, wrappedContent);
+                const wrappedContainerFile = `/tmp/import_data_${Date.now()}.sql`;
+                await execAsync(`docker cp "${wrappedFile}" ${this.dockerContainer}:${wrappedContainerFile}`);
+                try {
+                    await execAsync(psqlExec(`--set ON_ERROR_STOP=on -f ${wrappedContainerFile}`));
+                } finally {
+                    fs.unlinkSync(wrappedFile);
+                    await execAsync(`docker exec ${this.dockerContainer} rm -f ${wrappedContainerFile}`);
+                }
             }
 
-            // Execute psql inside Docker container to import
-            const command = `docker exec ${this.dockerContainer} psql -U ${dbUser} -d ${dbName} -f ${containerTempFile}`;
-
-            await execAsync(command, {
-                env: { ...process.env, PGPASSWORD: dbPassword }
-            });
-
-            // Clean up temp files
-            fs.unlinkSync(tempFile);
-            await execAsync(`docker exec ${this.dockerContainer} rm ${containerTempFile}`);
+            // Clean up local temp file
+            if (fs.existsSync(tempFile)) fs.unlinkSync(tempFile);
 
             return {
-                message: 'Database imported successfully',
+                message: `Database imported successfully (${type})`,
                 backupFile,
                 warning,
             };
         } catch (error) {
+            // Clean up temp file on error
+            if (fs.existsSync(tempFile)) fs.unlinkSync(tempFile);
             console.error('Import database error:', error);
             throw new BadRequestException(`Failed to import database: ${error.message}`);
         }

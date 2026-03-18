@@ -1,9 +1,14 @@
-import { IsDateString, IsEnum, IsInt, IsNotEmpty, IsString, Min, Max } from 'class-validator';
+import { IsDateString, IsEnum, IsNotEmpty, IsOptional, IsString } from 'class-validator';
 
 export enum StatusTahunAjaran {
     AKTIF = 'AKTIF',
     SELESAI = 'SELESAI',
     AKAN_DATANG = 'AKAN_DATANG',
+}
+
+export enum Semester {
+    GANJIL = 'GANJIL',
+    GENAP = 'GENAP',
 }
 
 export class CreateTahunAjaranDto {
@@ -19,4 +24,8 @@ export class CreateTahunAjaranDto {
 
     @IsEnum(StatusTahunAjaran)
     status: StatusTahunAjaran;
+
+    @IsEnum(Semester)
+    @IsOptional()
+    semester?: Semester; // Semester aktif (GANJIL/GENAP)
 }

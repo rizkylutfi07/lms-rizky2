@@ -3,20 +3,25 @@ import { PrismaService } from '../prisma/prisma.service';
 import { NotifikasiService } from '../notifikasi/notifikasi.service';
 import { CreateTugasDto, UpdateTugasDto, SubmitTugasDto } from './dto/tugas.dto';
 import { StatusPengumpulan } from '@prisma/client';
+import { TahunAjaranService } from '../tahun-ajaran/tahun-ajaran.service';
 
 @Injectable()
 export class TugasService {
     constructor(
         private readonly prisma: PrismaService,
         private readonly notifikasiService: NotifikasiService,
+        private readonly tahunAjaranService: TahunAjaranService,
     ) { }
 
     async create(guruId: string, data: CreateTugasDto) {
+        const activeTahunAjaran = await this.tahunAjaranService.getActiveOrNull();
         const tugas = await this.prisma.tugas.create({
             data: {
                 ...data,
                 guruId,
                 deadline: new Date(data.deadline),
+                tahunAjaranId: activeTahunAjaran?.id ?? null,
+                semester: activeTahunAjaran?.semester ?? null,
             },
             include: {
                 mataPelajaran: true,
@@ -58,6 +63,9 @@ export class TugasService {
         }
         if (filters?.isPublished !== undefined) {
             where.isPublished = filters.isPublished === 'true' || filters.isPublished === true;
+        }
+        if (filters?.tahunAjaranId) {
+            where.tahunAjaranId = filters.tahunAjaranId;
         }
 
         // Build include object - include student's own submissions if siswaId provided

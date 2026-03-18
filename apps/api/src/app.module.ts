@@ -34,6 +34,7 @@ import { RppModule } from './rpp/rpp.module';
 import { AbsensiKelasModule } from './absensi-kelas/absensi-kelas.module';
 import { JenisUjianModule } from './jenis-ujian/jenis-ujian.module';
 import { KelompokSoalModule } from './kelompok-soal/kelompok-soal.module';
+import { KalenderAkademikModule } from './kalender-akademik/kalender-akademik.module';
 
 @Module({
   imports: [
@@ -77,6 +78,7 @@ import { KelompokSoalModule } from './kelompok-soal/kelompok-soal.module';
     AbsensiKelasModule,
     JenisUjianModule,
     KelompokSoalModule,
+    KalenderAkademikModule,
   ],
   controllers: [AppController],
   providers: [AppService],

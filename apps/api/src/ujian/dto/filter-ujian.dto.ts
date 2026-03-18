@@ -27,6 +27,10 @@ export class FilterUjianDto {
     @IsOptional()
     jenisUjianId?: string;
 
+    @IsString()
+    @IsOptional()
+    tahunAjaranId?: string;
+
     @IsInt()
     @Min(1)
     @Type(() => Number)

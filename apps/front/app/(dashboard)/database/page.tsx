@@ -33,23 +33,31 @@ export default function DatabasePage() {
     const { data: backups, isLoading } = useQuery({
         queryKey: ["database-backups"],
         queryFn: async () => {
-            const res = await fetch('http://localhost:3001/database/backups', {
+            const res = await fetch(`${API_URL}/database/backups`, {
                 headers: { Authorization: `Bearer ${token}` },
             });
-            return res.json();
+            if (!res.ok) return [];
+            const data = await res.json();
+            return Array.isArray(data) ? data : [];
         },
     });
 
-    const handleExport = async () => {
-        const res = await fetch('http://localhost:3001/database/export', {
+    const handleExport = async (type: 'full' | 'data-only') => {
+        const label = type === 'data-only' ? 'data-only' : 'full';
+        const res = await fetch(`${API_URL}/database/export?type=${type}`, {
             headers: { Authorization: `Bearer ${token}` },
         });
+        if (!res.ok) {
+            toast({ title: "Error", description: "Gagal mengexport database", variant: "destructive" });
+            return;
+        }
         const blob = await res.blob();
         const url = window.URL.createObjectURL(blob);
         const a = document.createElement('a');
         a.href = url;
-        a.download = `database_backup_${new Date().toISOString().split('T')[0]}.sql`;
+        a.download = `database_backup_${label}_${new Date().toISOString().split('T')[0]}.sql`;
         a.click();
+        window.URL.revokeObjectURL(url);
     };
 
     const deleteMutation = useMutation({
@@ -92,17 +100,44 @@ export default function DatabasePage() {
                 <CardHeader>
                     <CardTitle className="flex items-center gap-2">
                         <Download size={20} />
-                        Export Database
+                        Export / Backup Database
                     </CardTitle>
                     <CardDescription>
-                        Download a complete backup of the database as SQL file
+                        Download backup database dalam format SQL
                     </CardDescription>
                 </CardHeader>
-                <CardContent>
-                    <Button onClick={handleExport}>
-                        <Download size={16} />
-                        Export Database
-                    </Button>
+                <CardContent className="space-y-4">
+                    <div className="grid grid-cols-1 gap-4 sm:grid-cols-2">
+                        {/* Full Backup */}
+                        <div className="rounded-lg border border-border p-4 space-y-2">
+                            <div className="flex items-center gap-2">
+                                <Database size={18} className="text-primary" />
+                                <p className="font-medium">Full Backup</p>
+                            </div>
+                            <p className="text-sm text-muted-foreground">
+                                Backup lengkap — schema (struktur tabel) + seluruh data. Cocok untuk migrasi server atau disaster recovery.
+                            </p>
+                            <Button onClick={() => handleExport('full')} className="w-full">
+                                <Download size={16} className="mr-2" />
+                                Download Full Backup
+                            </Button>
+                        </div>
+
+                        {/* Data Only Backup */}
+                        <div className="rounded-lg border border-border p-4 space-y-2">
+                            <div className="flex items-center gap-2">
+                                <FileDown size={18} className="text-blue-500" />
+                                <p className="font-medium">Data Only</p>
+                            </div>
+                            <p className="text-sm text-muted-foreground">
+                                Hanya data (tanpa schema). Cocok untuk import ke database yang sudah memiliki struktur tabel.
+                            </p>
+                            <Button onClick={() => handleExport('data-only')} variant="outline" className="w-full">
+                                <Download size={16} className="mr-2" />
+                                Download Data Only
+                            </Button>
+                        </div>
+                    </div>
                 </CardContent>
             </Card>
 
@@ -235,6 +270,7 @@ export default function DatabasePage() {
 function ImportModal({ onClose, onSuccess, token }: { onClose: () => void; onSuccess: () => void; token: string | null }) {
     const { toast } = useToast();
     const [file, setFile] = useState<File | null>(null);
+    const [importType, setImportType] = useState<'full' | 'data-only'>('full');
     const [createBackup, setCreateBackup] = useState(true);
     const [isLoading, setIsLoading] = useState(false);
     const [showConfirm, setShowConfirm] = useState(false);
@@ -247,7 +283,7 @@ function ImportModal({ onClose, onSuccess, token }: { onClose: () => void; onSuc
         formData.append('file', file);
 
         try {
-            const res = await fetch(`${API_URL}/database/import?createBackup=${createBackup}`, {
+            const res = await fetch(`${API_URL}/database/import?createBackup=${createBackup}&type=${importType}`, {
                 method: 'POST',
                 headers: { Authorization: `Bearer ${token}` },
                 body: formData,
@@ -285,13 +321,49 @@ function ImportModal({ onClose, onSuccess, token }: { onClose: () => void; onSuc
                 <CardContent>
                     {!showConfirm ? (
                         <div className="space-y-4">
-                            <div className="rounded-lg border border-red-500/50 bg-red-500/10 p-4">
+                            {/* Import type selector */}
+                            <div className="grid grid-cols-2 gap-2">
+                                <button
+                                    type="button"
+                                    onClick={() => setImportType('full')}
+                                    className={`rounded-lg border p-3 text-left transition ${
+                                        importType === 'full'
+                                            ? 'border-primary bg-primary/10 text-primary'
+                                            : 'border-border hover:bg-muted/30'
+                                    }`}
+                                >
+                                    <p className="font-medium text-sm">Full Backup</p>
+                                    <p className="text-xs text-muted-foreground mt-1">Schema + data. Reset seluruh database.</p>
+                                </button>
+                                <button
+                                    type="button"
+                                    onClick={() => setImportType('data-only')}
+                                    className={`rounded-lg border p-3 text-left transition ${
+                                        importType === 'data-only'
+                                            ? 'border-blue-500 bg-blue-500/10 text-blue-500'
+                                            : 'border-border hover:bg-muted/30'
+                                    }`}
+                                >
+                                    <p className="font-medium text-sm">Data Only</p>
+                                    <p className="text-xs text-muted-foreground mt-1">Hanya data. Schema tetap, tidak ada tabel yang dihapus.</p>
+                                </button>
+                            </div>
+
+                            <div className={`rounded-lg border p-4 ${
+                                importType === 'full'
+                                    ? 'border-red-500/50 bg-red-500/10'
+                                    : 'border-yellow-500/50 bg-yellow-500/10'
+                            }`}>
                                 <div className="flex gap-2">
-                                    <AlertTriangle className="text-red-500" size={20} />
+                                    <AlertTriangle className={importType === 'full' ? 'text-red-500' : 'text-yellow-500'} size={20} />
                                     <div className="text-sm">
-                                        <p className="font-medium text-red-500">Critical Warning</p>
+                                        <p className={`font-medium ${importType === 'full' ? 'text-red-500' : 'text-yellow-500'}`}>
+                                            {importType === 'full' ? 'Critical Warning' : 'Peringatan'}
+                                        </p>
                                         <p className="text-muted-foreground">
-                                            This action will OVERWRITE all existing data in the database. This cannot be undone without a backup.
+                                            {importType === 'full'
+                                                ? 'Seluruh database (schema + data) akan dihapus dan diganti. Tidak bisa di-undo tanpa backup.'
+                                                : 'Data yang ada akan ditimpa. Schema/struktur tabel tidak berubah.'}
                                         </p>
                                     </div>
                                 </div>
@@ -318,39 +390,50 @@ function ImportModal({ onClose, onSuccess, token }: { onClose: () => void; onSuc
                                     onChange={(e) => setCreateBackup(e.target.checked)}
                                     className="rounded border-white/20"
                                 />
-                                <span className="text-sm">Create automatic backup before import (recommended)</span>
+                                <span className="text-sm">Buat backup otomatis sebelum import (direkomendasikan)</span>
                             </label>
 
                             <div className="flex gap-2">
                                 <Button type="button" variant="outline" onClick={onClose} className="flex-1">
-                                    Cancel
+                                    Batal
                                 </Button>
                                 <Button
                                     onClick={() => setShowConfirm(true)}
                                     disabled={!file}
-                                    className="flex-1 bg-red-600 hover:bg-red-700"
+                                    className={`flex-1 ${
+                                        importType === 'full'
+                                            ? 'bg-red-600 hover:bg-red-700'
+                                            : 'bg-yellow-600 hover:bg-yellow-700'
+                                    }`}
                                 >
-                                    Continue
+                                    Lanjutkan
                                 </Button>
                             </div>
                         </div>
                     ) : (
                         <div className="space-y-4">
                             <div className="rounded-lg border border-yellow-500/50 bg-yellow-500/10 p-4">
-                                <p className="font-medium text-yellow-500 mb-2">Final Confirmation</p>
+                                <p className="font-medium text-yellow-500 mb-2">Konfirmasi Akhir</p>
                                 <p className="text-sm text-muted-foreground">
-                                    Are you absolutely sure you want to import this database? This will replace all current data.
+                                    {importType === 'full'
+                                        ? 'Seluruh schema dan data akan dihapus lalu diganti dengan isi file backup.'
+                                        : 'Data yang ada akan ditimpa dengan isi file backup. Schema tidak berubah.'}
+                                </p>
+                                <p className="text-sm mt-2 font-medium">
+                                    Tipe: <span className={importType === 'full' ? 'text-red-400' : 'text-blue-400'}>
+                                        {importType === 'full' ? 'Full Backup' : 'Data Only'}
+                                    </span>
                                 </p>
                                 {createBackup && (
                                     <p className="text-sm text-green-500 mt-2">
-                                        ✓ Automatic backup will be created before import
+                                        ✓ Backup otomatis akan dibuat sebelum import
                                     </p>
                                 )}
                             </div>
 
                             <div className="flex gap-2">
                                 <Button type="button" variant="outline" onClick={() => setShowConfirm(false)} className="flex-1">
-                                    Go Back
+                                    Kembali
                                 </Button>
                                 <Button
                                     onClick={handleSubmit}

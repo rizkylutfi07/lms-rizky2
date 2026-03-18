@@ -26,11 +26,12 @@ export class DatabaseController {
     constructor(private readonly databaseService: DatabaseService) { }
 
     @Get('export')
-    async exportDatabase(@Res() res: Response) {
-        const buffer = await this.databaseService.exportDatabase();
-
-        const timestamp = new Date().toISOString().replace(/[:.]/g, '-').split('T')[0];
-        const filename = `database_backup_${timestamp}.sql`;
+    async exportDatabase(
+        @Query('type') type: string = 'full',
+        @Res() res: Response,
+    ) {
+        const backupType = type === 'data-only' ? 'data-only' : 'full';
+        const { buffer, filename } = await this.databaseService.exportDatabase(backupType);
 
         res.setHeader('Content-Type', 'application/sql');
         res.setHeader('Content-Disposition', `attachment; filename=${filename}`);
@@ -42,6 +43,7 @@ export class DatabaseController {
     async importDatabase(
         @UploadedFile() file: Express.Multer.File,
         @Query('createBackup') createBackup?: string,
+        @Query('type') type?: string,
     ) {
         if (!file) {
             throw new BadRequestException('No file uploaded');
@@ -60,8 +62,9 @@ export class DatabaseController {
 
         const sqlContent = file.buffer.toString('utf-8');
         const shouldCreateBackup = createBackup !== 'false';
+        const importType = type === 'data-only' ? 'data-only' : 'full';
 
-        return this.databaseService.importDatabase(sqlContent, shouldCreateBackup);
+        return this.databaseService.importDatabase(sqlContent, shouldCreateBackup, importType);
     }
 
     @Get('backups')
