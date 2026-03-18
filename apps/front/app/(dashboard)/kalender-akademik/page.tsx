@@ -394,7 +394,7 @@ export default function KalenderAkademikPage() {
             {/* Event Detail Modal */}
             {detailEvent && (
                 <div className="fixed inset-0 z-[100] flex items-center justify-center bg-black/60 p-4 backdrop-blur-sm" onClick={() => setDetailEvent(null)}>
-                    <Card className="w-full max-w-sm" onClick={(e) => e.stopPropagation()}>
+                    <Card className="w-full max-w-sm bg-background" onClick={(e) => e.stopPropagation()}>
                         <CardHeader>
                             <div className="flex items-start justify-between gap-3">
                                 <div className="flex items-center gap-2 min-w-0">
